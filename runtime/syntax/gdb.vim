@@ -13,13 +13,16 @@ endif
 let s:cpo_save = &cpo
 set cpo&vim
 
-syn keyword gdbInfo contained address architecture args breakpoints catch common copying dcache
-syn keyword gdbInfo contained display files float frame functions handle line
-syn keyword gdbInfo contained locals program registers scope set sharedlibrary signals
-syn keyword gdbInfo contained source sources stack symbol target terminal threads
-syn keyword gdbInfo contained syn keyword tracepoints types udot variables warranty watchpoints
-syn match gdbInfo contained "all-registers"
-
+syn keyword gdbInfo contained address args auxv bookmarks breakpoints b checkpoints classes common connections copying dcache
+syn keyword gdbInfo contained display exceptions extensions files float frame f functions guile gu inferiors line locals macro
+syn keyword gdbInfo contained macros mem module modules os probes proc program record rec registers r scope selectors set
+syn keyword gdbInfo contained sharedlibrary dll signals handle skip source sources stack s symbol target tasks terminal threads
+syn keyword gdbInfo contained tracepoints tvariables types variables vector vtbl warranty watchpoints win
+syn match gdbInfo contained "\<all-registers\>"
+syn match gdbInfo contained "\<auto-load\>"
+syn match gdbInfo contained "\<static-tracepoint-markers\>"
+" obsolete?
+syn keyword gdbInfo architecture catch udot
 
 syn keyword gdbStatement contained actions apply attach awatch backtrace break bt call catch cd clear collect commands
 syn keyword gdbStatement contained complete condition continue delete detach directory disable disas[semble] disp[lay] down
