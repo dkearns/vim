@@ -25,18 +25,33 @@ syn keyword gdbStatement contained actions apply attach awatch backtrace break b
 syn keyword gdbStatement contained complete condition continue delete detach directory disable disas[semble] disp[lay] down
 syn keyword gdbStatement contained echo else enable end file finish frame handle hbreak help if ignore
 syn keyword gdbStatement contained inspect jump kill list load maintenance make next nexti ni output overlay
-syn keyword gdbStatement contained passcount path print printf ptype python pwd quit rbreak remote return run rwatch
+syn keyword gdbStatement contained passcount path print printf ptype pwd quit rbreak remote return run rwatch
 syn keyword gdbStatement contained search section set sharedlibrary shell show si signal skip source step stepi stepping
 syn keyword gdbStatement contained stop target tbreak tdump tfind thbreak thread tp trace tstart tstatus tstop
 syn keyword gdbStatement contained tty und[isplay] unset until up watch whatis where while ws x
 syn match gdbFuncDef "\<define\>.*"
-syn match gdbStatementContainer "^\s*\S\+" contains=gdbStatement,gdbFuncDef
+syn match gdbStatementContainer "^\s*\S\+" contains=gdbStatement,gdbMultilineStatement,gdbFuncDef
 syn match gdbStatement "^\s*info" nextgroup=gdbInfo skipwhite skipempty
 
 " some commonly used abbreviations
-syn keyword gdbStatement c cont p py
+syn keyword gdbStatement c cont p
 
 syn region gdbDocument matchgroup=gdbFuncDef start="\<document\>.*$" matchgroup=gdbFuncDef end="^end\s*$"
+
+" Guile
+syn include @gdbGuile syntax/scheme.vim
+unlet b:current_syntax
+syn match   gdbStatement contained "\<guile-repl\>"
+syn keyword gdbStatement contained gr
+syn region  gdbStatement contained matchgroup=gdbStatement start="\<gu\%(ile\)\=\ze\s" skip="\\$" end="$" contains=@gdbGuile keepend transparent fold
+syn region  gdbMultilineStatement contained matchgroup=gdbStatement start="\<gu\%(ile\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbGuile transparent fold
+
+" Python
+syn include @gdbPython syntax/python.vim
+unlet b:current_syntax
+syn region gdbStatement contained matchgroup=gdbStatement start="\<py\%(thon\)\=\ze\s" start="\<\%(python-interactive\|pi\)\ze\s" skip="\\$" end="$" contains=@gdbPython keepend transparent fold
+syn region gdbMultilineStatement contained matchgroup=gdbStatement start="\<py\%(thon\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbPython transparent fold
+syn match  gdbStatement contained "\<\%(python-interactive\|pi\)\s*$"
 
 syn match gdbStatement "\<add-shared-symbol-files\>"
 syn match gdbStatement "\<add-symbol-file\>"
