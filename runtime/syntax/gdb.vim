@@ -34,6 +34,7 @@ syn keyword gdbStatement contained stop target tbreak tdump tfind thbreak thread
 syn keyword gdbStatement contained tty und[isplay] unset until up watch whatis where while ws x
 syn match gdbFuncDef "\<define\>.*"
 syn match gdbStatementAnchor "^" nextgroup=gdbStatement,gdbMultilineStatement,gdbFuncDef,gdbPrefix skipwhite
+syn match gdbLineContinuation "\\$"
 syn keyword gdbStatement contained set  nextgroup=gdbSet  skipwhite
 syn keyword gdbStatement contained info nextgroup=gdbInfo skipwhite
 
@@ -205,6 +206,7 @@ hi def link gdbSet		Constant
 hi def link gdbInfo		Type
 hi def link gdbDocument		Special
 hi def link gdbNumber		Number
+hi def link gdbLineContinuation	Special
 
 let b:current_syntax = "gdb"
 
