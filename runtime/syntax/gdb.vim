@@ -3,7 +3,7 @@
 " Maintainer:	Claudio Fleiner <claudio@fleiner.com>
 " URL:		http://www.fleiner.com/vim/syntax/gdb.vim
 " Last Change:	2021 Nov 15
-" 		Additional changes by Simon Sobisch
+"		Additional changes by Simon Sobisch
 
 " quit when a syntax file was already loaded
 if exists("b:current_syntax")
@@ -12,6 +12,263 @@ endif
 
 let s:cpo_save = &cpo
 set cpo&vim
+
+" Commands
+
+" breakpoints
+syn keyword gdbStatement contained aw[atch]
+syn match   gdbStatement contained "\<b\%[reak]\>"
+syn match   gdbStatement contained "\<break-\%(\%[range]\>\)\="
+syn keyword gdbStatement contained cat[ch]
+syn keyword gdbStatement contained cl[ear] cl
+
+" TODO: handle specially
+" syn keyword gdbStatement contained comm[ands]
+syn region  gdbMultilineStatement contained matchgroup=gdbStatement start="\<comm\%[ands]\>" end="^\s*\zsend\ze\s*$" contains=TOP transparent fold
+
+syn keyword gdbStatement contained cond[ition]
+syn keyword gdbStatement contained de[lete] del d
+syn keyword gdbStatement contained dis[able] disa dis
+syn keyword gdbStatement contained dp[rintf]
+syn keyword gdbStatement contained e[nable] en
+syn keyword gdbStatement contained ft[race]
+syn keyword gdbStatement contained hb[reak]
+syn keyword gdbStatement contained ig[nore]
+syn keyword gdbStatement contained rb[reak]
+syn keyword gdbStatement contained rw[atch]
+syn keyword gdbStatement contained save
+syn keyword gdbStatement contained sk[ip]
+syn keyword gdbStatement contained str[ace]
+syn keyword gdbStatement contained tb[reak]
+syn keyword gdbStatement contained tc[atch]
+syn keyword gdbStatement contained thb[reak]
+syn keyword gdbStatement contained tr[ace] tp
+syn keyword gdbStatement contained wa[tch]
+
+" data 
+syn match   gdbStatement contained "\<ag\%[ent-printf]\>"
+syn keyword gdbStatement contained app[end]
+syn keyword gdbStatement contained ca[ll]
+syn keyword gdbStatement contained disas[semble]
+syn keyword gdbStatement contained disp[lay]
+syn keyword gdbStatement contained du[mp]
+syn keyword gdbStatement contained find
+syn match   gdbStatement contained "\<in\%[it-if-undefined]\>"
+syn keyword gdbStatement contained mem
+syn match   gdbStatement contained "\<memo\%[ry-tag]\>"
+syn keyword gdbStatement contained ou[tput]
+syn match   gdbStatement contained "\<\%(pr\%[int]\|ins\%[pect]\|p\)\>"
+syn match   gdbStatement contained "\<\%(print-\%[object]\|po\)\>"
+syn keyword gdbStatement contained printf
+syn keyword gdbStatement contained pt[ype]
+syn keyword gdbStatement contained resto[re]
+
+" TODO: handle specially
+" syn keyword gdbStatement contained set
+syn keyword gdbStatement contained set nextgroup=gdbSet skipwhite
+
+syn keyword gdbStatement contained und[isplay]
+syn keyword gdbStatement contained wha[tis]
+syn keyword gdbStatement contained wit[h] w
+syn keyword gdbStatement contained x
+
+" files
+syn match   gdbStatement contained "\<add-symbol-file\>"
+syn match   gdbStatement contained "\<add-symbol-file-\%[from-memory]\>"
+syn keyword gdbStatement contained cd
+syn match   gdbStatement contained "\<co\%[re-file]\>"
+syn keyword gdbStatement contained dir[ectory]
+syn keyword gdbStatement contained ed[it]
+syn match   gdbStatement contained "\<exe\%[c-file]\>"
+syn keyword gdbStatement contained fil[e]
+syn match   gdbStatement contained "\<\%(for\%[ward-search]\|fo\|sea\%[rch]\)\>"
+syn match   gdbStatement contained "\<\%(ge\%[nerate-core-file]\|gc\%[ore]\)\>"
+syn keyword gdbStatement contained li[st] l
+syn keyword gdbStatement contained lo[ad]
+syn keyword gdbStatement contained no[sharedlibrary]
+syn keyword gdbStatement contained pat[h]
+syn keyword gdbStatement contained pw[d]
+syn keyword gdbStatement contained remot[e]
+syn match   gdbStatement contained "\<remove-s\%[ymbol-file]\>"
+syn match   gdbStatement contained "\<\%(reverse-se\%[arch]\|rev\)\>"
+syn keyword gdbStatement contained sec[tion]
+syn keyword gdbStatement contained sha[redlibrary]
+syn match   gdbStatement contained "\<sy\%[mbol-file]\>"
+
+" internals
+syn keyword gdbStatement contained mai[ntenance] mt
+
+" obscure
+syn keyword gdbStatement contained ch[eckpoint]
+syn match gdbStatement contained "\<compa\%[re-sections]\>"
+syn keyword gdbStatement contained compi[le] exp[ression]
+syn keyword gdbStatement contained compl[ete]
+
+" Guile
+syn include @gdbGuile syntax/scheme.vim
+unlet b:current_syntax
+syn match   gdbStatement contained "\<guile-repl\>"
+syn keyword gdbStatement contained gr
+syn region  gdbStatement contained matchgroup=gdbStatement start="\<gu\%(ile\)\=\ze\s" skip="\\$" end="$" contains=@gdbGuile keepend transparent fold
+syn region  gdbMultilineStatement contained matchgroup=gdbStatement start="\<gu\%(ile\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbGuile transparent fold
+
+syn keyword gdbStatement contained mo[nitor]
+
+" Python
+syn include @gdbPython syntax/python.vim
+unlet b:current_syntax
+syn region gdbStatement contained matchgroup=gdbStatement start="\<py\%(thon\)\=\ze\s" start="\<\%(python-interactive\|pi\)\ze\s" skip="\\$" end="$" contains=@gdbPython keepend transparent fold
+syn region gdbMultilineStatement contained matchgroup=gdbStatement start="\<py\%(thon\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbPython transparent fold
+syn match  gdbStatement contained "\<\%(python-interactive\|pi\)\s*$"
+
+syn keyword gdbStatement contained rec[ord] rec
+syn keyword gdbStatement contained resta[rt]
+syn keyword gdbStatement contained sto[p]
+
+" running
+syn keyword gdbStatement contained adv[ance]
+syn keyword gdbStatement contained at[tach]
+syn keyword gdbStatement contained cont[inue] fg c
+syn keyword gdbStatement contained det[ach]
+syn keyword gdbStatement contained disc[onnect]
+syn keyword gdbStatement contained fini[sh] fin
+syn keyword gdbStatement contained ha[ndle]
+syn keyword gdbStatement contained infe[rior]
+syn keyword gdbStatement contained interr[upt]
+syn keyword gdbStatement contained ju[mp] j
+syn keyword gdbStatement contained k[ill]
+syn keyword gdbStatement contained next n
+syn keyword gdbStatement contained nexti ni
+syn match   gdbStatement contained "\<que\%[ue-signal]\>"
+syn match   gdbStatement contained "\<\%(reverse-c\%[ontinue]\|rc\)\>"
+syn match   gdbStatement contained "\<reverse-f\%[inish]\>"
+syn match   gdbStatement contained "\<\%(reverse-next\|rn\)\>"
+syn match   gdbStatement contained "\<\%(reverse-nexti\|rni\)\>"
+syn match   gdbStatement contained "\<\%(reverse-step\|rs\)\>"
+syn match   gdbStatement contained "\<\%(reverse-stepi\|rsi\)\>"
+syn keyword gdbStatement contained ru[n] r
+syn keyword gdbStatement contained sig[nal]
+syn keyword gdbStatement contained start s
+syn keyword gdbStatement contained starti si
+syn keyword gdbStatement contained step s
+syn keyword gdbStatement contained stepi si
+syn keyword gdbStatement contained taa[s]
+syn keyword gdbStatement contained tar[get]
+syn keyword gdbStatement contained tas[k]
+syn keyword gdbStatement contained tfa[as]
+syn keyword gdbStatement contained thr[ead] t
+syn keyword gdbStatement contained unt[il] u
+
+" stack
+syn keyword gdbStatement contained ba[cktrace] whe[re] bt
+syn keyword gdbStatement contained do[wn]
+syn keyword gdbStatement contained fa[as]
+syn keyword gdbStatement contained fr[ame] f
+syn keyword gdbStatement contained ret[urn]
+syn match   gdbStatement contained "\<sel\%[ect-frame]\>"
+syn keyword gdbStatement contained up
+
+" status
+
+" TODO: handle specially
+" syn keyword gdbStatement contained info inf i
+syn keyword gdbStatement contained info inf i nextgroup=gdbInfo skipwhite
+
+syn keyword gdbStatement contained mac[ro]
+" TODO: info set
+syn keyword gdbStatement contained sho[w]
+
+" support
+syn match   gdbStatement contained "\<add-auto-load-sa\%[fe-path]\>"
+syn match   gdbStatement contained "\<add-auto-load-sc\%[ripts-directory]\>"
+syn keyword gdbStatement contained al[ias]
+syn keyword gdbStatement contained apr[opos]
+
+" TODO: handle specially
+"     : optionally highlight define/end as normal commands and only the
+"	command name with HL group Function
+" syn keyword gdbStatement contained def[ine]
+syn region  gdbDefine	 contained matchgroup=gdbFuncDef start="\<def\%[ine]\>.*" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
+
+syn match   gdbStatement contained "\<define-\%(\%[prefix]\>\)\="
+syn keyword gdbStatement contained dem[angle]
+
+" TODO: handle specially
+" syn keyword gdbStatement contained doc\%[ument]
+syn region  gdbDocument  contained matchgroup=gdbFuncDef start="\<doc\%[ument]\>.*$" end="^\s*\zsend\ze\s*$" fold
+
+syn match   gdbStatement contained "\<don\%[t-repeat]\>"
+syn match   gdbStatement contained "\<down-\%[silently]\>"
+syn keyword gdbStatement contained ec[ho]
+syn keyword gdbStatement contained he[lp] h
+
+" TODO: handle specially
+" syn keyword gdbStatement contained if else
+syn region gdbIf contained matchgroup=gdbStatement start="\<if\>" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
+syn keyword gdbStatement contained else containedin=gdbIf
+
+syn match   gdbStatement contained "\<interp\%[reter-exec]\>"
+syn keyword gdbStatement contained mak[e]
+syn match   gdbStatement contained "\<new\%[-ui]\>"
+syn keyword gdbStatement contained ov[erlay] ov ovly
+syn keyword gdbStatement contained pi[pe]
+syn match   gdbStatement contained "|"
+syn keyword gdbStatement contained qui[t] exi[t] q
+syn keyword gdbStatement contained she[ll]
+syn match   gdbStatement contained "!"
+syn keyword gdbStatement contained so[urce]
+syn match   gdbStatement contained "\<up-\%[silently]\>"
+
+" TODO: handle specially
+" syn match   gdbStatement contained "\<whi\%[le]\>"
+" syn keyword gdbStatement contained loop_break loop_continue
+syn region gdbWhile contained matchgroup=gdbStatement start="\<whi\%[le]\>" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
+syn keyword gdbStatement contained loop_break loop_continue containedin=gdbWhile
+
+" text-user-interface
+syn match   gdbStatement contained "[<>+-]"
+syn keyword gdbStatement contained foc[us] fs
+syn keyword gdbStatement contained la[yout]
+syn keyword gdbStatement contained ref[resh]
+syn keyword gdbStatement contained tu[i]
+syn keyword gdbStatement contained upd[ate]
+syn keyword gdbStatement contained win[height] wh
+
+" tracepoints
+syn keyword gdbStatement contained ac[tions]
+syn keyword gdbStatement contained col[lect]
+syn keyword gdbStatement contained end
+syn keyword gdbStatement contained pas[scount]
+syn keyword gdbStatement contained t[dump]
+syn keyword gdbStatement contained tev[al]
+syn keyword gdbStatement contained tfi[nd]
+syn keyword gdbStatement contained tsa[ve]
+syn keyword gdbStatement contained tstar[t]
+syn keyword gdbStatement contained tstat[us]
+syn keyword gdbStatement contained tsto[p]
+syn keyword gdbStatement contained tv[ariable]
+syn match   gdbStatement contained "\<\%(while-stepping\|stepp\%[ing]\|ws\)\>"
+
+" unclassified
+syn match   gdbStatement contained "\<add-i\%[nferior]\>"
+syn match   gdbStatement contained "\<clo\%[ne-inferior]\>"
+syn keyword gdbStatement contained ev[al]
+syn match   gdbStatement contained "\<fl\%[ash-erase]\>"
+syn keyword gdbStatement contained fu[nction]
+syn match   gdbStatement contained "\<jit-reader-l\%[oad]\>"
+syn match   gdbStatement contained "\<jit-reader-u\%[nload]\>"
+syn match   gdbStatement contained "\<remove-i\%[nferiors]\>"
+syn keyword gdbStatement contained uns[et]
+
+syn keyword gdbStatement contained bo[okmark]
+syn match   gdbStatement contained "\<go\%[to-bookmark]\>"
+
+syn keyword gdbPrefix contained server nextgroup=gdbStatement skipwhite
+
+syn cluster gdbStatements contains=gdbStatement,gdbMultilineStatement,gdbDefine,gdbDocument,gdbIf,gdbWhile,gdbPrefix
+
+syn match gdbStatementAnchor "^" nextgroup=@gdbStatements skipwhite
+syn match gdbLineContinuation "\\$"
 
 syn keyword gdbInfo contained address args auxv bookmarks breakpoints b checkpoints classes common connections copying dcache
 syn keyword gdbInfo contained display exceptions extensions files float frame f functions guile gu inferiors line locals macro
@@ -22,57 +279,7 @@ syn match gdbInfo contained "\<all-registers\>"
 syn match gdbInfo contained "\<auto-load\>"
 syn match gdbInfo contained "\<static-tracepoint-markers\>"
 " obsolete?
-syn keyword gdbInfo architecture catch udot
-
-syn keyword gdbStatement contained actions apply attach awatch backtrace break bt call catch cd clear collect commands
-syn keyword gdbStatement contained complete condition continue delete detach directory disable disas[semble] disp[lay] down
-syn keyword gdbStatement contained echo else enable end file finish frame handle hbreak help if ignore
-syn keyword gdbStatement contained inspect jump kill list load maintenance make next nexti ni output overlay
-syn keyword gdbStatement contained passcount path print printf ptype pwd quit rbreak remote return run rwatch
-syn keyword gdbStatement contained search section sharedlibrary shell show si signal skip source step stepi stepping
-syn keyword gdbStatement contained stop target tbreak tdump tfind thbreak thread tp trace tstart tstatus tstop
-syn keyword gdbStatement contained tty und[isplay] unset until up watch whatis where while ws x
-syn match gdbFuncDef "\<define\>.*"
-syn match gdbStatementAnchor "^" nextgroup=gdbStatement,gdbMultilineStatement,gdbFuncDef,gdbPrefix skipwhite
-syn match gdbLineContinuation "\\$"
-syn keyword gdbStatement contained set  nextgroup=gdbSet  skipwhite
-syn keyword gdbStatement contained info nextgroup=gdbInfo skipwhite
-
-syn keyword gdbPrefix contained server nextgroup=gdbStatement skipwhite
-
-" some commonly used abbreviations
-syn keyword gdbStatement c cont p
-
-syn region gdbDocument matchgroup=gdbFuncDef start="\<document\>.*$" matchgroup=gdbFuncDef end="^end\s*$"
-
-" Guile
-syn include @gdbGuile syntax/scheme.vim
-unlet b:current_syntax
-syn match   gdbStatement contained "\<guile-repl\>"
-syn keyword gdbStatement contained gr
-syn region  gdbStatement contained matchgroup=gdbStatement start="\<gu\%(ile\)\=\ze\s" skip="\\$" end="$" contains=@gdbGuile keepend transparent fold
-syn region  gdbMultilineStatement contained matchgroup=gdbStatement start="\<gu\%(ile\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbGuile transparent fold
-
-" Python
-syn include @gdbPython syntax/python.vim
-unlet b:current_syntax
-syn region gdbStatement contained matchgroup=gdbStatement start="\<py\%(thon\)\=\ze\s" start="\<\%(python-interactive\|pi\)\ze\s" skip="\\$" end="$" contains=@gdbPython keepend transparent fold
-syn region gdbMultilineStatement contained matchgroup=gdbStatement start="\<py\%(thon\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbPython transparent fold
-syn match  gdbStatement contained "\<\%(python-interactive\|pi\)\s*$"
-
-syn match gdbStatement "\<add-shared-symbol-files\>"
-syn match gdbStatement "\<add-symbol-file\>"
-syn match gdbStatement "\<core-file\>"
-syn match gdbStatement "\<dont-repeat\>"
-syn match gdbStatement "\<down-silently\>"
-syn match gdbStatement "\<exec-file\>"
-syn match gdbStatement "\<forward-search\>"
-syn match gdbStatement "\<reverse-search\>"
-syn match gdbStatement "\<save-tracepoints\>"
-syn match gdbStatement "\<select-frame\>"
-syn match gdbStatement "\<symbol-file\>"
-syn match gdbStatement "\<up-silently\>"
-syn match gdbStatement "\<while-stepping\>"
+syn keyword gdbInfo contained architecture catch udot
 
 syn keyword gdbSet contained ada agent annotate architecture processor args backtrace breakpoint charset check ch c complaints
 syn keyword gdbSet contained confirm cwd dcache debug debuginfod directories editing endian environment fortran gnutarget g guile gu
@@ -80,7 +287,6 @@ syn keyword gdbSet contained height history language listsize logging mem mpx ob
 syn keyword gdbSet contained radix ravenscar record rec remote remoteaddresssize remotecache remoteflow remotelogbase remotelogfile
 syn keyword gdbSet contained remotetimeout remotewritesize serial source style sysroot targetdebug tcp tdesc tui variable var
 syn keyword gdbSet contained verbose watchdog width write
-
 " obsolete
 syn keyword gdbSet contained remotebaud remotebreak remotedebug remotedevice
 
@@ -171,7 +377,6 @@ syn match gdbSet contained "\<unwindonsignal\>"
 syn match gdbSet contained "\<unwind-on-terminating-exception\>"
 syn match gdbSet contained "\<use-coredump-filter\>"
 syn match gdbSet contained "\<use-deprecated-index-sections\>"
-
 " obsolete?
 syn match gdbSet contained "\<symbol-reloading\>"
 
