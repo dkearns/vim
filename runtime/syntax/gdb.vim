@@ -181,7 +181,14 @@ syn keyword gdbStatement contained sho[w]
 " support
 syn match   gdbStatement contained "\<add-auto-load-sa\%[fe-path]\>"
 syn match   gdbStatement contained "\<add-auto-load-sc\%[ripts-directory]\>"
-syn keyword gdbStatement contained al[ias]
+
+" TODO: handle specially
+" syn keyword gdbStatement contained al[ias]
+syn keyword gdbStatement   contained al[ias]            nextgroup=gdbAliasName   skipwhite
+syn match   gdbAliasName   contained "\<\%(\w\|-\)\+\>" nextgroup=gdbAliasEquals skipwhite
+syn match   gdbAliasEquals contained "="                nextgroup=@gdbStatements skipwhite
+hi def link gdbAliasName Function
+
 syn keyword gdbStatement contained apr[opos]
 
 " TODO: handle specially
