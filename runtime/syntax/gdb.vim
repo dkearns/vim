@@ -98,7 +98,26 @@ syn keyword gdbStatement contained mai[ntenance] mt
 " obscure
 syn keyword gdbStatement contained ch[eckpoint]
 syn match gdbStatement contained "\<compa\%[re-sections]\>"
-syn keyword gdbStatement contained compi[le] exp[ression]
+
+" TODO: other languages
+syn include @gdbC syntax/c.vim
+unlet b:current_syntax
+" syn keyword gdbStatement contained compi[le] exp[ression]
+" syn keyword gdbStatement contained compi[le] exp[ression] nextgroup=gdbCompileArgs skipwhite
+" syn match   gdbCompile contained "\<\%(compi\%[le]\|exp\%[ression]\)\>" nextgroup=gdbCompileArgs skipwhite
+syn keyword gdbCompile contained compi[le] exp[ression] nextgroup=gdbCompileArgs skipwhite
+syn keyword gdbCompileArgs contained c[ode] nextgroup=gdbCompileCodeOptions,@gdbC skipwhite
+syn keyword gdbCompileArgs contained p[rint] nextgroup=gdbCompilePrintOptions,@gdbC skipwhite
+" TODO: proper option support
+syn match   gdbCompileCodeOptions contained "--\|\%(-r\%[aw]\)\(\s\+--\)\=" nextgroup=@gdbC skipwhite
+syn match   gdbCompilePrintOptions contained "\%(-\w\+\%(\s\+\w\+\)\=\s\+\)*--" nextgroup=@gdbC skipwhite
+syn keyword gdbCompileArgs contained f[ile] nextgroup=gdbCompileCodeOptions skipwhite
+
+syn region  gdbStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+c\%[ode]\ze\s" skip="\\$" end="$" contains=gdbCompile,@gdbC keepend transparent fold
+syn region  gdbMultilineStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+c\%[ode]\s*$" matchgroup=gdbStatement end="^\s*\zsend\ze\s*$" contains=gdbCompile,@gdbC transparent fold
+syn region  gdbStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+p\%[rint]\ze\s" skip="\\$" end="$" contains=gdbCompile,@gdbC keepend transparent fold
+syn region  gdbMultilineStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+p\%[rint]\s*$" matchgroup=gdbStatement end="^\s*\zsend\ze\s*$" contains=gdbCompile,@gdbC transparent fold
+
 syn keyword gdbStatement contained compl[ete]
 
 " Guile
