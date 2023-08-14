@@ -21,6 +21,7 @@ setlocal include=^\\s*source
 let b:undo_ftplugin = "setlocal com< cms< fo< inc<"
 
 if exists("loaded_matchit") && !exists("b:match_words")
+  let b:match_ignorecase = 0
   let s:line_start = '\%(^\s*\)\@<='
   let b:match_words = s:line_start .. '\%(commands\|define\|document\|if\|while\|' ..
 	\                             'compi\%[le]\s\+\%(c\%[ode]\|p\%[rint]\)\|' ..
@@ -28,7 +29,7 @@ if exists("loaded_matchit") && !exists("b:match_words")
 	\		s:line_start .. '\%(else\|loop_continue\|loop_break\)\>:' ..
 	\	      s:line_start .. 'end\>'
   unlet s:line_start
-  let b:undo_ftplugin ..= " | unlet! b:match_words"
+  let b:undo_ftplugin ..= " | unlet! b:match_ignorecase b:match_words"
 endif
 
 if (has("gui_win32") || has("gui_gtk")) && !exists("b:browsefilter")
