@@ -1,9 +1,9 @@
 " Vim syntax file
-" Language:	GDB command files
-" Maintainer:	Claudio Fleiner <claudio@fleiner.com>
-" URL:		http://www.fleiner.com/vim/syntax/gdb.vim
-" Last Change:	2021 Nov 15
-"		Additional changes by Simon Sobisch
+" Language:		GDB command files
+" Maintainer:		Doug Kearns <dougkearns@gmail.com>
+" Previous Maintainer:	Claudio Fleiner <claudio@fleiner.com>
+" Last Change:		2021 Nov 15
+"			Additional changes by Simon Sobisch
 
 " quit when a syntax file was already loaded
 if exists("b:current_syntax")
