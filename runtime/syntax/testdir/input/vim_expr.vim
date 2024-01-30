@@ -30,3 +30,45 @@ echo $'Highlight interpolation:\t{{ { $'nested: {{ {1 + 2} }}' } }}'
 echo $"Highlight interpolation:\t{{ { string({"foo": "bar"}) } }}"
 echo $"Highlight interpolation:\t{{ { $"nested: {{ {1 + 2} }}" } }}"
 
+" Multiline (continued) strings
+
+let s = "
+      "\ comment
+      \ line 1
+      "\ comment
+      \ line 2
+      "\ comment
+      \" " tail comment
+
+let s = "
+      \ line 1
+      "\ escape sequence
+      \\" line 2
+      \" " tail comment
+
+let s = '
+      "\ comment
+      \ line 1
+      "\ comment
+      \ line 2
+      "\ comment
+      \' " tail comment
+
+let s = $"
+      "\ comment
+      \ line 1
+      "\ comment
+      \ line 2
+      "\ comment
+      \" " tail comment
+
+let s = $'
+      "\ comment
+      \ line 1
+      "\ comment
+      \ line 2
+      "\ comment
+      \' " tail comment
+
+" line comment
+foo() " tail comment

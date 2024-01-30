@@ -250,7 +250,7 @@ syn keyword vimAugroupKey contained	aug[roup]
 " Operators: {{{2
 " =========
 syn cluster	vimOperGroup	contains=vimEnvvar,vimFunc,vimFuncVar,vimOper,vimOperParen,vimNumber,vimString,vimType,vimRegister,@vimContinue,vim9Comment,vimVar
-syn match	vimOper	"||\|&&\|[-+*/%.!]"				skipwhite nextgroup=vimString,vimSpecFile
+syn match	vimOper	"||\|&&\|[-+*/%.!]"			skipwhite nextgroup=vimString,vimSpecFile
 syn match	vimOper	"\%#=1\(==\|!=\|>=\|<=\|=\~\|!\~\|>\|<\|=\|!\~#\)[?#]\{0,2}"	skipwhite nextgroup=vimString,vimSpecFile
 syn match	vimOper	"\(\<is\|\<isnot\)[?#]\{0,2}\>"			skipwhite nextgroup=vimString,vimSpecFile
 syn region	vimOperParen 	matchgroup=vimParenSep	start="(" end=")" contains=vimoperStar,@vimOperGroup
@@ -364,6 +364,8 @@ syn match	vimNotPatSep	contained	"\\\\"
 syn cluster	vimStringGroup	contains=vimEscape,vimEscapeBrace,vimPatSep,vimNotPatSep,vimPatSepErr,vimPatSepZone,@Spell
 syn region	vimString	oneline keepend	start=+[^a-zA-Z>!\\@]"+lc=1 skip=+\\\\\|\\"+ matchgroup=vimStringEnd end=+"+	contains=@vimStringGroup
 syn region	vimString	oneline keepend	start=+[^a-zA-Z>!\\@]'+lc=1 end=+'+
+" TODO: these appear to be Vim 5 era matches for syn region start/skip/end
+"   patterns and can be removed
 syn region	vimString	oneline	start=+=!+lc=1	skip=+\\\\\|\\!+ end=+!+	contains=@vimStringGroup
 syn region	vimString	oneline	start="=+"lc=1	skip="\\\\\|\\+" end="+"	contains=@vimStringGroup
 "syn region	vimString	oneline	start="\s/\s*\A"lc=1 skip="\\\\\|\\+" end="/"	contains=@vimStringGroup  " see tst45.vim
@@ -380,6 +382,11 @@ syn region	vimString start=+$"+ end=+"+ oneline contains=@vimStringGroup,vimStri
 syn region	vimStringInterpolationExpr matchgroup=vimOperParen start=+{+ end=+}+ oneline contains=vimFunc,vimFuncVar,vimOper,vimNotation,vimOperParen,vimString,vimVar
 syn match	vimStringInterpolationBrace "{{"
 syn match	vimStringInterpolationBrace "}}"
+
+syn region	vimString	contained	containedin=vimOper start=+$'+ end=+'+ skip=+\\\\\|\\'\|''+	contains=@vimContinue,vimStringInterpolationBrace,vimStringInterpolationExpr
+syn region	vimString	contained	containedin=vimOper start=+$"+ skip=/\\\\\|\\"\|\s*"\\ / end=+"+	contains=@vimContinue,@vimStringGroup,vimStringInterpolationBrace,vimStringInterpolationExpr
+syn region	vimString	contained	containedin=vimOper start=/'/ skip=/''/ end=/'/		contains=@vimContinue
+syn region	vimString	contained	containedin=vimOper start=/"/ skip=/\\\\\|\\"\|\s*"\\ / end=/"/	contains=@vimContinue,@vimStringGroup
 
 " Substitutions: {{{2
 " =============
@@ -636,7 +643,7 @@ syn region	vimSynRegion	contained keepend	matchgroup=vimGroupName start="\h\w*" 
 syn match	vimSynRegOpt	contained	"\%#=1\<\(conceal\(ends\)\=\|transparent\|contained\|excludenl\|skipempty\|skipwhite\|display\|keepend\|oneline\|extend\|skipnl\|fold\)\>"
 syn match	vimSynReg	contained	"\<\%(start\|skip\|end\)="	nextgroup=vimSynRegPat
 syn match	vimSynMtchGrp	contained	"matchgroup="	nextgroup=vimGroup,vimHLGroup
-syn region	vimSynRegPat	contained extend	start="\z([-`~!@#$%^&*_=+;:'",./?]\)"  skip=/\\\\\|\\\z1\|\n\s*\\\|\n\s*"\\ /  end="\z1"  contains=@vimSynRegPatGroup skipwhite nextgroup=vimSynPatMod,vimSynReg
+syn region	vimSynRegPat	contained extend	start="\z([-`~!@#$%^&*_=+;:'",./?]\)"  skip=/\\\\\|\\\z1/  end="\z1"  contains=@vimSynRegPatGroup skipwhite nextgroup=vimSynPatMod,vimSynReg
 syn match	vimSynPatMod	contained	"\%#=1\(hs\|ms\|me\|hs\|he\|rs\|re\)=[se]\([-+]\d\+\)\="
 syn match	vimSynPatMod	contained	"\%#=1\(hs\|ms\|me\|hs\|he\|rs\|re\)=[se]\([-+]\d\+\)\=," nextgroup=vimSynPatMod
 syn match	vimSynPatMod	contained	"lc=\d\+"
