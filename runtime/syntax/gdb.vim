@@ -2,8 +2,8 @@
 " Language:		GDB command files
 " Maintainer:		Doug Kearns <dougkearns@gmail.com>
 " Previous Maintainer:	Claudio Fleiner <claudio@fleiner.com>
-" Last Change:		2021 Nov 15
-"			Additional changes by Simon Sobisch
+" Last Change:		2025 Jun 29
+" Contributors:		Simon Sobisch
 
 " quit when a syntax file was already loaded
 if exists("b:current_syntax")
@@ -45,7 +45,7 @@ syn match    gdbStatement contained "\<comm\%[ands]\>" nextgroup=gdbBreakpointNu
 syn region  gdbMultilineStatement contained start="\<comm\%[ands]\>" matchgroup=gdbStatement end="^\s*\zsend\ze\s*$" contains=gdbStatement,gdbComment,gdbCommandsStatementKeyword transparent fold
 
 syn keyword gdbStatement contained cond[ition] nextgroup=@gdbConditionOption,gdbConditionBreakpointNumber skipwhite
-  syn match   gdbConditionEndOption contained "--"	     nextgroup=gdbExpression skipwhite
+  syn match   gdbConditionEndOption contained "--"           nextgroup=gdbExpression skipwhite
   syn match   gdbConditionOption    contained "-f\%[orce]\>" nextgroup=gdbConditionEndOption,gdbExpression skipwhite
   syn cluster gdbConditionOption contains=gdbConditionOption,gdbConditionEndOption
   syn match   gdbConditionBreakpointNumber contained "\<\d\+\>" contains=gdbBreakpointNumber nextgroup=gdbExpression skipwhite
@@ -81,9 +81,9 @@ syn keyword gdbStatement contained tc[atch] nextgroup=gdbCatchArgs skipwhite
 syn keyword gdbStatement contained thb[reak]
 syn keyword gdbStatement contained tr[ace] tp
 syn keyword gdbStatement contained wa[tch] nextgroup=@gdbWatchOption,gdbExpression skipwhite
-  syn match   gdbWatchEndOption contained "--"		    nextgroup=gdbExpression skipwhite
-  syn match   gdbWatchOption	contained "-l\%[ocation]\>" nextgroup=gdbWatchEndOption,gdbExpression skipwhite
-  syn cluster gdbWatchOption	contains=gdbWatchOption,gdbWatchEndOption
+  syn match   gdbWatchEndOption contained "--"              nextgroup=gdbExpression skipwhite
+  syn match   gdbWatchOption    contained "-l\%[ocation]\>" nextgroup=gdbWatchEndOption,gdbExpression skipwhite
+  syn cluster gdbWatchOption    contains=gdbWatchOption,gdbWatchEndOption
 
 " data {{{2
 syn keyword gdbStatement contained ag[ent-printf] nextgroup=gdbString
@@ -178,7 +178,7 @@ syn keyword gdbStatement contained set nextgroup=gdbSetArgs skipwhite
   syn keyword gdbSetArgs contained la[nguage] nextgroup=gdbSetLanguageValue skipwhite
     syn keyword gdbSetLanguageValue contained ada asm auto c d fortran go local minimal modula-2 objective-c opencl pascal rust
     syn keyword gdbSetLanguageValue contained unknown
-    syn match	gdbSetLanguageValue contained "\<c++\>"
+    syn match   gdbSetLanguageValue contained "\<c++\>"
   syn keyword gdbSetArgs contained arg[s] nextgroup=gdbSetStringValue skipwhite
   syn keyword gdbSetArgs contained cw[d] nextgroup=gdbSetOptionalFilenameValue skipwhite
   " TODO: worth including an architecture value?
@@ -310,13 +310,13 @@ syn keyword gdbStatement contained set nextgroup=gdbSetArgs skipwhite
   syn keyword gdbSetArgs contained rec[ord] rec nextgroup=gdbSetRecordArgs skipwhite
     syn keyword gdbSetRecordArgs contained btrace nextgroup=gdbSetRecordBtraceArgs skipwhite
       syn keyword gdbSetRecordBtraceArgs contained bts nextgroup=gdbSetRecordBtraceBtsArgs skipwhite
-	syn keyword gdbSetRecordBtraceBtsArgs contained buffer-size nextgroup=gdbSetUIntegerValue skipwhite
+        syn keyword gdbSetRecordBtraceBtsArgs contained buffer-size nextgroup=gdbSetUIntegerValue skipwhite
       syn keyword gdbSetRecordBtraceArgs contained cpu nextgroup=gdbSetRecordBtraceCpuArgs skipwhite
-	syn keyword gdbSetRecordBtraceCpuArgs contained auto none
+        syn keyword gdbSetRecordBtraceCpuArgs contained auto none
       syn keyword gdbSetRecordBtraceArgs contained pt nextgroup=gdbSetRecordBtracePtArgs skipwhite
-	syn keyword gdbSetRecordBtracePtArgs contained buffer-size nextgroup=gdbSetUIntegerValue skipwhite
+        syn keyword gdbSetRecordBtracePtArgs contained buffer-size nextgroup=gdbSetUIntegerValue skipwhite
       syn keyword gdbSetRecordBtraceArgs contained replay-memory-access nextgroup=gdbSetRecordBtraceReplayMemoryAccessValue skipwhite
-	syn keyword gdbSetRecordBtraceReplayMemoryAccessValue contained read-only read-write
+        syn keyword gdbSetRecordBtraceReplayMemoryAccessValue contained read-only read-write
     syn keyword gdbSetRecordArgs contained full nextgroup=gdbSetRecordFullArgs skipwhite
       syn keyword gdbSetRecordFullArgs contained insn-number-max nextgroup=gdbSetUIntegerValue skipwhite
       syn keyword gdbSetRecordFullArgs contained memory-query
@@ -708,7 +708,7 @@ syn keyword gdbStatement contained mai[ntenance] mt nextgroup=gdbMaintenanceArgs
     syn keyword gdbMaintenanceSetArgs contained bfd-sharing nextgroup=gdbSetBooleanValue skipwhite
     syn keyword gdbMaintenanceSetArgs contained btrace nextgroup=gdbMaintenanceSetBtraceArgs skipwhite
       syn keyword gdbMaintenanceSetBtraceArgs contained pt nextgroup=gdbMaintenanceSetBtracePtArgs skipwhite
-	syn keyword gdbMaintenanceSetBtracePtArgs contained skip-pad nextgroup=gdbSetBooleanValue skipwhite
+        syn keyword gdbMaintenanceSetBtracePtArgs contained skip-pad nextgroup=gdbSetBooleanValue skipwhite
     syn keyword gdbMaintenanceSetArgs contained catch-demangler-crashes nextgroup=gdbSetBooleanValue skipwhite
     syn keyword gdbMaintenanceSetArgs contained check-libthread-db nextgroup=gdbSetBooleanValue skipwhite
     syn keyword gdbMaintenanceSetArgs contained demangler-warning nextgroup=gdbMaintenanceSetDemanglerWarningArgs skipwhite
@@ -768,12 +768,12 @@ syn keyword gdbStatement contained compa[re-sections]
 " syn keyword gdbCompile contained compi[le] exp[ression] nextgroup=gdbCompileArgs skipwhite
 syn match   gdbCompile contained "\<\%(compi\%[le]\|exp\%[ression]\)\>" nextgroup=gdbCompileArgs skipwhite
   syn keyword gdbCompileArgs contained c[ode] nextgroup=gdbCompileCodeOptions,@gdbC skipwhite
-    syn match	gdbCompileCodeOptions contained "--\|\%(-r\%[aw]\)\(\s\+--\)\=" nextgroup=@gdbC skipwhite
+    syn match   gdbCompileCodeOptions contained "--\|\%(-r\%[aw]\)\(\s\+--\)\=" nextgroup=@gdbC skipwhite
   syn keyword gdbCompileArgs contained f[ile] nextgroup=gdbCompileCodeOptions skipwhite
   syn keyword gdbCompileArgs contained p[rint] nextgroup=gdbCompilePrintOptions,gdbCompilePrintFormat,@gdbC skipwhite
     " TODO: proper option support
-    syn match	gdbCompilePrintOptions contained "\%(-\w\+\%(\s\+\w\+\)\=\s\+\)*--" nextgroup=@gdbC,gdbCompilePrintFormat skipwhite
-    syn match	gdbCompilePrintFormat contained "/[oxdutfaicsz]" nextgroup=@gdbC skipwhite
+    syn match   gdbCompilePrintOptions contained "\%(-\w\+\%(\s\+\w\+\)\=\s\+\)*--" nextgroup=@gdbC,gdbCompilePrintFormat skipwhite
+    syn match   gdbCompilePrintFormat contained "/[oxdutfaicsz]" nextgroup=@gdbC skipwhite
 
 syn region  gdbStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+c\%[ode]\ze\s" skip="\\$" end="$" contains=gdbCompile,@gdbC keepend transparent fold
 syn region  gdbMultilineStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+c\%[ode]\%(\s\+-r\%[aw]\)\=\%(\s\+--\)\=\s*$" matchgroup=gdbStatement end="^\s*\zsend\ze\s*$" contains=gdbCompile,@gdbC transparent fold
@@ -914,17 +914,17 @@ syn keyword gdbStatement contained add-auto-load-sc[ripts-directory] nextgroup=g
 syn keyword gdbStatement contained adi nextgroup=gdbAdiArgs skipwhite
   syn keyword gdbAdiArgs contained a[ssign] e[xamine] x
 
-syn keyword gdbStatement   contained al[ias]		      nextgroup=gdbAliasOption,gdbAliasEndOption,gdbAliasName skipwhite
-  syn match   gdbAliasEndOption contained "--"		      nextgroup=gdbAliasName skipwhite
-  syn match   gdbAliasOption	contained "-a\>"	      nextgroup=gdbAliasEndOption,gdbAliasName skipwhite
-  syn match   gdbAliasName	contained "\<\w\%(\w\|-\)*\>" nextgroup=gdbAliasEquals skipwhite
-  syn match   gdbAliasEquals	contained "="		      nextgroup=@gdbStatements skipwhite
+syn keyword gdbStatement   contained al[ias]                  nextgroup=gdbAliasOption,gdbAliasEndOption,gdbAliasName skipwhite
+  syn match   gdbAliasEndOption contained "--"                nextgroup=gdbAliasName skipwhite
+  syn match   gdbAliasOption    contained "-a\>"              nextgroup=gdbAliasEndOption,gdbAliasName skipwhite
+  syn match   gdbAliasName      contained "\<\w\%(\w\|-\)*\>" nextgroup=gdbAliasEquals skipwhite
+  syn match   gdbAliasEquals    contained "="                 nextgroup=@gdbStatements skipwhite
   hi def link gdbAliasName Function
 
 syn keyword gdbStatement contained apr[opos]
 
 " TODO: optionally highlight define/end as normal commands and only the
-syn region  gdbDefine	 contained matchgroup=gdbFuncDef start="\<def\%[ine]\>.*" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
+syn region  gdbDefine    contained matchgroup=gdbFuncDef start="\<def\%[ine]\>.*" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
 " syn region  gdbDefine    contained matchgroup=gdbStatement start="\<def\%[ine]\>" end="^\s*\zsend\ze\s*$" contains=TOP transparent fold
 syn keyword gdbStatement contained define-[prefix]
 syn keyword gdbStatement contained dem[angle]
