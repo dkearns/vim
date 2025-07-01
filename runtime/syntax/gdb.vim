@@ -924,12 +924,15 @@ syn keyword gdbStatement   contained al[ias]                  nextgroup=gdbAlias
 syn keyword gdbStatement contained apr[opos]
 
 " TODO: optionally highlight define/end as normal commands and only the
-syn region  gdbDefine    contained matchgroup=gdbFuncDef start="\<def\%[ine]\>.*" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
-" syn region  gdbDefine    contained matchgroup=gdbStatement start="\<def\%[ine]\>" end="^\s*\zsend\ze\s*$" contains=TOP transparent fold
+  " syn region  gdbDefine    contained matchgroup=gdbFuncDef start="\<def\%[ine]\>.*" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
+syn region  gdbDefine    contained matchgroup=gdbStatement start="\<def\%[ine]\>" end="^\s*\zsend\ze\s*$" contains=TOP transparent fold
 syn keyword gdbStatement contained define-[prefix]
 syn keyword gdbStatement contained dem[angle]
 
-syn region  gdbDocument  contained matchgroup=gdbFuncDef start="\<doc\%[ument]\>.*$" end="^\s*\zsend\ze\s*$" fold
+  " syn region  gdbDocument  contained matchgroup=gdbFuncDef start="\<doc\%[ument]\>.*$" end="^\s*\zsend\ze\s*$" fold
+syn region  gdbDocument  contained matchgroup=gdbStatement start="\<doc\%[ument]\>" end="^\s*\zsend\ze\s*$" fold contains=gdbDocumentCommand
+" TODO: better name, too slow?
+syn match gdbDocumentCommand contained "\%(^\s*\<doc\%[ument]\>\s\+\)\@16<=[[:alpha:]_][[:alnum:]_-]*"
 
 syn keyword gdbStatement contained don[t-repeat]
 syn keyword gdbStatement contained down-[silently]
@@ -1407,10 +1410,10 @@ syn match   gdbArchitecture contained "\<riscv:rv64\>"
 syn match   gdbArchitecture contained "\<riscv:rv32\>"
 
 " Sync {{{1
-if !exists("gdb_minlines")
-  let gdb_minlines = 10
-endif
-exec "syn sync ccomment gdbComment minlines=" .. gdb_minlines
+exec "syn sync minlines=" .. get(g:, "gdb_minlines", 100)
+exec "syn sync maxlines=" .. get(g:, "gdb_minlines", 200)
+syn sync ccomment gdbComment
+syn sync linecont "\\$"
 
 " Default Highlighting {{{1
 " Only when an item doesn't have highlighting yet
