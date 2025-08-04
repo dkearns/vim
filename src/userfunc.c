@@ -1017,7 +1017,6 @@ get_function_body(
     {
 	char_u	*theline;
 	char_u	*p;
-	char_u	*arg;
 
 	if (KeyTyped)
 	{
@@ -1284,120 +1283,105 @@ get_function_body(
 	    // Check for ":append", ":change", ":insert".  Not for :def.
 	    p = skip_range(p, FALSE, NULL);
 	    if (!vim9_function
-		&& ((p[0] == 'a' && (!ASCII_ISALPHA(p[1]) || p[1] == 'p'))
-		    || (p[0] == 'c'
-			&& (!ASCII_ISALPHA(p[1]) || (p[1] == 'h'
-				&& (!ASCII_ISALPHA(p[2]) || (p[2] == 'a'
-					&& (STRNCMP(&p[3], "nge", 3) != 0
-					    || !ASCII_ISALPHA(p[6])))))))
-		    || (p[0] == 'i'
-			&& (!ASCII_ISALPHA(p[1]) || (p[1] == 'n'
-				&& (!ASCII_ISALPHA(p[2])
-				    || (p[2] == 's'
-					&& (!ASCII_ISALPHA(p[3])
-						|| p[3] == 'e'))))))))
+		    && (checkforcmd(&p, "append", 1)
+			|| checkforcmd(&p, "change", 1)
+			|| checkforcmd(&p, "insert", 1)))
 		skip_until = vim_strnsave((char_u *)".", 1);
 
 	    // Check for ":python <<EOF", ":tcl <<EOF", etc.
-	    arg = skipwhite(skiptowhite(p));
-	    if (arg[0] == '<' && arg[1] =='<'
-		    && ((p[0] == 'p' && p[1] == 'y'
-				    && (!ASCII_ISALNUM(p[2]) || p[2] == 't'
-					|| ((p[2] == '3' || p[2] == 'x')
-						   && !ASCII_ISALPHA(p[3]))))
-			|| (p[0] == 'p' && p[1] == 'e'
-				    && (!ASCII_ISALPHA(p[2]) || p[2] == 'r'))
-			|| (p[0] == 't' && p[1] == 'c'
-				    && (!ASCII_ISALPHA(p[2]) || p[2] == 'l'))
-			|| (p[0] == 'l' && p[1] == 'u' && p[2] == 'a'
-				    && !ASCII_ISALPHA(p[3]))
-			|| (p[0] == 'r' && p[1] == 'u' && p[2] == 'b'
-				    && (!ASCII_ISALPHA(p[3]) || p[3] == 'y'))
-			|| (p[0] == 'm' && p[1] == 'z'
-				    && (!ASCII_ISALPHA(p[2]) || p[2] == 's'))
-			))
+	    else if (checkforcmd(&p, "lua", 3)
+		    || checkforcmd(&p, "mzscheme", 2)
+		    || checkforcmd(&p, "perl", 2)
+		    || checkforcmd(&p, "py3", 3)
+		    || checkforcmd(&p, "python3", 7)
+		    || checkforcmd(&p, "pyx", 3)
+		    || checkforcmd(&p, "pythonx", 7)
+		    // check after :py3/:python3 - checkforcmd() considers the 3 an arg when testing :py[thon]
+		    || checkforcmd(&p, "python", 2)
+		    || checkforcmd(&p, "ruby", 3)
+		    || checkforcmd(&p, "tcl", 3))
 	    {
-		// ":python <<" continues until a dot, like ":append"
-		p = skipwhite(arg + 2);
-		if (STRNCMP(p, "trim", 4) == 0
-			&& (p[4] == NUL || VIM_ISWHITE(p[4])))
+		// ":python <<" continues until a dot, like ":append", but "trim" is also respected
+		if (STRNCMP(p, "<<", 2) == 0)
 		{
-		    // Ignore leading white space.
-		    p = skipwhite(p + 4);
-		    heredoc_trimmedlen = skipwhite(theline) - theline;
-		    heredoc_trimmed = vim_strnsave(theline, heredoc_trimmedlen);
-		    if (heredoc_trimmed == NULL)
-			heredoc_trimmedlen = 0;
+
+		    p = skipwhite(p + 2);
+		    if (STRNCMP(p, "trim", 4) == 0
+			    && (p[4] == NUL || VIM_ISWHITE(p[4])))
+		    {
+			// Ignore leading white space.
+			p = skipwhite(p + 4);
+			heredoc_trimmedlen = skipwhite(theline) - theline;
+			heredoc_trimmed = vim_strnsave(theline, heredoc_trimmedlen);
+			if (heredoc_trimmed == NULL)
+			    heredoc_trimmedlen = 0;
+		    }
+		    if (*p == NUL)
+			skip_until = vim_strnsave((char_u *)".", 1);
+		    else
+			skip_until = vim_strnsave(p, skiptowhite(p) - p);
+		    getline_options = GETLINE_NONE;
+		    is_heredoc = TRUE;
+		    if (vim9_function && nesting == 0)
+			heredoc_concat_len = newlines->ga_len + 1;
 		}
-		if (*p == NUL)
-		    skip_until = vim_strnsave((char_u *)".", 1);
-		else
-		    skip_until = vim_strnsave(p, skiptowhite(p) - p);
-		getline_options = GETLINE_NONE;
-		is_heredoc = TRUE;
-		if (vim9_function && nesting == 0)
-		    heredoc_concat_len = newlines->ga_len + 1;
 	    }
 
-	    if (!is_heredoc)
+	    // Check for ":cmd v =<< [trim] EOF"
+	    //       and ":cmd [a, b] =<< [trim] EOF"
+	    //       and "lines =<< [trim] EOF" for Vim9
+	    // Where "cmd" can be "let", "var", "final" or "const".
+	    else if (checkforcmd(&p, "let", 2)
+		    || checkforcmd(&p, "var", 3)
+		    || checkforcmd(&p, "final", 5)
+		    || checkforcmd(&p, "const", 5)
+		    || vim9_function)
 	    {
-		// Check for ":cmd v =<< [trim] EOF"
-		//       and ":cmd [a, b] =<< [trim] EOF"
-		//       and "lines =<< [trim] EOF" for Vim9
-		// Where "cmd" can be "let", "var", "final" or "const".
-		arg = p;
-		if (checkforcmd(&arg, "let", 2)
-			|| checkforcmd(&arg, "var", 3)
-			|| checkforcmd(&arg, "final", 5)
-			|| checkforcmd(&arg, "const", 5)
-			|| vim9_function)
+		int		save_sc_version = current_sctx.sc_version;
+		int		var_count = 0;
+		int		semicolon = 0;
+
+		current_sctx.sc_version
+				 = vim9_function ? SCRIPT_VERSION_VIM9 : 1;
+		p = skip_var_list(p, TRUE, &var_count, &semicolon,
+								     TRUE);
+		if (p != NULL)
+		    p = skipwhite(p);
+		current_sctx.sc_version = save_sc_version;
+		if (p != NULL && STRNCMP(p, "=<<", 3) == 0)
 		{
-		    int		save_sc_version = current_sctx.sc_version;
-		    int		var_count = 0;
-		    int		semicolon = 0;
+		    int has_trim = FALSE;
 
-		    current_sctx.sc_version
-				     = vim9_function ? SCRIPT_VERSION_VIM9 : 1;
-		    arg = skip_var_list(arg, TRUE, &var_count, &semicolon,
-									 TRUE);
-		    if (arg != NULL)
-			arg = skipwhite(arg);
-		    current_sctx.sc_version = save_sc_version;
-		    if (arg != NULL && STRNCMP(arg, "=<<", 3) == 0)
+		    p = skipwhite(p + 3);
+		    while (TRUE)
 		    {
-			int has_trim = FALSE;
-
-			p = skipwhite(arg + 3);
-			while (TRUE)
+			if (STRNCMP(p, "trim", 4) == 0
+				&& (p[4] == NUL || VIM_ISWHITE(p[4])))
 			{
-			    if (STRNCMP(p, "trim", 4) == 0
-				    && (p[4] == NUL || VIM_ISWHITE(p[4])))
-			    {
-				// Ignore leading white space.
-				p = skipwhite(p + 4);
-				has_trim = TRUE;
-				continue;
-			    }
-			    if (STRNCMP(p, "eval", 4) == 0
-				    && (p[4] == NUL || VIM_ISWHITE(p[4])))
-			    {
-				// Ignore leading white space.
-				p = skipwhite(p + 4);
-				continue;
-			    }
-			    break;
+			    // Ignore leading white space.
+			    p = skipwhite(p + 4);
+			    has_trim = TRUE;
+			    continue;
 			}
-			if (has_trim)
+			if (STRNCMP(p, "eval", 4) == 0
+				&& (p[4] == NUL || VIM_ISWHITE(p[4])))
 			{
-			    heredoc_trimmedlen = skipwhite(theline) - theline;
-			    heredoc_trimmed = vim_strnsave(theline, heredoc_trimmedlen);
-			    if (heredoc_trimmed == NULL)
-				heredoc_trimmedlen = 0;
+			    // Ignore leading white space.
+			    p = skipwhite(p + 4);
+			    continue;
 			}
-			skip_until = vim_strnsave(p, skiptowhite(p) - p);
-			getline_options = GETLINE_NONE;
-			is_heredoc = TRUE;
+			break;
 		    }
+		    if (has_trim)
+		    {
+			heredoc_trimmedlen = skipwhite(theline) - theline;
+			heredoc_trimmed = vim_strnsave(theline, heredoc_trimmedlen);
+			if (heredoc_trimmed == NULL)
+			    heredoc_trimmedlen = 0;
+		    }
+		    skip_until = vim_strnsave(p, skiptowhite(p) - p);
+		    getline_options = GETLINE_NONE;
+		    is_heredoc = TRUE;
 		}
 	    }
 	}

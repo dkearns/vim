@@ -1075,4 +1075,105 @@ func Test_func_return_in_try_verbose()
   delfunc TryReturnOverlongString
 endfunc
 
+" Issue #17893
+func Test_function_heredoc_scanning()
+  " tail digits are not allowed for script-interface heredocs - no argument
+  " is allowed before "<<" and some variants include a tail digit in the name,
+  " e.g., :python3
+  let text =<< trim END
+    func NoHeredocCommands()
+      apple
+      channel
+      inset
+      pythagoras <<
+      pert <<
+
+      appends
+        " changes
+      inserts
+
+      luas <<
+      mzschemes <<
+      perls <<
+      pythons <<
+      python3s <<
+      pythonxs <<
+      rubys <<
+      tcls <<
+
+      lua9 <<
+      mz9 <<
+      mzs9 <<
+      mzsc9 <<
+      mzsch9 <<
+      mzsche9 <<
+      mzschem9 <<
+      pe9 <<
+      per9 <<
+      perl9 <<
+      py9 <<
+      pyt9 <<
+      pyth9 <<
+      pytho9 <<
+      python9 <<
+      rub9 <<
+      ruby9 <<
+      tcl9 <<
+
+      luax <<
+      mzschemex <<
+        " pythonx <<
+      perlx <<
+      rubyx <<
+      tclx <<
+    endfunc
+  END
+  call writefile(text, 'Xnoheredoccommands', 'D')
+  source Xnoheredoccommands
+  call assert_true(exists("*NoHeredocCommands"))
+
+  " tail digit is allowed here as an illegal argument checked at runtime
+  let text =<< trim END
+    func InsertHeredocCommands()
+      a9
+.
+      ap9
+.
+      app9
+.
+      appe9
+.
+      appen9
+.
+      append9
+.
+      c9
+.
+      ch9
+.
+      cha9
+.
+      chang9
+.
+      change9
+.
+      i9
+.
+      in9
+.
+      ins9
+.
+      inse9
+.
+      inser9
+.
+      insert9
+.
+    endfunc
+  END
+  call writefile(text, 'Xinsertheredoccommands', 'D')
+  source Xinsertheredoccommands
+  call assert_true(exists("*InsertHeredocCommands"))
+endfunc
+
 " vim: shiftwidth=2 sts=2 expandtab
