@@ -5,6 +5,8 @@
 " Last Change:		2025 Sep 16
 " Contributors:		Simon Sobisch
 
+" WARNING: the group names are NOT stable and may change at any time
+
 " quit when a syntax file was already loaded
 if exists("b:current_syntax")
   finish
@@ -40,9 +42,9 @@ syn match    gdbCommand contained "\<comm\%[ands]\>" nextgroup=gdbBreakpointNumb
   syn cluster gdbBreakpointNumbers contains=gdbBreakpointNumber,gdbBreakpointRange
   syn match   gdbBreakpointCount contained "-\@1<!\<\d\+\>" nextgroup=@gdbBreakpointNumbers skipwhite
   " TODO: better name
-  syn keyword gdbCommandsStatementKeyword silent contained
-  hi def link gdbCommandsStatementKeyword gdbCommand
-syn region  gdbMultilineStatement contained start="\<comm\%[ands]\>" matchgroup=gdbCommand end="^\s*\zsend\ze\s*$" contains=gdbCommand,gdbComment,gdbCommandsStatementKeyword transparent fold
+  syn keyword gdbCommandsKeyword silent contained
+  hi def link gdbCommandsKeyword gdbCommand
+syn region  gdbMultilineCommand contained start="\<comm\%[ands]\>" matchgroup=gdbCommand end="^\s*\zsend\ze\s*$" contains=gdbCommand,gdbComment,gdbCommandsKeyword transparent fold
 
 syn keyword gdbCommand contained cond[ition] nextgroup=@gdbConditionOption,gdbConditionBreakpointNumber skipwhite
   syn match   gdbConditionEndOption contained "--"           nextgroup=gdbExpression skipwhite
@@ -183,7 +185,6 @@ syn keyword gdbCommand contained set nextgroup=gdbSetArgs skipwhite
   syn keyword gdbSetArgs contained cw[d] nextgroup=gdbSetOptionalFilenameValue skipwhite
   " TODO: worth including an architecture value?
   syn keyword gdbSetArgs contained arc[hitecture] proc[essor] nextgroup=gdbArchitecture skipwhite
-    hi def link gdbArchitecture Constant
   syn keyword gdbSetArgs contained env[ironment] " VAR VALUE
   syn keyword gdbSetArgs contained lis[tsize] nextgroup=gdbSetIntegerValue skipwhite
   " TODO: auto as constant?
@@ -466,7 +467,6 @@ syn keyword gdbCommand contained set nextgroup=gdbSetArgs skipwhite
       syn match  gdbStringEscape "\\[\\ efnprtvw]" containedin=gdbSetExtendedPromptValue
       syn match  gdbStringEscape "\\[fpt]{[^}]\+}" containedin=gdbSetExtendedPromptValue
       syn match  gdbStringEscape "\\\[[^]]\+]"     containedin=gdbSetExtendedPromptValue
-    hi def link gdbSetExtendedPromptValue gdbString
   syn keyword gdbSetArgs contained extens[ion-language] nextgroup=gdbSetStringNoEscapeValue skipwhite
   syn keyword gdbSetArgs contained fi[lename-display] nextgroup=gdbSetFilenameDisplayValue skipwhite
   syn keyword gdbSetFilenameDisplayValue contained absolute basename relative
@@ -637,9 +637,8 @@ syn keyword gdbCommand contained set nextgroup=gdbSetArgs skipwhite
 
 syn keyword gdbCommand contained und[isplay]
 syn keyword gdbCommand contained wha[tis]
-syn match gdbWithStatement contained "\<\%(wit\%[h]\|w\)\>" nextgroup=gdbSetArgs skipwhite
-syn region gdbWrappedStatement contained start="\<\%(wit\%[h]\|w\)\>" matchgroup=gdbCommandAnchor end="--" end="$" skip="\\$" transparent contains=gdbWithStatement,gdbLineContinuation nextgroup=gdbCommand skipwhite keepend
-hi def link gdbWithStatement gdbCommand
+syn match gdbWith contained "\<\%(wit\%[h]\|w\)\>" nextgroup=gdbSetArgs skipwhite
+syn region gdbWrappedCommand contained start="\<\%(wit\%[h]\|w\)\>" matchgroup=gdbCommandAnchor end="--" end="$" skip="\\$" transparent contains=gdbWith,gdbLineContinuation nextgroup=gdbCommand skipwhite keepend
 syn keyword gdbCommand contained x nextgroup=gdbFormat
 syn match   gdbFormat contained "/\%(-\=\d*\)\=[oxdutfaicsz]\=[bhwg]\="
 syn match   gdbFormat contained "/\%(-\=\d*\)\=[bhwg]\=[oxdutfaicsz]\="
@@ -776,9 +775,9 @@ syn match   gdbCompile contained "\<\%(compi\%[le]\|exp\%[ression]\)\>" nextgrou
     syn match   gdbCompilePrintFormat contained "/[oxdutfaicsz]" nextgroup=@gdbC skipwhite
 
 syn region  gdbCommand contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+c\%[ode]\ze\s" skip="\\$" end="$" contains=gdbCompile,@gdbC keepend transparent fold
-syn region  gdbMultilineStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+c\%[ode]\%(\s\+-r\%[aw]\)\=\%(\s\+--\)\=\s*$" matchgroup=gdbCommand end="^\s*\zsend\ze\s*$" contains=gdbCompile,@gdbC transparent fold
+syn region  gdbMultilineCommand contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+c\%[ode]\%(\s\+-r\%[aw]\)\=\%(\s\+--\)\=\s*$" matchgroup=gdbCommand end="^\s*\zsend\ze\s*$" contains=gdbCompile,@gdbC transparent fold
 syn region  gdbCommand contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+p\%[rint]\ze\s" skip="\\$" end="$" contains=gdbCompile,@gdbC keepend transparent fold
-syn region  gdbMultilineStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+p\%[rint]\%(\%(\s\+-.*\)\=\s\+--\)\=\%(\s\+/[a-z]\)\=\s*$" matchgroup=gdbCommand end="^\s*\zsend\ze\s*$" contains=gdbCompile,@gdbC transparent fold
+syn region  gdbMultilineCommand contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+p\%[rint]\%(\%(\s\+-.*\)\=\s\+--\)\=\%(\s\+/[a-z]\)\=\s*$" matchgroup=gdbCommand end="^\s*\zsend\ze\s*$" contains=gdbCompile,@gdbC transparent fold
 
 syn keyword gdbCommand contained compl[ete]
 
@@ -788,7 +787,7 @@ unlet b:current_syntax
 syn keyword gdbCommand contained guile-repl
 syn keyword gdbCommand contained gr
 syn region  gdbCommand contained matchgroup=gdbCommand start="\<gu\%(ile\)\=\ze\s" skip="\\$" end="$" contains=@gdbGuile keepend transparent fold
-syn region  gdbMultilineStatement contained matchgroup=gdbCommand start="\<gu\%(ile\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbGuile transparent fold
+syn region  gdbMultilineCommand contained matchgroup=gdbCommand start="\<gu\%(ile\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbGuile transparent fold
 
 syn keyword gdbCommand contained mo[nitor]
 
@@ -796,7 +795,7 @@ syn keyword gdbCommand contained mo[nitor]
 syn include @gdbPython syntax/python.vim
 unlet b:current_syntax
 syn region  gdbCommand contained matchgroup=gdbCommand start="\<py\%(thon\)\=\ze\s" start="\<\%(python-interactive\|pi\)\ze\s" skip="\\$" end="$" contains=@gdbPython keepend transparent fold
-syn region  gdbMultilineStatement contained matchgroup=gdbCommand start="\<py\%(thon\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbPython transparent fold
+syn region  gdbMultilineCommand contained matchgroup=gdbCommand start="\<py\%(thon\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbPython transparent fold
 syn match   gdbCommand contained "\<\%(python-interactive\|pi\)\s*$"
 " }}}
 
@@ -919,20 +918,14 @@ syn keyword gdbCommand contained al[ias] nextgroup=gdbAliasOption,gdbAliasEndOpt
   syn match   gdbAliasOption    contained "-a\>"              nextgroup=gdbAliasEndOption,gdbAliasName skipwhite
   syn match   gdbAliasName      contained "\<\w\%(\w\|-\)*\>" nextgroup=gdbAliasEquals skipwhite
   syn match   gdbAliasEquals    contained "="                 nextgroup=@gdbCommands skipwhite
-  hi def link gdbAliasName Function
 
 syn keyword gdbCommand contained apr[opos]
 
-" TODO: optionally highlight define/end as normal commands and only the
-  " syn region  gdbDefine    contained matchgroup=gdbFuncDef start="\<def\%[ine]\>.*" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
 syn region  gdbDefine  contained matchgroup=gdbCommand start="\<def\%[ine]\>" end="^\s*\zsend\ze\s*$" contains=TOP transparent fold
 syn keyword gdbCommand contained define-[prefix]
 syn keyword gdbCommand contained dem[angle]
 
-  " syn region  gdbDocument  contained matchgroup=gdbFuncDef start="\<doc\%[ument]\>.*$" end="^\s*\zsend\ze\s*$" fold
-syn region  gdbDocument  contained matchgroup=gdbCommand start="\<doc\%[ument]\>" end="^\s*\zsend\ze\s*$" fold contains=gdbDocumentCommand
-" TODO: better name, too slow?
-syn match gdbDocumentCommand contained "\%(^\s*\<doc\%[ument]\>\s\+\)\@16<=[[:alpha:]_][[:alnum:]_-]*"
+syn region  gdbDocument contained matchgroup=gdbCommand start="\<doc\%[ument]\>" end="^\s*\zsend\ze\s*$" fold contains=gdbDocumentCommand
 
 syn keyword gdbCommand contained don[t-repeat]
 syn keyword gdbCommand contained down-[silently]
@@ -1019,7 +1012,7 @@ syn keyword gdbCommand contained go[to-bookmark]
 " Command syntax {{{1
 syn keyword gdbPrefix contained server nextgroup=gdbCommand skipwhite
 
-syn cluster gdbCommands contains=gdbCommand,gdbMultilineStatement,gdbCompile,gdbDefine,gdbDocument,gdbIf,gdbWhile,gdbPrefix,gdbWrappedStatement
+syn cluster gdbCommands contains=gdbCommand,gdbMultilineCommand,gdbCompile,gdbDefine,gdbDocument,gdbIf,gdbWhile,gdbPrefix,gdbWrappedCommand
 
 syn match   gdbCommandAnchor "^" nextgroup=@gdbCommands skipwhite
 " TODO: give higher priority than \\ in unquoted strings as \\$ matches \ escape of first char on following line
@@ -1420,12 +1413,13 @@ syn sync linecont "\\$"
 hi def link gdbCompile		gdbCommand
 hi def link gdbFuncDef		Function
 hi def link gdbComment		Comment
-hi def link gdbCommand	Statement
+hi def link gdbCommand		Statement
 hi def link gdbPrefix		gdbCommand
 hi def link gdbString		String
 hi def link gdbStringEscape	SpecialChar
 hi def link gdbCharacter	Character
 hi def link gdbVariable		Identifier
+hi def link gdbWith		gdbCommand
 
 " Command options {{{2
 hi def link gdbFormat				Special
@@ -1580,6 +1574,7 @@ hi def link gdbSetFilenameValue			gdbSetValue
 hi def link gdbSetOptionalFilenameValue		gdbSetValue
 hi def link gdbSetStringValue			gdbString
 hi def link gdbSetStringNoEscapeValue		gdbString
+hi def link gdbSetExtendedPromptValue		gdbString
 
 " Enum values {{{3
 hi def link gdbSetAdaSourceCharsetValue		      gdbSetValue
@@ -1630,6 +1625,8 @@ hi def link gdbSetTuiBorderKindValue		      gdbSetValue
 hi def link gdbSetTuiBorderModeValue		      gdbSetValue
 " }}}2
 
+hi def link gdbAliasName	Function
+hi def link gdbArchitecture	Constant
 hi def link gdbWindowName	Constant
 hi def link gdbBreakpointCount	Number
 hi def link gdbBreakpointNumber	Constant
