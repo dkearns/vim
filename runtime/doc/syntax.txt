@@ -1887,7 +1887,7 @@ group to make them easier to see.
 GDB						*gdb.vim* *ft-gdb-syntax*
 
 The GDB syntax file provides syntax |folding| (see |:syn-fold|) for comments
-and block statements. This can be enabled with
+and block statements. This can be enabled with: >
 
 	:set foldmethod=syntax
 
