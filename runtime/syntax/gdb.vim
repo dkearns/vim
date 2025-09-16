@@ -2,7 +2,7 @@
 " Language:		GDB command files
 " Maintainer:		Doug Kearns <dougkearns@gmail.com>
 " Previous Maintainer:	Claudio Fleiner <claudio@fleiner.com>
-" Last Change:		2025 Jun 29
+" Last Change:		2025 Sep 16
 " Contributors:		Simon Sobisch
 
 " quit when a syntax file was already loaded
@@ -25,14 +25,14 @@ syn region  gdbExpression contained start="\S" skip="\\$" end="$" contains=@gdbC
 " Commands {{{1
 
 " breakpoints {{{2
-syn keyword gdbStatement contained aw[atch] nextgroup=@gdbWatchOption,gdbExpression skipwhite
-syn keyword gdbStatement contained b[reak]
-syn keyword gdbStatement contained break-[range]
-syn keyword gdbStatement contained cat[ch] nextgroup=gdbCatchArgs skipwhite
+syn keyword gdbCommand contained aw[atch] nextgroup=@gdbWatchOption,gdbExpression skipwhite
+syn keyword gdbCommand contained b[reak]
+syn keyword gdbCommand contained break-[range]
+syn keyword gdbCommand contained cat[ch] nextgroup=gdbCatchArgs skipwhite
   syn keyword gdbCatchArgs contained assert catch exception exec fork handlers load rethrow signal syscall throw unload vfork
-syn keyword gdbStatement contained cl[ear] cl
+syn keyword gdbCommand contained cl[ear] cl
 
-syn match    gdbStatement contained "\<comm\%[ands]\>" nextgroup=gdbBreakpointNumber,gdbBreakpointRange skipwhite
+syn match    gdbCommand contained "\<comm\%[ands]\>" nextgroup=gdbBreakpointNumber,gdbBreakpointRange skipwhite
   " TODO: move this and generalise to idlist or similar?  Where else are id
   " numbers and ranges used? Breakpoints include catchpoints and watchpoints.
   syn match   gdbBreakpointNumber contained "\<\d\+\>" nextgroup=gdbBreakpointNumber,gdbBreakpointRange skipwhite
@@ -41,85 +41,85 @@ syn match    gdbStatement contained "\<comm\%[ands]\>" nextgroup=gdbBreakpointNu
   syn match   gdbBreakpointCount contained "-\@1<!\<\d\+\>" nextgroup=@gdbBreakpointNumbers skipwhite
   " TODO: better name
   syn keyword gdbCommandsStatementKeyword silent contained
-  hi def link gdbCommandsStatementKeyword gdbStatement
-syn region  gdbMultilineStatement contained start="\<comm\%[ands]\>" matchgroup=gdbStatement end="^\s*\zsend\ze\s*$" contains=gdbStatement,gdbComment,gdbCommandsStatementKeyword transparent fold
+  hi def link gdbCommandsStatementKeyword gdbCommand
+syn region  gdbMultilineStatement contained start="\<comm\%[ands]\>" matchgroup=gdbCommand end="^\s*\zsend\ze\s*$" contains=gdbCommand,gdbComment,gdbCommandsStatementKeyword transparent fold
 
-syn keyword gdbStatement contained cond[ition] nextgroup=@gdbConditionOption,gdbConditionBreakpointNumber skipwhite
+syn keyword gdbCommand contained cond[ition] nextgroup=@gdbConditionOption,gdbConditionBreakpointNumber skipwhite
   syn match   gdbConditionEndOption contained "--"           nextgroup=gdbExpression skipwhite
   syn match   gdbConditionOption    contained "-f\%[orce]\>" nextgroup=gdbConditionEndOption,gdbExpression skipwhite
   syn cluster gdbConditionOption contains=gdbConditionOption,gdbConditionEndOption
   syn match   gdbConditionBreakpointNumber contained "\<\d\+\>" contains=gdbBreakpointNumber nextgroup=gdbExpression skipwhite
 
-syn keyword gdbStatement contained del[ete] del d nextgroup=@gdbBreakpointNumbers,gdbDeleteArgs skipwhite
+syn keyword gdbCommand contained del[ete] del d nextgroup=@gdbBreakpointNumbers,gdbDeleteArgs skipwhite
   syn keyword gdbDeleteArgs contained breakpoints nextgroup=@gdbBreakpointNumbers skipwhite
   syn keyword gdbDeleteArgs contained tracepoints tr nextgroup=@gdbBreakpointNumbers skipwhite
   syn keyword gdbDeleteArgs contained bookmark checkpoint display mem tvariable
-syn keyword gdbStatement contained dis[able] disa dis nextgroup=@gdbBreakpointNumbers,gdbDisableArgs skipwhite
+syn keyword gdbCommand contained dis[able] disa dis nextgroup=@gdbBreakpointNumbers,gdbDisableArgs skipwhite
   syn keyword gdbDisableArgs contained breakpoints nextgroup=@gdbBreakpointNumbers skipwhite
   syn keyword gdbDisableArgs contained display frame-filter mem pretty-printer probes type-printer unwinder xmethod
-syn keyword gdbStatement contained dp[rintf]
-syn keyword gdbStatement contained e[nable] en nextgroup=gdbEnableArgs skipwhite
+syn keyword gdbCommand contained dp[rintf]
+syn keyword gdbCommand contained e[nable] en nextgroup=gdbEnableArgs skipwhite
   syn keyword gdbEnableArgs contained display frame-filter mem pretty-printer probes type-printer unwinder xmethod
   syn keyword gdbEnableArgs contained delete once nextgroup=@gdbBreakpointNumbers skipwhite
   syn keyword gdbEnableArgs contained count nextgroup=gdbBreakpointCount skipwhite
   syn keyword gdbEnableArgs contained breakpoints nextgroup=gdbEnableBreakpointArgs,@gdbBreakpointNumbers skipwhite
     syn keyword gdbEnableBreakpointArgs contained count nextgroup=gdbBreakpointCount skipwhite
     syn keyword gdbEnableBreakpointArgs contained delete once nextgroup=@gdbBreakpointNumbers skipwhite
-syn keyword gdbStatement contained ft[race]
-syn keyword gdbStatement contained hb[reak]
-syn keyword gdbStatement contained ig[nore]
-syn keyword gdbStatement contained rb[reak]
-syn keyword gdbStatement contained rw[atch] nextgroup=@gdbWatchOption,gdbExpression skipwhite
-syn keyword gdbStatement contained save nextgroup=gdbSaveArgs skipwhite
+syn keyword gdbCommand contained ft[race]
+syn keyword gdbCommand contained hb[reak]
+syn keyword gdbCommand contained ig[nore]
+syn keyword gdbCommand contained rb[reak]
+syn keyword gdbCommand contained rw[atch] nextgroup=@gdbWatchOption,gdbExpression skipwhite
+syn keyword gdbCommand contained save nextgroup=gdbSaveArgs skipwhite
   syn keyword gdbSaveArgs contained breakpoints gdb-index tracepoints
-syn keyword gdbStatement contained sk[ip] nextgroup=gdbSkipArgs skipwhite
+syn keyword gdbCommand contained sk[ip] nextgroup=gdbSkipArgs skipwhite
   syn keyword gdbSkipArgs contained delete disable enable file function
-syn keyword gdbStatement contained str[ace]
-syn keyword gdbStatement contained tb[reak]
-syn keyword gdbStatement contained tc[atch]
-syn keyword gdbStatement contained tc[atch] nextgroup=gdbCatchArgs skipwhite
-syn keyword gdbStatement contained thb[reak]
-syn keyword gdbStatement contained tr[ace] tp
-syn keyword gdbStatement contained wa[tch] nextgroup=@gdbWatchOption,gdbExpression skipwhite
+syn keyword gdbCommand contained str[ace]
+syn keyword gdbCommand contained tb[reak]
+syn keyword gdbCommand contained tc[atch]
+syn keyword gdbCommand contained tc[atch] nextgroup=gdbCatchArgs skipwhite
+syn keyword gdbCommand contained thb[reak]
+syn keyword gdbCommand contained tr[ace] tp
+syn keyword gdbCommand contained wa[tch] nextgroup=@gdbWatchOption,gdbExpression skipwhite
   syn match   gdbWatchEndOption contained "--"              nextgroup=gdbExpression skipwhite
   syn match   gdbWatchOption    contained "-l\%[ocation]\>" nextgroup=gdbWatchEndOption,gdbExpression skipwhite
   syn cluster gdbWatchOption    contains=gdbWatchOption,gdbWatchEndOption
 
 " data {{{2
-syn keyword gdbStatement contained ag[ent-printf] nextgroup=gdbString
-syn keyword gdbStatement contained app[end] nextgroup=gdbAppendArgs skipwhite
+syn keyword gdbCommand contained ag[ent-printf] nextgroup=gdbString
+syn keyword gdbCommand contained app[end] nextgroup=gdbAppendArgs skipwhite
   syn keyword gdbAppendArgs contained b[inary] nextgroup=gdbAppendBinaryArgs skipwhite
   syn keyword gdbAppendBinaryArgs contained m[emory] v[alue] nextgroup=gdbAppendBinaryArgs skipwhite
   syn keyword gdbAppendArgs contained m[emory] v[alue]
-syn keyword gdbStatement contained ca[ll]
-syn keyword gdbStatement contained disas[semble]
-syn keyword gdbStatement contained disp[lay] nextgroup=gdbFormat skipwhite
-syn keyword gdbStatement contained du[mp] nextgroup=gdbDumpArgs skipwhite
+syn keyword gdbCommand contained ca[ll]
+syn keyword gdbCommand contained disas[semble]
+syn keyword gdbCommand contained disp[lay] nextgroup=gdbFormat skipwhite
+syn keyword gdbCommand contained du[mp] nextgroup=gdbDumpArgs skipwhite
   " TODO: share subcommand group
   syn keyword gdbDumpArgs contained b[inary] i[hex] s[rec] t[ekhex] va[lue] ve[rilog] nextgroup=gdbDumpBinaryArgs skipwhite
   syn keyword gdbDumpArgs contained m[emory]
   syn keyword gdbDumpBinaryArgs contained m[emory] v[alue]
-syn keyword gdbStatement contained explore nextgroup=gdbExploreArgs skipwhite
+syn keyword gdbCommand contained explore nextgroup=gdbExploreArgs skipwhite
   syn keyword gdbExploreArgs contained t[ype] v[alue]
-syn keyword gdbStatement contained find
-syn keyword gdbStatement contained in[it-if-undefined]
-syn keyword gdbStatement contained mem
-syn keyword gdbStatement contained memo[ry-tag] nextgroup=gdbMemoryTagArgs skipwhite
+syn keyword gdbCommand contained find
+syn keyword gdbCommand contained in[it-if-undefined]
+syn keyword gdbCommand contained mem
+syn keyword gdbCommand contained memo[ry-tag] nextgroup=gdbMemoryTagArgs skipwhite
   syn keyword gdbMemoryTagArgs contained c[heck]
   syn keyword gdbMemoryTagArgs contained print-a[llocation-tag]
   syn keyword gdbMemoryTagArgs contained print-l[ogical-tag]
   syn keyword gdbMemoryTagArgs contained s[et-allocation-tag]
   syn keyword gdbMemoryTagArgs contained w[ith-logical-tag]
-syn keyword gdbStatement contained ou[tput]
-syn keyword gdbStatement contained pr[int] ins[pect] p nextgroup=gdbPrintFormat skipwhite
+syn keyword gdbCommand contained ou[tput]
+syn keyword gdbCommand contained pr[int] ins[pect] p nextgroup=gdbPrintFormat skipwhite
   syn match   gdbPrintFormat contained "/1\=[oxdutfaicsz]\="
-syn keyword gdbStatement contained print-[object] po
-syn keyword gdbStatement contained printf
-syn keyword gdbStatement contained pt[ype]
-syn keyword gdbStatement contained resto[re]
+syn keyword gdbCommand contained print-[object] po
+syn keyword gdbCommand contained printf
+syn keyword gdbCommand contained pt[ype]
+syn keyword gdbCommand contained resto[re]
 
 " Set command {{{3
-syn keyword gdbStatement contained set nextgroup=gdbSetArgs skipwhite
+syn keyword gdbCommand contained set nextgroup=gdbSetArgs skipwhite
 
   " Value types {{{4
 
@@ -635,41 +635,41 @@ syn keyword gdbStatement contained set nextgroup=gdbSetArgs skipwhite
   syn keyword gdbSetArgs contained vars[ize-limit] nextgroup=gdbSetZUIntegerUnlimitedValue skipwhite
   " }}}3
 
-syn keyword gdbStatement contained und[isplay]
-syn keyword gdbStatement contained wha[tis]
+syn keyword gdbCommand contained und[isplay]
+syn keyword gdbCommand contained wha[tis]
 syn match gdbWithStatement contained "\<\%(wit\%[h]\|w\)\>" nextgroup=gdbSetArgs skipwhite
-syn region gdbWrappedStatement contained start="\<\%(wit\%[h]\|w\)\>" matchgroup=gdbStatementAnchor end="--" end="$" skip="\\$" transparent contains=gdbWithStatement,gdbLineContinuation nextgroup=gdbStatement skipwhite keepend
-hi def link gdbWithStatement gdbStatement
-syn keyword gdbStatement contained x nextgroup=gdbFormat
+syn region gdbWrappedStatement contained start="\<\%(wit\%[h]\|w\)\>" matchgroup=gdbCommandAnchor end="--" end="$" skip="\\$" transparent contains=gdbWithStatement,gdbLineContinuation nextgroup=gdbCommand skipwhite keepend
+hi def link gdbWithStatement gdbCommand
+syn keyword gdbCommand contained x nextgroup=gdbFormat
 syn match   gdbFormat contained "/\%(-\=\d*\)\=[oxdutfaicsz]\=[bhwg]\="
 syn match   gdbFormat contained "/\%(-\=\d*\)\=[bhwg]\=[oxdutfaicsz]\="
 
 " files {{{2
-syn keyword gdbStatement contained add-symbol-file
-syn keyword gdbStatement contained add-symbol-file-[from-memory]
-syn keyword gdbStatement contained cd
-syn keyword gdbStatement contained co[re-file]
-syn keyword gdbStatement contained dir[ectory]
-syn keyword gdbStatement contained ed[it]
-syn keyword gdbStatement contained exe[c-file]
-syn keyword gdbStatement contained fil[e]
-syn keyword gdbStatement contained for[ward-search] fo sea[rch]
-syn keyword gdbStatement contained ge[nerate-core-file] gc[ore]
-syn keyword gdbStatement contained li[st] l
-syn keyword gdbStatement contained lo[ad]
-syn keyword gdbStatement contained no[sharedlibrary]
-syn keyword gdbStatement contained pat[h]
-syn keyword gdbStatement contained pw[d]
-syn keyword gdbStatement contained remot[e] nextgroup=gdbRemoteArgs skipwhite
+syn keyword gdbCommand contained add-symbol-file
+syn keyword gdbCommand contained add-symbol-file-[from-memory]
+syn keyword gdbCommand contained cd
+syn keyword gdbCommand contained co[re-file]
+syn keyword gdbCommand contained dir[ectory]
+syn keyword gdbCommand contained ed[it]
+syn keyword gdbCommand contained exe[c-file]
+syn keyword gdbCommand contained fil[e]
+syn keyword gdbCommand contained for[ward-search] fo sea[rch]
+syn keyword gdbCommand contained ge[nerate-core-file] gc[ore]
+syn keyword gdbCommand contained li[st] l
+syn keyword gdbCommand contained lo[ad]
+syn keyword gdbCommand contained no[sharedlibrary]
+syn keyword gdbCommand contained pat[h]
+syn keyword gdbCommand contained pw[d]
+syn keyword gdbCommand contained remot[e] nextgroup=gdbRemoteArgs skipwhite
   syn keyword gdbRemoteArgs contained d[elete] g[et] p[ut]
-syn keyword gdbStatement contained remove-s[ymbol-file]
-syn keyword gdbStatement contained reverse-se[arch] rev
-syn keyword gdbStatement contained sec[tion]
-syn keyword gdbStatement contained sha[redlibrary]
-syn keyword gdbStatement contained sy[mbol-file]
+syn keyword gdbCommand contained remove-s[ymbol-file]
+syn keyword gdbCommand contained reverse-se[arch] rev
+syn keyword gdbCommand contained sec[tion]
+syn keyword gdbCommand contained sha[redlibrary]
+syn keyword gdbCommand contained sy[mbol-file]
 
 " internals {{{2
-syn keyword gdbStatement contained mai[ntenance] mt nextgroup=gdbMaintenanceArgs skipwhite
+syn keyword gdbCommand contained mai[ntenance] mt nextgroup=gdbMaintenanceArgs skipwhite
   syn keyword gdbMaintenanceArgs contained agent
   syn keyword gdbMaintenanceArgs contained agent-eval
   syn keyword gdbMaintenanceArgs contained agent-printf
@@ -760,11 +760,11 @@ syn keyword gdbStatement contained mai[ntenance] mt nextgroup=gdbMaintenanceArgs
   syn keyword gdbMaintenanceArgs contained with
 
 " obscure {{{2
-syn keyword gdbStatement contained ch[eckpoint]
-syn keyword gdbStatement contained compa[re-sections]
+syn keyword gdbCommand contained ch[eckpoint]
+syn keyword gdbCommand contained compa[re-sections]
 
-" syn keyword gdbStatement contained compi[le] exp[ression]
-" syn keyword gdbStatement contained compi[le] exp[ression] nextgroup=gdbCompileArgs skipwhite
+" syn keyword gdbCommand contained compi[le] exp[ression]
+" syn keyword gdbCommand contained compi[le] exp[ression] nextgroup=gdbCompileArgs skipwhite
 " syn keyword gdbCompile contained compi[le] exp[ression] nextgroup=gdbCompileArgs skipwhite
 syn match   gdbCompile contained "\<\%(compi\%[le]\|exp\%[ression]\)\>" nextgroup=gdbCompileArgs skipwhite
   syn keyword gdbCompileArgs contained c[ode] nextgroup=gdbCompileCodeOptions,@gdbC skipwhite
@@ -775,32 +775,32 @@ syn match   gdbCompile contained "\<\%(compi\%[le]\|exp\%[ression]\)\>" nextgrou
     syn match   gdbCompilePrintOptions contained "\%(-\w\+\%(\s\+\w\+\)\=\s\+\)*--" nextgroup=@gdbC,gdbCompilePrintFormat skipwhite
     syn match   gdbCompilePrintFormat contained "/[oxdutfaicsz]" nextgroup=@gdbC skipwhite
 
-syn region  gdbStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+c\%[ode]\ze\s" skip="\\$" end="$" contains=gdbCompile,@gdbC keepend transparent fold
-syn region  gdbMultilineStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+c\%[ode]\%(\s\+-r\%[aw]\)\=\%(\s\+--\)\=\s*$" matchgroup=gdbStatement end="^\s*\zsend\ze\s*$" contains=gdbCompile,@gdbC transparent fold
-syn region  gdbStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+p\%[rint]\ze\s" skip="\\$" end="$" contains=gdbCompile,@gdbC keepend transparent fold
-syn region  gdbMultilineStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+p\%[rint]\%(\%(\s\+-.*\)\=\s\+--\)\=\%(\s\+/[a-z]\)\=\s*$" matchgroup=gdbStatement end="^\s*\zsend\ze\s*$" contains=gdbCompile,@gdbC transparent fold
+syn region  gdbCommand contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+c\%[ode]\ze\s" skip="\\$" end="$" contains=gdbCompile,@gdbC keepend transparent fold
+syn region  gdbMultilineStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+c\%[ode]\%(\s\+-r\%[aw]\)\=\%(\s\+--\)\=\s*$" matchgroup=gdbCommand end="^\s*\zsend\ze\s*$" contains=gdbCompile,@gdbC transparent fold
+syn region  gdbCommand contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+p\%[rint]\ze\s" skip="\\$" end="$" contains=gdbCompile,@gdbC keepend transparent fold
+syn region  gdbMultilineStatement contained start="\<\%(compi\%[le]\|exp\%[ression]\)\s\+p\%[rint]\%(\%(\s\+-.*\)\=\s\+--\)\=\%(\s\+/[a-z]\)\=\s*$" matchgroup=gdbCommand end="^\s*\zsend\ze\s*$" contains=gdbCompile,@gdbC transparent fold
 
-syn keyword gdbStatement contained compl[ete]
+syn keyword gdbCommand contained compl[ete]
 
 " Guile {{{3
 syn include @gdbGuile syntax/scheme.vim
 unlet b:current_syntax
-syn keyword gdbStatement contained guile-repl
-syn keyword gdbStatement contained gr
-syn region  gdbStatement contained matchgroup=gdbStatement start="\<gu\%(ile\)\=\ze\s" skip="\\$" end="$" contains=@gdbGuile keepend transparent fold
-syn region  gdbMultilineStatement contained matchgroup=gdbStatement start="\<gu\%(ile\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbGuile transparent fold
+syn keyword gdbCommand contained guile-repl
+syn keyword gdbCommand contained gr
+syn region  gdbCommand contained matchgroup=gdbCommand start="\<gu\%(ile\)\=\ze\s" skip="\\$" end="$" contains=@gdbGuile keepend transparent fold
+syn region  gdbMultilineStatement contained matchgroup=gdbCommand start="\<gu\%(ile\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbGuile transparent fold
 
-syn keyword gdbStatement contained mo[nitor]
+syn keyword gdbCommand contained mo[nitor]
 
 " Python {{{3
 syn include @gdbPython syntax/python.vim
 unlet b:current_syntax
-syn region  gdbStatement contained matchgroup=gdbStatement start="\<py\%(thon\)\=\ze\s" start="\<\%(python-interactive\|pi\)\ze\s" skip="\\$" end="$" contains=@gdbPython keepend transparent fold
-syn region  gdbMultilineStatement contained matchgroup=gdbStatement start="\<py\%(thon\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbPython transparent fold
-syn match   gdbStatement contained "\<\%(python-interactive\|pi\)\s*$"
+syn region  gdbCommand contained matchgroup=gdbCommand start="\<py\%(thon\)\=\ze\s" start="\<\%(python-interactive\|pi\)\ze\s" skip="\\$" end="$" contains=@gdbPython keepend transparent fold
+syn region  gdbMultilineStatement contained matchgroup=gdbCommand start="\<py\%(thon\)\=\ze\s*$" end="^\s*\zsend\ze\s*$" contains=@gdbPython transparent fold
+syn match   gdbCommand contained "\<\%(python-interactive\|pi\)\s*$"
 " }}}
 
-syn keyword gdbStatement contained rec[ord] rec nextgroup=gdbRecordArgs skipwhite
+syn keyword gdbCommand contained rec[ord] rec nextgroup=gdbRecordArgs skipwhite
   syn keyword gdbRecordArgs contained b[trace] nextgroup=gdbRecordBtraceArgs skipwhite
     syn keyword gdbRecordBtraceArgs contained bts pt
   syn keyword gdbRecordArgs contained bts d[elete] ful[l] pt sa[ve] st[op]
@@ -810,67 +810,67 @@ syn keyword gdbStatement contained rec[ord] rec nextgroup=gdbRecordArgs skipwhit
     syn keyword gdbRecordGotoArgs contained b[egin] s[tart] e[nd]
   syn keyword gdbRecordArgs contained fun[ction-call-history]
   syn keyword gdbRecordArgs contained instruction-history
-syn keyword gdbStatement contained resta[rt]
-syn keyword gdbStatement contained sto[p]
+syn keyword gdbCommand contained resta[rt]
+syn keyword gdbCommand contained sto[p]
 
 " running {{{2
-syn keyword gdbStatement contained adv[ance]
-syn keyword gdbStatement contained at[tach]
-syn keyword gdbStatement contained cont[inue] fg c
-syn keyword gdbStatement contained det[ach] nextgroup=gdbDetachArgs skipwhite
+syn keyword gdbCommand contained adv[ance]
+syn keyword gdbCommand contained at[tach]
+syn keyword gdbCommand contained cont[inue] fg c
+syn keyword gdbCommand contained det[ach] nextgroup=gdbDetachArgs skipwhite
   syn keyword gdbDetachArgs contained checkpoint inferiors
-syn keyword gdbStatement contained disc[onnect]
-syn keyword gdbStatement contained fini[sh] fin
-syn keyword gdbStatement contained ha[ndle]
-syn keyword gdbStatement contained infe[rior]
-syn keyword gdbStatement contained interr[upt]
-syn keyword gdbStatement contained ju[mp] j
-syn keyword gdbStatement contained k[ill] nextgroup=gdbKillArgs skipwhite
+syn keyword gdbCommand contained disc[onnect]
+syn keyword gdbCommand contained fini[sh] fin
+syn keyword gdbCommand contained ha[ndle]
+syn keyword gdbCommand contained infe[rior]
+syn keyword gdbCommand contained interr[upt]
+syn keyword gdbCommand contained ju[mp] j
+syn keyword gdbCommand contained k[ill] nextgroup=gdbKillArgs skipwhite
   syn keyword gdbKillArgs contained inferiors
-syn keyword gdbStatement contained next n
-syn keyword gdbStatement contained nexti ni
-syn keyword gdbStatement contained que[ue-signal]
-syn keyword gdbStatement contained reverse-c[ontinue] rc
-syn keyword gdbStatement contained reverse-f[inish]
-syn keyword gdbStatement contained reverse-next rn
-syn keyword gdbStatement contained reverse-nexti rni
-syn keyword gdbStatement contained reverse-step rs
-syn keyword gdbStatement contained reverse-stepi rsi
-syn keyword gdbStatement contained ru[n] r
-syn keyword gdbStatement contained sig[nal]
-syn keyword gdbStatement contained start s
-syn keyword gdbStatement contained starti si
-syn keyword gdbStatement contained step s
-syn keyword gdbStatement contained stepi si
-syn keyword gdbStatement contained taa[s]
-syn keyword gdbStatement contained tar[get] nextgroup=gdbTargetArgs skipwhite
+syn keyword gdbCommand contained next n
+syn keyword gdbCommand contained nexti ni
+syn keyword gdbCommand contained que[ue-signal]
+syn keyword gdbCommand contained reverse-c[ontinue] rc
+syn keyword gdbCommand contained reverse-f[inish]
+syn keyword gdbCommand contained reverse-next rn
+syn keyword gdbCommand contained reverse-nexti rni
+syn keyword gdbCommand contained reverse-step rs
+syn keyword gdbCommand contained reverse-stepi rsi
+syn keyword gdbCommand contained ru[n] r
+syn keyword gdbCommand contained sig[nal]
+syn keyword gdbCommand contained start s
+syn keyword gdbCommand contained starti si
+syn keyword gdbCommand contained step s
+syn keyword gdbCommand contained stepi si
+syn keyword gdbCommand contained taa[s]
+syn keyword gdbCommand contained tar[get] nextgroup=gdbTargetArgs skipwhite
   syn keyword gdbTargetArgs contained c[ore] e[xec] extended-remote n[ative] record-b[trace] record-c[ore] record-f[ull] rem[ote]
   syn keyword gdbTargetArgs contained t[file]
-syn keyword gdbStatement contained tas[k] nextgroup=gdbTaskArgs skipwhite
+syn keyword gdbCommand contained tas[k] nextgroup=gdbTaskArgs skipwhite
   syn keyword gdbTaskArgs contained a[pply] nextgroup=gdbTaskApplyArgs skipwhite
     syn keyword gdbTaskApplyArgs contained a[ll]
-syn keyword gdbStatement contained tfa[as]
-syn keyword gdbStatement contained thr[ead] t nextgroup=gdbThreadArgs skipwhite
+syn keyword gdbCommand contained tfa[as]
+syn keyword gdbCommand contained thr[ead] t nextgroup=gdbThreadArgs skipwhite
   syn keyword gdbThreadArgs contained a[pply] nextgroup=gdbThreadApplyArgs skipwhite
     syn keyword gdbThreadApplyArgs contained a[ll]
   syn keyword gdbThreadArgs contained f[ind] n[ame]
-syn keyword gdbStatement contained unt[il] u
+syn keyword gdbCommand contained unt[il] u
 
 " stack {{{2
-syn keyword gdbStatement contained ba[cktrace] whe[re] bt
-syn keyword gdbStatement contained do[wn]
-syn keyword gdbStatement contained fa[as]
-syn keyword gdbStatement contained fr[ame] f nextgroup=gdbFrameArgs skipwhite
+syn keyword gdbCommand contained ba[cktrace] whe[re] bt
+syn keyword gdbCommand contained do[wn]
+syn keyword gdbCommand contained fa[as]
+syn keyword gdbCommand contained fr[ame] f nextgroup=gdbFrameArgs skipwhite
   syn keyword gdbFrameArgs contained ad[dress] f[unction] l[evel] v[iew]
   syn keyword gdbFrameArgs contained ap[ply] nextgroup=gdbFrameApplyArgs skipwhite
   syn keyword gdbFrameApplyArgs contained a[ll] l[evel]
-syn keyword gdbStatement contained ret[urn]
-syn keyword gdbStatement contained sel[ect-frame] nextgroup=gdbSelectFrameArgs skipwhite
+syn keyword gdbCommand contained ret[urn]
+syn keyword gdbCommand contained sel[ect-frame] nextgroup=gdbSelectFrameArgs skipwhite
   syn keyword gdbSelectFrameArgs contained a[ddress] f[unction] l[evel] v[iew]
-syn keyword gdbStatement contained up
+syn keyword gdbCommand contained up
 
 " status {{{2
-syn keyword gdbStatement contained info inf i nextgroup=gdbInfoArgs skipwhite
+syn keyword gdbCommand contained info inf i nextgroup=gdbInfoArgs skipwhite
   syn keyword gdbInfoArgs contained ad[dress] al[l-registers] ar[gs] aux[v] bo[okmarks] br[eakpoints] b ch[eckpoints] cl[asses]
   syn keyword gdbInfoArgs contained com[mon] con[nections] cop[ying] dc[ache] di[splay] exc[eptions] ext[ensions] fi[les] fl[oat]
   syn keyword gdbInfoArgs contained frame-[filter] fu[nctions] gu[ile] gu in[feriors] io[_registers] li[ne] lo[cals] macro macros
@@ -896,12 +896,12 @@ syn keyword gdbStatement contained info inf i nextgroup=gdbInfoArgs skipwhite
   syn keyword gdbInfoArgs contained set nextgroup=@gdbShowArgs skipwhite
   syn keyword gdbInfoArgs contained w3[2] nextgroup=gdbInfoW32Args skipwhite
     syn keyword gdbInfoW32Args contained thread-information-block tib
-syn keyword gdbStatement contained mac[ro] nextgroup=gdbMacroArgs skipwhite
+syn keyword gdbCommand contained mac[ro] nextgroup=gdbMacroArgs skipwhite
   syn keyword gdbMacroArgs contained d[efine] l[ist] u[ndef]
   syn keyword gdbMacroArgs contained expand exp
   syn keyword gdbMacroArgs contained expand-[once] exp1
 " TODO: disallow set values
-syn keyword gdbStatement contained sho[w] nextgroup=@gdbShowArgs skipwhite
+syn keyword gdbCommand contained sho[w] nextgroup=@gdbShowArgs skipwhite
   syn keyword gdbShowArgs contained commands configuration convenience conv copying paths user values warranty version
   syn keyword gdbShowArgs contained index-cache nextgroup=gdbShowIndexCacheArgs skipwhite
     " stats is only available in a show command
@@ -909,119 +909,119 @@ syn keyword gdbStatement contained sho[w] nextgroup=@gdbShowArgs skipwhite
 syn cluster gdbShowArgs contains=gdbSetArgs,gdbShowArgs
 
 " support {{{2
-syn keyword gdbStatement contained add-auto-load-sa[fe-path] nextgroup=gdbSetOptionalFilenameValue skipwhite
-syn keyword gdbStatement contained add-auto-load-sc[ripts-directory] nextgroup=gdbSetOptionalFilenameValue skipwhite
-syn keyword gdbStatement contained adi nextgroup=gdbAdiArgs skipwhite
+syn keyword gdbCommand contained add-auto-load-sa[fe-path] nextgroup=gdbSetOptionalFilenameValue skipwhite
+syn keyword gdbCommand contained add-auto-load-sc[ripts-directory] nextgroup=gdbSetOptionalFilenameValue skipwhite
+syn keyword gdbCommand contained adi nextgroup=gdbAdiArgs skipwhite
   syn keyword gdbAdiArgs contained a[ssign] e[xamine] x
 
-syn keyword gdbStatement   contained al[ias]                  nextgroup=gdbAliasOption,gdbAliasEndOption,gdbAliasName skipwhite
+syn keyword gdbCommand contained al[ias] nextgroup=gdbAliasOption,gdbAliasEndOption,gdbAliasName skipwhite
   syn match   gdbAliasEndOption contained "--"                nextgroup=gdbAliasName skipwhite
   syn match   gdbAliasOption    contained "-a\>"              nextgroup=gdbAliasEndOption,gdbAliasName skipwhite
   syn match   gdbAliasName      contained "\<\w\%(\w\|-\)*\>" nextgroup=gdbAliasEquals skipwhite
-  syn match   gdbAliasEquals    contained "="                 nextgroup=@gdbStatements skipwhite
+  syn match   gdbAliasEquals    contained "="                 nextgroup=@gdbCommands skipwhite
   hi def link gdbAliasName Function
 
-syn keyword gdbStatement contained apr[opos]
+syn keyword gdbCommand contained apr[opos]
 
 " TODO: optionally highlight define/end as normal commands and only the
   " syn region  gdbDefine    contained matchgroup=gdbFuncDef start="\<def\%[ine]\>.*" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
-syn region  gdbDefine    contained matchgroup=gdbStatement start="\<def\%[ine]\>" end="^\s*\zsend\ze\s*$" contains=TOP transparent fold
-syn keyword gdbStatement contained define-[prefix]
-syn keyword gdbStatement contained dem[angle]
+syn region  gdbDefine  contained matchgroup=gdbCommand start="\<def\%[ine]\>" end="^\s*\zsend\ze\s*$" contains=TOP transparent fold
+syn keyword gdbCommand contained define-[prefix]
+syn keyword gdbCommand contained dem[angle]
 
   " syn region  gdbDocument  contained matchgroup=gdbFuncDef start="\<doc\%[ument]\>.*$" end="^\s*\zsend\ze\s*$" fold
-syn region  gdbDocument  contained matchgroup=gdbStatement start="\<doc\%[ument]\>" end="^\s*\zsend\ze\s*$" fold contains=gdbDocumentCommand
+syn region  gdbDocument  contained matchgroup=gdbCommand start="\<doc\%[ument]\>" end="^\s*\zsend\ze\s*$" fold contains=gdbDocumentCommand
 " TODO: better name, too slow?
 syn match gdbDocumentCommand contained "\%(^\s*\<doc\%[ument]\>\s\+\)\@16<=[[:alpha:]_][[:alnum:]_-]*"
 
-syn keyword gdbStatement contained don[t-repeat]
-syn keyword gdbStatement contained down-[silently]
-syn keyword gdbStatement contained ec[ho] nextgroup=gdbUnquotedString skipwhite
+syn keyword gdbCommand contained don[t-repeat]
+syn keyword gdbCommand contained down-[silently]
+syn keyword gdbCommand contained ec[ho] nextgroup=gdbUnquotedString skipwhite
   " TODO: move
   syn region gdbUnquotedString contained start="\S" skip="\\$" end="$" contains=gdbStringEscape,gdbLineContinuation
   hi def link gdbUnquotedString String
   " syn region gdbUnquotedStringNoEscape contained start="\S" skip="\\$" end="$" contains=gdbLineContinuation
   " hi def link gdbUnquotedStringNoEscape String
-syn keyword gdbStatement contained he[lp] h
+syn keyword gdbCommand contained he[lp] h
 
-syn region  gdbIf contained matchgroup=gdbStatement start="\<if\>" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
-syn keyword gdbStatement contained else containedin=gdbIf
+syn region  gdbIf contained matchgroup=gdbCommand start="\<if\>" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
+syn keyword gdbCommand contained else containedin=gdbIf
 
-syn keyword gdbStatement contained interp[reter-exec]
-syn keyword gdbStatement contained mak[e]
-syn keyword gdbStatement contained new[-ui]
-syn keyword gdbStatement contained ov[erlay] ov ovly nextgroup=gdbOverlayArgs skipwhite
+syn keyword gdbCommand contained interp[reter-exec]
+syn keyword gdbCommand contained mak[e]
+syn keyword gdbCommand contained new[-ui]
+syn keyword gdbCommand contained ov[erlay] ov ovly nextgroup=gdbOverlayArgs skipwhite
   syn keyword gdbOverlayArgs contained a[uto] li[st-overlays] lo[ad-target] man[ual] map[-overlay] o[ff] u[nmap-overlay]
 " TODO: pi completes as pipe ignoring pi (python-interactive)
 "     : sh region
-syn keyword gdbStatement contained pip[e]
-syn match   gdbStatement contained "|"
-syn keyword gdbStatement contained qui[t] exi[t] q
-syn keyword gdbStatement contained she[ll] nextgroup=gdbShellValue skipwhite
-syn match   gdbStatement contained "!"     nextgroup=gdbShellValue skipwhite
+syn keyword gdbCommand contained pip[e]
+syn match   gdbCommand contained "|"
+syn keyword gdbCommand contained qui[t] exi[t] q
+syn keyword gdbCommand contained she[ll] nextgroup=gdbShellValue skipwhite
+syn match   gdbCommand contained "!"     nextgroup=gdbShellValue skipwhite
   syn include @gdbSh syntax/sh.vim
   unlet b:current_syntax
   syn region gdbShellValue contained start="\S" skip="\\$" end="$" contains=@gdbSh,gdbLineContinuation keepend
-syn keyword gdbStatement contained so[urce] nextgroup=gdbSourceOption skipwhite
+syn keyword gdbCommand contained so[urce] nextgroup=gdbSourceOption skipwhite
   syn match   gdbSourceOption contained "\<-[sv]\>" nextgroup=gdbSourceOption skipwhite
-syn keyword gdbStatement contained up-[silently]
+syn keyword gdbCommand contained up-[silently]
 
-syn region  gdbWhile contained matchgroup=gdbStatement start="\<whi\%[le]\>" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
-syn keyword gdbStatement contained loop_b[reak] loop_c[ontinue] containedin=gdbWhile
+syn region  gdbWhile contained matchgroup=gdbCommand start="\<whi\%[le]\>" end="\%(^\s*\)\@<=end\ze\s*$" contains=TOP transparent fold
+syn keyword gdbCommand contained loop_b[reak] loop_c[ontinue] containedin=gdbWhile
 
 " text-user-interface {{{2
-syn match   gdbStatement contained "[<>+-]"
-syn keyword gdbStatement contained foc[us] fs
-syn keyword gdbStatement contained la[yout] nextgroup=gdbLayoutArgs skipwhite
+syn match   gdbCommand contained "[<>+-]"
+syn keyword gdbCommand contained foc[us] fs
+syn keyword gdbCommand contained la[yout] nextgroup=gdbLayoutArgs skipwhite
   syn keyword gdbLayoutArgs contained a[sm] n[ext] p[rev] r[egs] sp[lit] sr[c]
-syn keyword gdbStatement contained ref[resh]
-syn keyword gdbStatement contained tu[i] nextgroup=gdbTuiArgs skipwhite
+syn keyword gdbCommand contained ref[resh]
+syn keyword gdbCommand contained tu[i] nextgroup=gdbTuiArgs skipwhite
   syn keyword gdbTuiArgs contained d[isable] e[nable] n[ew-layout] r[eg]
-syn keyword gdbStatement contained upd[ate]
-syn keyword gdbStatement contained win[height] wh nextgroup=gdbWindowName skipwhite
+syn keyword gdbCommand contained upd[ate]
+syn keyword gdbCommand contained win[height] wh nextgroup=gdbWindowName skipwhite
   syn keyword gdbWindowName contained a[sm] c[md] sr[c] st[atus] r[egs]
 
 " tracepoints {{{2
-syn keyword gdbStatement contained ac[tions]
-syn keyword gdbStatement contained col[lect]
-syn keyword gdbStatement contained end
-syn keyword gdbStatement contained pas[scount]
-syn keyword gdbStatement contained t[dump]
-syn keyword gdbStatement contained tev[al]
-syn keyword gdbStatement contained tfi[nd] nextgroup=gdbTfindArgs skipwhite
+syn keyword gdbCommand contained ac[tions]
+syn keyword gdbCommand contained col[lect]
+syn keyword gdbCommand contained end
+syn keyword gdbCommand contained pas[scount]
+syn keyword gdbCommand contained t[dump]
+syn keyword gdbCommand contained tev[al]
+syn keyword gdbCommand contained tfi[nd] nextgroup=gdbTfindArgs skipwhite
   syn keyword gdbTfindArgs contained e[nd] l[ine] n[one] o[utside] p[c] r[ange] s[tart] t[racepoint]
-syn keyword gdbStatement contained tsa[ve]
-syn keyword gdbStatement contained tstar[t]
-syn keyword gdbStatement contained tstat[us]
-syn keyword gdbStatement contained tsto[p]
-syn keyword gdbStatement contained tv[ariable]
-syn keyword gdbStatement contained while-stepping stepp[ing] ws
+syn keyword gdbCommand contained tsa[ve]
+syn keyword gdbCommand contained tstar[t]
+syn keyword gdbCommand contained tstat[us]
+syn keyword gdbCommand contained tsto[p]
+syn keyword gdbCommand contained tv[ariable]
+syn keyword gdbCommand contained while-stepping stepp[ing] ws
 
 " unclassified {{{2
-syn keyword gdbStatement contained add-i[nferior]
-syn keyword gdbStatement contained clo[ne-inferior]
-syn keyword gdbStatement contained ev[al]
-syn keyword gdbStatement contained fl[ash-erase]
-syn keyword gdbStatement contained fu[nction]
-syn keyword gdbStatement contained jit-reader-l[oad]
-syn keyword gdbStatement contained jit-reader-u[nload]
-syn keyword gdbStatement contained remove-i[nferiors]
-syn keyword gdbStatement contained uns[et] nextgroup=gdbUnsetArgs skipwhite
+syn keyword gdbCommand contained add-i[nferior]
+syn keyword gdbCommand contained clo[ne-inferior]
+syn keyword gdbCommand contained ev[al]
+syn keyword gdbCommand contained fl[ash-erase]
+syn keyword gdbCommand contained fu[nction]
+syn keyword gdbCommand contained jit-reader-l[oad]
+syn keyword gdbCommand contained jit-reader-u[nload]
+syn keyword gdbCommand contained remove-i[nferiors]
+syn keyword gdbCommand contained uns[et] nextgroup=gdbUnsetArgs skipwhite
   syn keyword gdbUnsetArgs contained environment exec-wrapper substitute-path
   syn keyword gdbUnsetArgs contained tdesc nextgroup=gdbUnsetTdescArgs skipwhite
     syn keyword gdbUnsetTdescArgs contained filename
   syn keyword gdbUnsetArgs contained exec-wrapper
   syn keyword gdbUnsetArgs contained substitute-path
-syn keyword gdbStatement contained bo[okmark]
-syn keyword gdbStatement contained go[to-bookmark]
+syn keyword gdbCommand contained bo[okmark]
+syn keyword gdbCommand contained go[to-bookmark]
 " }}}
 
 " Command syntax {{{1
-syn keyword gdbPrefix contained server nextgroup=gdbStatement skipwhite
+syn keyword gdbPrefix contained server nextgroup=gdbCommand skipwhite
 
-syn cluster gdbStatements contains=gdbStatement,gdbMultilineStatement,gdbCompile,gdbDefine,gdbDocument,gdbIf,gdbWhile,gdbPrefix,gdbWrappedStatement
+syn cluster gdbCommands contains=gdbCommand,gdbMultilineStatement,gdbCompile,gdbDefine,gdbDocument,gdbIf,gdbWhile,gdbPrefix,gdbWrappedStatement
 
-syn match   gdbStatementAnchor "^" nextgroup=@gdbStatements skipwhite
+syn match   gdbCommandAnchor "^" nextgroup=@gdbCommands skipwhite
 " TODO: give higher priority than \\ in unquoted strings as \\$ matches \ escape of first char on following line
 syn match   gdbLineContinuation "\\$"
 
@@ -1417,11 +1417,11 @@ syn sync linecont "\\$"
 
 " Default Highlighting {{{1
 " Only when an item doesn't have highlighting yet
-hi def link gdbCompile		gdbStatement
+hi def link gdbCompile		gdbCommand
 hi def link gdbFuncDef		Function
 hi def link gdbComment		Comment
-hi def link gdbStatement	Statement
-hi def link gdbPrefix		gdbStatement
+hi def link gdbCommand	Statement
+hi def link gdbPrefix		gdbCommand
 hi def link gdbString		String
 hi def link gdbStringEscape	SpecialChar
 hi def link gdbCharacter	Character
