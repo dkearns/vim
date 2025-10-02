@@ -1,0 +1,157 @@
+(* Oberon Test File for Vim Syntax Highlighting *)
+(* This file tests various Oberon language constructs *)
+
+MODULE SampleOberon;
+
+IMPORT Texts, Oberon;
+
+CONST
+  MaxItems = 100;
+  Pi = 3.14159;
+  NewLine = 0AX;
+  
+TYPE
+  Item* = RECORD
+    name*: ARRAY 32 OF CHAR;
+    value*: INTEGER;
+    next*: Item
+  END;
+  
+  ItemPtr* = POINTER TO Item;
+  ItemArray* = ARRAY MaxItems OF Item;
+  
+VAR
+  list*: ItemPtr;
+  count: INTEGER;
+  flag: BOOLEAN;
+
+(* Simple procedure *)
+PROCEDURE InitItem*(VAR item: Item; name: ARRAY OF CHAR; value: INTEGER);
+BEGIN
+  COPY(name, item.name);
+  item.value := value;
+  item.next := NIL
+END InitItem;
+
+(* Procedure with return value *)
+PROCEDURE FindItem*(name: ARRAY OF CHAR): ItemPtr;
+VAR current: ItemPtr;
+BEGIN
+  current := list;
+  WHILE (current # NIL) & (current.name # name) DO
+    current := current.next
+  END;
+  RETURN current
+END FindItem;
+
+(* Procedure with control structures *)
+PROCEDURE ProcessItems*;
+VAR 
+  i: INTEGER;
+  current: ItemPtr;
+  sum: REAL;
+BEGIN
+  i := 0; sum := 0.0;
+  
+  (* FOR loop *)
+  FOR i := 1 TO MaxItems DO
+    sum := sum + i * Pi
+  END;
+  
+  (* WHILE loop *)
+  current := list;
+  WHILE current # NIL DO
+    IF current.value > 0 THEN
+      INC(count)
+    ELSIF current.value < 0 THEN
+      DEC(count)
+    ELSE
+      count := 0
+    END;
+    current := current.next
+  END;
+  
+  (* CASE statement *)
+  CASE count OF
+    0: flag := FALSE
+  | 1..10: flag := TRUE
+  | 11, 12, 13: flag := FALSE
+  ELSE flag := TRUE
+  END;
+  
+  (* REPEAT loop *)
+  REPEAT
+    INC(i);
+    sum := sum / 2.0
+  UNTIL sum < 1.0E-10
+END ProcessItems;
+
+(* Function with hexadecimal and character constants *)
+PROCEDURE CheckBounds*(x, y: INTEGER): BOOLEAN;
+CONST
+  MinX = 0; MaxX = 0FFFFH;
+  MinY = 0; MaxY = 255;
+  ErrorChar = 7X;  (* Bell character *)
+BEGIN
+  IF (x < MinX) OR (x > MaxX) OR (y < MinY) OR (y > MaxY) THEN
+    (* Write error character *)
+    Texts.Write(Texts.OpenWriter(), ErrorChar);
+    RETURN FALSE
+  ELSE
+    RETURN TRUE
+  END
+END CheckBounds;
+
+(* Procedure with string literals and escape sequences *)
+PROCEDURE PrintMessage*;
+VAR msg: ARRAY 64 OF CHAR;
+BEGIN
+  msg := "Hello, ""Oberon"" World!";
+  msg := 'Single ''quoted'' string';
+  Texts.WriteString(Texts.OpenWriter(), msg);
+  Texts.WriteLn(Texts.OpenWriter())
+END PrintMessage;
+
+(* Procedure using system functions *)
+PROCEDURE LowLevel*;
+VAR 
+  addr: INTEGER;
+  byte: CHAR;
+BEGIN
+  addr := ADR(count);  (* Get address *)
+  GET(addr, byte);     (* Get byte at address *)
+  PUT(addr + 1, byte); (* Put byte at address *)
+  
+  (* Bit operations *)
+  addr := ASH(addr, 1);     (* Arithmetic shift *)
+  addr := ROT(addr, 8);     (* Rotate *)
+  
+  (* Type conversion *)
+  addr := SHORT(LONG(addr))
+END LowLevel;
+
+(* Main procedure *)
+PROCEDURE Main*;
+VAR item: Item;
+BEGIN
+  NEW(list);
+  InitItem(item, "test", 42);
+  
+  (* Arithmetic operations *)
+  count := (100 + 50) DIV 3 MOD 7;
+  
+  (* Boolean operations *)
+  flag := TRUE & ~FALSE OR (count # 0);
+  
+  (* Set operations *)
+  IF 5 IN {1, 3, 5, 7, 9} THEN
+    count := count * 2
+  END;
+  
+  ProcessItems;
+  PrintMessage
+END Main;
+
+BEGIN
+  Main
+END SampleOberon.
