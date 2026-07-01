@@ -3581,6 +3581,7 @@ ex_append(exarg_T *eap)
     int		did_undo = FALSE;
     linenr_T	lnum = eap->line2;
     int		indent = 0;
+    int		skip_indent = 0;
     char_u	*p;
     int		vcol;
     int		empty = (curbuf->b_ml.ml_flags & ML_EMPTY);
@@ -3619,8 +3620,15 @@ ex_append(exarg_T *eap)
 		indent = append_indent;
 		append_indent = -1;
 	    }
+	    else if (eap->skip)
+		indent = skip_indent;
 	    else if (lnum > 0)
-		indent = get_indent_lnum(lnum);
+	    {
+		if (eap->skip)
+		    indent = skip_indent;
+		else
+		    indent = get_indent_lnum(lnum);
+	    }
 	}
 	ex_keep_indent = FALSE;
 	if (*eap->arg == '|')
@@ -3678,9 +3686,11 @@ ex_append(exarg_T *eap)
 	    else
 		break;
 	}
+
 	if ((p[0] == '.' && p[1] == NUL)
-		|| (!did_undo && u_save(lnum, lnum + 1 + (empty ? 1 : 0))
-								     == FAIL))
+		|| (!eap->skip
+		    && !did_undo
+		    && u_save(lnum, lnum + 1 + (empty ? 1 : 0)) == FAIL))
 	{
 	    vim_free(theline);
 	    break;
@@ -3690,20 +3700,26 @@ ex_append(exarg_T *eap)
 	if (p[0] == NUL)
 	    theline[0] = NUL;
 
-	did_undo = TRUE;
-	ml_append(lnum, theline, (colnr_T)0, FALSE);
-	if (empty)
-	    // there are no marks below the inserted lines
-	    appended_lines(lnum, 1L);
+	if (eap->skip)
+	    skip_indent = get_indent_str(theline, (int)curbuf->b_p_ts, FALSE);
 	else
-	    appended_lines_mark(lnum, 1L);
+	{
+	    did_undo = TRUE;
+	    ml_append(lnum, theline, (colnr_T)0, FALSE);
+	    if (empty)
+		// there are no marks below the inserted lines
+		appended_lines(lnum, 1L);
+	    else
+		appended_lines_mark(lnum, 1L);
+	}
 
 	vim_free(theline);
 	++lnum;
 
 	if (empty)
 	{
-	    ml_delete(2L);
+	    if (!eap->skip)
+		ml_delete(2L);
 	    empty = FALSE;
 	}
     }
@@ -3711,6 +3727,9 @@ ex_append(exarg_T *eap)
 
     if (eap->forceit)
 	curbuf->b_p_ai = !curbuf->b_p_ai;
+
+    if (eap->skip)
+	return;
 
     // "start" is set to eap->line2+1 unless that position is invalid (when
     // eap->line2 pointed to the end of the buffer and nothing was appended)
@@ -3746,6 +3765,13 @@ ex_change(exarg_T *eap)
     if (not_in_vim9(eap) == FAIL)
 	return;
 #endif
+
+    if (eap->skip)
+    {
+	ex_append(eap);
+	return;
+    }
+
     if (eap->line2 >= eap->line1
 	    && u_save(eap->line1 - 1, eap->line2 + 1) == FAIL)
 	return;

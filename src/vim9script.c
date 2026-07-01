@@ -154,7 +154,8 @@ not_in_vim9(exarg_T *eap)
 	    case CMD_k:
 		if (eap->addr_count > 0)
 		{
-		    emsg(_(e_no_range_allowed));
+		    if (!eap->skip)
+			emsg(_(e_no_range_allowed));
 		    return FAIL;
 		}
 		// FALLTHROUGH
@@ -164,7 +165,8 @@ not_in_vim9(exarg_T *eap)
 	    case CMD_open:
 	    case CMD_t:
 	    case CMD_xit:
-		semsg(_(e_command_not_supported_in_vim9_script_missing_var_str), eap->cmd);
+		if (!eap->skip)
+		    semsg(_(e_command_not_supported_in_vim9_script_missing_var_str), eap->cmd);
 		return FAIL;
 	    default: break;
 	}
