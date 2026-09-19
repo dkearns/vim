@@ -3309,7 +3309,7 @@ update_search_stat(
 	stat->cnt = cnt;
 	stat->exact_match = exact_match;
 	stat->incomplete = incomplete;
-	stat->last_maxcount = p_msc;
+	stat->last_maxcount = last_maxcount;
 	return;
     }
     last_maxcount = maxcount;
@@ -3890,7 +3890,8 @@ search_line:
 		}
 
 		add_r = ins_compl_add_infercase(aux, i, p_ic,
-			curr_fname == curbuf->b_fname ? NULL : curr_fname,
+			curr_fname == curbuf->b_fname ? NULL
+						  : shorten_fname1(curr_fname),
 			dir, cont_s_ipos, 0);
 		if (add_r == OK)
 		    // if dir was BACKWARD then honor it just once
