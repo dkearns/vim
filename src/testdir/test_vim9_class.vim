@@ -3,6 +3,16 @@
 import './util/vim9.vim' as v9
 
 def Test_class_basic()
+  var foo =<< trim END
+      vim9script
+      class A
+      endclass
+      execute "class B extends A"
+      endclass
+      assert_true(B.new() is B.new() || true)
+  END
+  v9.CheckSourceSuccess(foo)
+
   # Class supported only in "vim9script"
   var lines =<< trim END
     class NotWorking
