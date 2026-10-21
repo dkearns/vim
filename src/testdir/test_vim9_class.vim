@@ -3,16 +3,6 @@
 import './util/vim9.vim' as v9
 
 def Test_class_basic()
-  var foo =<< trim END
-      vim9script
-      class A
-      endclass
-      execute "class B extends A"
-      endclass
-      assert_true(B.new() is B.new() || true)
-  END
-  v9.CheckSourceSuccess(foo)
-
   # Class supported only in "vim9script"
   var lines =<< trim END
     class NotWorking
@@ -2493,6 +2483,32 @@ def Test_class_extends()
     endclass
   END
   v9.CheckSourceFailure(lines, 'E1315: White space required after name: A"', 4)
+
+  lines =<< trim END
+    vim9script
+    class Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    endclass
+    class B extends Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    endclass
+  END
+  lines =<< trim END
+    vim9script
+    class Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    endclass
+    class B extends Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    endclass
+  END
+
+  # this was reading past end of string
+  lines =<< trim END
+    vim9script
+    class A
+    endclass
+    execute "class B extends A"
+    endclass
+  END
+  v9.CheckSourceSuccess(lines)
+
 enddef
 
 def Test_using_base_class()

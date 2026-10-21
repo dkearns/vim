@@ -702,9 +702,9 @@ LINT_OPTIONS = -beprxzF
 # $ export ASAN_OPTIONS="print_stacktrace=1 log_path=asan"
 # $ export LSAN_OPTIONS="suppressions=`pwd`/testdir/lsan-suppress.txt"
 # When running tests output can be found in testdir/asan.*
-#SANITIZER_CFLAGS = -g -O0 -fsanitize-recover=all \
-#		   -fsanitize=address -fsanitize=undefined \
-#		   -fno-omit-frame-pointer
+SANITIZER_CFLAGS = -g -O0 -fsanitize-recover=all \
+		   -fsanitize=address -fsanitize=undefined \
+		   -fno-omit-frame-pointer
 
 # Similarly when compiling with clang and using ubsan.
 # $ export UBSAN_OPTIONS="print_stacktrace=1 log_path=ubsan"
