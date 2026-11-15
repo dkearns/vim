@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Simplistic testing of Arabic mode.
 " NOTE: This just checks if the code works. If you know Arabic please add
 " functional tests that check the shaping works with real text.
@@ -11,7 +13,7 @@ func s:get_chars(lnum)
   let chars = []
   let numchars = strchars(getline('.'), 1)
   for i in range(1, numchars)
-    exe 'norm ' i . '|'
+    exe 'norm ' i .. '|'
     let c = execute('ascii')
     let c = substitute(c, '\n\?<.\{-}Hex\s*', 'U+', 'g')
     let c = substitute(c, ',\s*Oct\(al\)\=\s\d*\(, Digr ..\)\=', '', 'g')
@@ -355,8 +357,8 @@ func Test_shape_initial()
 	\ [s:a_HEH, s:a_f_GHAIN, s:a_i_HEH],
 	\ [s:a_YEH, s:a_f_GHAIN, s:a_i_YEH],
 	\ ]
-    call setline(1, s:a_GHAIN . pair[0] . ' ')
-    call assert_equal([pair[1] . pair[2] . ' '], ScreenLines(1, 3))
+    call setline(1, s:a_GHAIN .. pair[0] .. ' ')
+    call assert_equal([pair[1] .. pair[2] .. ' '], ScreenLines(1, 3))
   endfor
 
   set arabicshape&
@@ -407,8 +409,8 @@ func Test_shape_isolated()
 	\ [s:a_HEH, s:a_s_HEH],
 	\ [s:a_YEH, s:a_s_YEH],
 	\ ]
-    call setline(1, ' ' . pair[0] . ' ')
-    call assert_equal([' ' . pair[1] . ' '], ScreenLines(1, 3))
+    call setline(1, ' ' .. pair[0] .. ' ')
+    call assert_equal([' ' .. pair[1] .. ' '], ScreenLines(1, 3))
   endfor
 
   set arabicshape&
@@ -460,8 +462,8 @@ func Test_shape_iso_to_medial()
 	\[s:a_ALEF_MAKSURA, s:a_s_GHAIN, s:a_f_ALEF_MAKSURA, s:a_i_BEH],
 	\[s:a_YEH, s:a_f_GHAIN, s:a_m_YEH, s:a_i_BEH],
 	\ ]
-    call setline(1, s:a_GHAIN . pair[0] . s:a_BEH)
-    call assert_equal([pair[1] . pair[2] . pair[3]], ScreenLines(1, 3))
+    call setline(1, s:a_GHAIN .. pair[0] .. s:a_BEH)
+    call assert_equal([pair[1] .. pair[2] .. pair[3]], ScreenLines(1, 3))
   endfor
 
   set arabicshape&
@@ -512,8 +514,8 @@ func Test_shape_final()
 	\[s:a_ALEF_MAKSURA, s:a_f_ALEF_MAKSURA, s:a_i_BEH],
 	\[s:a_YEH, s:a_f_YEH, s:a_i_BEH],
 	\ ]
-    call setline(1, ' ' . pair[0] . s:a_BEH)
-    call assert_equal([' ' . pair[1] . pair[2]], ScreenLines(1, 3))
+    call setline(1, ' ' .. pair[0] .. s:a_BEH)
+    call assert_equal([' ' .. pair[1] .. pair[2]], ScreenLines(1, 3))
   endfor
 
   set arabicshape&
@@ -532,8 +534,8 @@ func Test_shape_combination_final()
 	\ [s:a_ALEF, s:a_f_LAM_ALEF],
 	\ ]
     " The test char is a composing char, put on s:a_LAM.
-    call setline(1, ' ' . s:a_LAM . pair[0] . s:a_BEH)
-    call assert_equal([' ' . pair[1] . s:a_i_BEH], ScreenLines(1, 3))
+    call setline(1, ' ' .. s:a_LAM .. pair[0] .. s:a_BEH)
+    call assert_equal([' ' .. pair[1] .. s:a_i_BEH], ScreenLines(1, 3))
   endfor
 
   set arabicshape&
@@ -552,8 +554,8 @@ func Test_shape_combination_isolated()
 	\ [s:a_ALEF, s:a_s_LAM_ALEF],
 	\ ]
     " The test char is a composing char, put on s:a_LAM.
-    call setline(1, ' ' . s:a_LAM . pair[0] . ' ')
-    call assert_equal([' ' . pair[1] . ' '], ScreenLines(1, 3))
+    call setline(1, ' ' .. s:a_LAM .. pair[0] .. ' ')
+    call assert_equal([' ' .. pair[1] .. ' '], ScreenLines(1, 3))
   endfor
 
   set arabicshape&

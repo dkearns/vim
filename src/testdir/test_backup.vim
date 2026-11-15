@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the backup function
 
 func Test_backup()

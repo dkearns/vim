@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for block inserting
 
 func Test_blockinsert_indent()

@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for :const
 
 func s:noop()
@@ -265,7 +267,7 @@ func Test_const_with_compound_assign()
     call assert_fails('const i %= 4', 'E995:')
 
     let s = 'a'
-    call assert_fails('const s .= "b"', 'E995:')
+    call assert_fails('const s ..= "b"', 'E995:')
 
     let [a, b, c] = [1, 2, 3]
     call assert_fails('const [a, b, c] += [4, 5, 6]', 'E995:')

@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for setbufline(), getbufline(), appendbufline(), deletebufline()
 
 source util/screendump.vim
@@ -50,7 +52,7 @@ func Test_setbufline_getbufline()
                     \ "no process"],
                     \ getbufline(b, 2, 4))
   endif
-  exe "bwipe! " . b
+  exe "bwipe! " .. b
 endfunc
 
 func Test_setbufline_getbufline_fold()
@@ -153,7 +155,7 @@ func Test_appendbufline()
   call assert_equal(['d'], getbufline(b, 4))
   call assert_equal(['e'], getbufline(b, 5))
   call assert_equal([], getbufline(b, 6))
-  exe "bwipe! " . b
+  exe "bwipe! " .. b
 endfunc
 
 func Test_appendbufline_no_E315()
@@ -217,7 +219,7 @@ func Test_deletebufline()
   call assert_equal(1, deletebufline(b, 4))
   call assert_equal(0, deletebufline(b, 1))
   call assert_equal(['b', 'c'], getbufline(b, 1, 2))
-  exe "bwipe! " . b
+  exe "bwipe! " .. b
 
   edit XbufOne
   let one = bufnr()

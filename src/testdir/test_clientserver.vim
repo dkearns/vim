@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the +clientserver feature.
 
 source util/screendump.vim
@@ -34,7 +36,7 @@ func Test_client_server()
   call Check_X11_Connection()
 
   let name = 'XVIMTEST'
-  let cmd .= ' --servername ' . name
+  let cmd ..= ' --servername ' .. name
   let job = job_start(cmd, {'stoponexit': 'kill', 'out_io': 'null'})
   call WaitForAssert({-> assert_equal("run", job_status(job))})
 
@@ -53,7 +55,7 @@ func Test_client_server()
   eval name->remote_foreground()
 
   call remote_send(name, ":let testvar = 'yes'\<CR>")
-  call WaitFor('remote_expr("' . name . '", "exists(\"testvar\") ? testvar : \"\"", "", 1) == "yes"')
+  call WaitFor('remote_expr("' .. name .. '", "exists(\"testvar\") ? testvar : \"\"", "", 1) == "yes"')
   call assert_equal('yes', remote_expr(name, "testvar", "", 2))
   call assert_fails("let x=remote_expr(name, '2+x')", 'E449:')
   call assert_fails("let x=remote_expr('[], '2+2')", 'E116:')
@@ -214,11 +216,11 @@ func Test_client_server_stopinsert()
   let name = 'XVIMTEST2'
   call writefile(['one two three'], fname, 'D')
 
-  let cmd .= ' -c "set virtualedit=onemore"'
-  let cmd .= ' -c "call cursor(1, 14)"'
-  let cmd .= ' -c "startinsert"'
-  let cmd .= ' --servername ' . name
-  let cmd .= ' ' .. fname
+  let cmd ..= ' -c "set virtualedit=onemore"'
+  let cmd ..= ' -c "call cursor(1, 14)"'
+  let cmd ..= ' -c "startinsert"'
+  let cmd ..= ' --servername ' .. name
+  let cmd ..= ' ' .. fname
   let job = job_start(cmd, {'stoponexit': 'kill', 'out_io': 'null'})
   call WaitForAssert({-> assert_equal("run", job_status(job))})
 

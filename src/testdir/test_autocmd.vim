@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for autocommands
 
 source util/screendump.vim
@@ -6,7 +8,7 @@ import './util/vim9.vim' as v9
 func s:cleanup_buffers() abort
   for bnr in range(1, bufnr('$'))
     if bufloaded(bnr) && bufnr('%') != bnr
-      execute 'bd! ' . bnr
+      execute 'bd! ' .. bnr
     endif
   endfor
 endfunc
@@ -246,7 +248,7 @@ func Test_autocmd_bufunload_avoiding_SEGV_01()
 
   augroup test_autocmd_bufunload
     autocmd!
-    exe 'autocmd BufUnload <buffer> ' . (lastbuf + 1) . 'bwipeout!'
+    exe 'autocmd BufUnload <buffer> ' .. (lastbuf + 1) .. 'bwipeout!'
   augroup END
 
   call assert_fails('edit bb.txt', 'E937:')
@@ -264,7 +266,7 @@ func Test_autocmd_bufunload_avoiding_SEGV_02()
 
   augroup test_autocmd_bufunload
     autocmd!
-    exe 'autocmd BufUnload <buffer> ' . (lastbuf + 1) . 'bwipeout!'
+    exe 'autocmd BufUnload <buffer> ' .. (lastbuf + 1) .. 'bwipeout!'
   augroup END
 
   normal! i1
@@ -1111,7 +1113,7 @@ endfunc
 
 func Test_BufEnter()
   au! BufEnter
-  au Bufenter * let val = val . '+'
+  au Bufenter * let val = val .. '+'
   let g:val = ''
   split NewFile
   call assert_equal('+', g:val)
@@ -1237,7 +1239,7 @@ func Test_autocmd_bufwipe_in_SessLoadPost()
     let v:swapchoice = "e"
     augroup test_autocmd_sessionload
     autocmd!
-    autocmd SessionLoadPost * exe bufnr("Xsomething") . "bw!"
+    autocmd SessionLoadPost * exe bufnr("Xsomething") .. "bw!"
     augroup END
 
     func WriteErrors()
@@ -1294,7 +1296,7 @@ func Test_autocmd_bufwipe_in_SessLoadPost2()
       endfor
       for b in range(1, bufnr(''$''))
         if bufexists(b) && buflisted(b) && (index(tabblist, b) == -1 || bufname(b) =~# ''^$'')
-          exec ''bwipeout '' . b
+          exec ''bwipeout '' .. b
         endif
       endfor
       echomsg "SessionLoadPost DONE"
@@ -2144,7 +2146,7 @@ func Test_QuitPre()
   split Xbar
   au! QuitPre * let g:afile = expand('<afile>')
   " Close the other window, <afile> should be correct.
-  exe win_id2win(winid) . 'q'
+  exe win_id2win(winid) .. 'q'
   call assert_equal('Xfoo', g:afile)
 
   unlet g:afile
@@ -2469,7 +2471,7 @@ func Test_bufunload_all()
       let i = 1
       while i <= bufnr('$')
         if i != bufnr('%') && bufloaded(i)
-          exe  i . 'bunload'
+          exe  i .. 'bunload'
         endif
         let i += 1
       endwhile
@@ -2917,9 +2919,9 @@ function s:Before_test_dirchanged()
   augroup END
   let s:li = []
   let s:dir_this = getcwd()
-  let s:dir_foo = s:dir_this . '/Xfoo'
+  let s:dir_foo = s:dir_this .. '/Xfoo'
   call mkdir(s:dir_foo)
-  let s:dir_bar = s:dir_this . '/Xbar'
+  let s:dir_bar = s:dir_this .. '/Xbar'
   call mkdir(s:dir_bar)
 endfunc
 
@@ -2977,7 +2979,7 @@ function Test_dirchanged_auto()
   set acd
   cd ..
   call assert_equal([], s:li)
-  exe 'edit ' . s:dir_foo . '/Xautofile'
+  exe 'edit ' .. s:dir_foo .. '/Xautofile'
   call assert_equal(s:dir_foo, getcwd())
   let expected = ["pre cd " .. s:dir_foo, "auto:", s:dir_foo]
   call assert_equal(expected, s:li)
@@ -2994,7 +2996,7 @@ func Test_ChangedP()
   set complete=. completeopt=menuone
 
   func! TextChangedAutocmd(char)
-    let g:autocmd .= a:char
+    let g:autocmd ..= a:char
   endfunc
 
   " TextChanged will not be triggered, only check that it isn't.
@@ -3409,10 +3411,10 @@ func Test_ReadWrite_Autocmds()
     au!
     " setup autocommands to decompress before reading and re-compress
     " afterwards
-    au BufReadPre  *.gz  exe '!gzip -d ' . shellescape(expand("<afile>"))
+    au BufReadPre  *.gz  exe '!gzip -d ' .. shellescape(expand("<afile>"))
     au BufReadPre  *.gz  call rename(expand("<afile>:r"), expand("<afile>"))
     au BufReadPost *.gz  call rename(expand("<afile>"), expand("<afile>:r"))
-    au BufReadPost *.gz  exe '!gzip ' . shellescape(expand("<afile>:r"))
+    au BufReadPost *.gz  exe '!gzip ' .. shellescape(expand("<afile>:r"))
   augroup END
 
   e! Xtestfile.gz		" Edit compressed file
@@ -3438,9 +3440,9 @@ func Test_ReadWrite_Autocmds()
   set shelltemp			" need temp files here
   augroup Test4
     au!
-    au FilterReadPre   *.out  call rename(expand("<afile>"), expand("<afile>") . ".t")
-    au FilterReadPre   *.out  exe 'silent !sed s/e/E/ ' . shellescape(expand("<afile>")) . ".t >" . shellescape(expand("<afile>"))
-    au FilterReadPre   *.out  exe 'silent !rm ' . shellescape(expand("<afile>")) . '.t'
+    au FilterReadPre   *.out  call rename(expand("<afile>"), expand("<afile>") .. ".t")
+    au FilterReadPre   *.out  exe 'silent !sed s/e/E/ ' .. shellescape(expand("<afile>")) .. ".t >" .. shellescape(expand("<afile>"))
+    au FilterReadPre   *.out  exe 'silent !rm ' .. shellescape(expand("<afile>")) .. '.t'
     au FilterReadPost  *.out  '[,']s/x/X/g
   augroup END
 
@@ -3477,7 +3479,7 @@ func Test_ReadWrite_Autocmds()
   " Test for the FileReadPre and FileReadPost autocmds.
   augroup Test5
     au!
-    au FileReadPre *.gz exe 'silent !gzip -d ' . shellescape(expand("<afile>"))
+    au FileReadPre *.gz exe 'silent !gzip -d ' .. shellescape(expand("<afile>"))
     au FileReadPre *.gz call rename(expand("<afile>:r"), expand("<afile>"))
     au FileReadPost *.gz '[,']s/l/L/
   augroup END
@@ -3819,7 +3821,7 @@ func Test_autocmd_sigusr1()
 
   let g:sigusr1_passed = 0
   au SigUSR1 * let g:sigusr1_passed = 1
-  call system('/bin/kill -s usr1 ' . getpid())
+  call system('/bin/kill -s usr1 ' .. getpid())
   call WaitForAssert({-> assert_true(g:sigusr1_passed)})
 
   au! SigUSR1
@@ -5120,8 +5122,8 @@ endfunc
 " Check for `expected` after a session is written to-disk.
 func s:watch_for_session_path(expected)
   execute 'autocmd SessionWritePost * ++once execute "call s:assert_session_path(\"'
-        \ . a:expected
-        \ . '\")"'
+        \ .. a:expected
+        \ .. '\")"'
 endfunc
 
 " Ensure v:this_session gets the full session path, if explicitly stated

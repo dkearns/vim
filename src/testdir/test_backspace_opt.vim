@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for 'backspace' settings
 
 func Test_backspace_option()

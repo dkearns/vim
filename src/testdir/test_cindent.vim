@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for cinoptions and cindent
 
 def Test_cino_hash()

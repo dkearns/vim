@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for editing the command line.
 
 source util/screendump.vim

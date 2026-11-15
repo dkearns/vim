@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for the various 'cpoptions' (cpo) flags
 
 " Test for the 'a' flag in 'cpo'. Reading a file should set the alternate

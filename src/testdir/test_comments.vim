@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the various flags in the 'comments' option
 
 " Test for the 'n' flag in 'comments'
@@ -149,7 +151,7 @@ func Test_comment_multibyte_leader()
     ＸＸa
     ＸＸＹ
   END
-  exe "normal o\n" . join(t, "\n")
+  exe "normal o\n" .. join(t, "\n")
 
   let expected =<< trim END
     {

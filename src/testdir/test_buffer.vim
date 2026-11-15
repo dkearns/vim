@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for Vim buffer
 
 " Test for the :bunload command with an offset
@@ -17,7 +19,7 @@ func Test_bunload_with_offset()
 
   bunload Xb2
   bunload Xb3
-  exe bufwinnr('Xb1') . 'wincmd w'
+  exe bufwinnr('Xb1') .. 'wincmd w'
   .+3bunload
   call assert_equal(0, getbufinfo('Xb4')[0].loaded)
   call assert_equal('Xb1',
@@ -28,7 +30,7 @@ func Test_bunload_with_offset()
   ball
   bunload Xb3
   bunload Xb4
-  exe bufwinnr('Xb1') . 'wincmd w'
+  exe bufwinnr('Xb1') .. 'wincmd w'
   .+3bunload
   call assert_equal(0, getbufinfo('Xb2')[0].loaded)
   call assert_equal('Xb1',
@@ -39,7 +41,7 @@ func Test_bunload_with_offset()
   ball
   bunload Xb2
   bunload Xb3
-  exe bufwinnr('Xb4') . 'wincmd w'
+  exe bufwinnr('Xb4') .. 'wincmd w'
   .-3bunload
   call assert_equal(0, getbufinfo('Xb1')[0].loaded)
   call assert_equal('Xb4',
@@ -50,7 +52,7 @@ func Test_bunload_with_offset()
   ball
   bunload Xb1
   bunload Xb2
-  exe bufwinnr('Xb4') . 'wincmd w'
+  exe bufwinnr('Xb4') .. 'wincmd w'
   .-3bunload
   call assert_equal(0, getbufinfo('Xb3')[0].loaded)
   call assert_equal('Xb4',
@@ -269,7 +271,7 @@ func Test_buffer_sbuf_cleanup()
     au!
     autocmd SwapExists XsplitCleanup let v:swapchoice='q'
   augroup END
-  exe 'sbuf ' . bnr
+  exe 'sbuf ' .. bnr
   call assert_equal(1, winnr('$'))
   call assert_equal(0, getbufinfo('XsplitCleanup')[0].loaded)
 

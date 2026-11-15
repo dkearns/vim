@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for editing the command line.
 
 source util/screendump.vim
@@ -914,8 +916,8 @@ func Test_getcompletion()
   call assert_equal(-1, match(l[2:], '^\.\.\?/$'))
   let root = has('win32') ? 'C:\\' : '/'
   let l = getcompletion(root, 'shellcmd')
-  let expected = map(filter(glob(root . '*', 0, 1),
-        \ 'isdirectory(v:val) || executable(v:val)'), 'isdirectory(v:val) ? v:val . ''/'' : v:val')
+  let expected = map(filter(glob(root .. '*', 0, 1),
+        \ 'isdirectory(v:val) || executable(v:val)'), 'isdirectory(v:val) ? v:val .. ''/'' : v:val')
   call assert_equal(expected, l)
 
   if has('cscope')
@@ -999,7 +1001,7 @@ func Test_getcompletion()
 
   for name in names
     let matchcount = len(getcompletion('', name))
-    call assert_true(matchcount >= 0, 'No matches for ' . name)
+    call assert_true(matchcount >= 0, 'No matches for ' .. name)
   endfor
 
   set tags&
@@ -1149,14 +1151,14 @@ func Test_shellcmd_completion()
   call setfperm('Xpathdir/Xfile.exe', 'rwx------')
 
   " Set PATH to example directory without trailing slash.
-  let $PATH = getcwd() . '/Xpathdir'
+  let $PATH = getcwd() .. '/Xpathdir'
 
   " Test for the ":!<TAB>" case.  Previously, this would include subdirs of
   " dirs in the PATH, even though they won't be executed.  We check that only
   " subdirs of the PWD and executables from the PATH are included in the
   " suggestions.
   let actual = getcompletion('X', 'shellcmd')
-  let expected = map(filter(glob('*', 0, 1), 'isdirectory(v:val) && v:val[0] == "X"'), 'v:val . "/"')
+  let expected = map(filter(glob('*', 0, 1), 'isdirectory(v:val) && v:val[0] == "X"'), 'v:val .. "/"')
   call insert(expected, 'Xfile.exe')
   call assert_equal(expected, actual)
 
@@ -1186,7 +1188,7 @@ func Test_cmdline_paste()
   call assert_equal('"aaa /tmp/some bbb', @:)
 
   call feedkeys(":aaa \<C-R>\<C-L> bbb\<C-B>\"\<CR>", 'tx')
-  call assert_equal('"aaa '.getline(1).' bbb', @:)
+  call assert_equal('"aaa ' .. getline(1) .. ' bbb', @:)
 
   set incsearch
   call feedkeys("fy:aaa veryl\<C-R>\<C-W> bbb\<C-B>\"\<CR>", 'tx')
@@ -1238,7 +1240,7 @@ func Test_cmdline_remove_char()
   let encoding_save = &encoding
 
   for e in ['utf8', 'latin1']
-    exe 'set encoding=' . e
+    exe 'set encoding=' .. e
 
     call feedkeys(":abc def\<S-Left>\<Del>\<C-B>\"\<CR>", 'tx')
     call assert_equal('"abc ef', @:, e)
@@ -1402,8 +1404,8 @@ func Test_cmdline_complete_user_names()
     if len(first_letter) > 0
       " Trying completion of  :e ~x  where x is the first letter of
       " the user name should complete to at least the user name.
-      call feedkeys(':e ~' . first_letter . "\<c-a>\<c-B>\"\<cr>", 'tx')
-      call assert_match('^"e \~.*\<' . whoami . '\>', @:)
+      call feedkeys(':e ~' .. first_letter .. "\<c-a>\<c-B>\"\<cr>", 'tx')
+      call assert_match('^"e \~.*\<' .. whoami .. '\>', @:)
     endif
   elseif has('win32')
     " Just in case: check that the system has an Administrator account.
@@ -1411,7 +1413,7 @@ func Test_cmdline_complete_user_names()
     if names =~ 'Administrator'
       " Trying completion of  :e ~A  should complete to Administrator.
       " There could be other names starting with "A" before Administrator.
-      call feedkeys(':e ~A' . "\<c-a>\<c-B>\"\<cr>", 'tx')
+      call feedkeys(':e ~A' .. "\<c-a>\<c-B>\"\<cr>", 'tx')
       call assert_match('^"e \~.*Administrator', @:)
     endif
   else
@@ -1453,19 +1455,19 @@ func Test_cmdline_complete_languages()
   call feedkeys(":language \<c-a>\<c-b>\"\<cr>", 'tx')
   call assert_match('^"language .*\<collate\>.*\<ctype\>.*\<messages\>.*\<time\>', @:)
 
-  call assert_match('^"language .*\<' . lang . '\>', @:)
+  call assert_match('^"language .*\<' .. lang .. '\>', @:)
 
   call feedkeys(":language messages \<c-a>\<c-b>\"\<cr>", 'tx')
-  call assert_match('^"language .*\<' . lang . '\>', @:)
+  call assert_match('^"language .*\<' .. lang .. '\>', @:)
 
   call feedkeys(":language ctype \<c-a>\<c-b>\"\<cr>", 'tx')
-  call assert_match('^"language .*\<' . lang . '\>', @:)
+  call assert_match('^"language .*\<' .. lang .. '\>', @:)
 
   call feedkeys(":language time \<c-a>\<c-b>\"\<cr>", 'tx')
-  call assert_match('^"language .*\<' . lang . '\>', @:)
+  call assert_match('^"language .*\<' .. lang .. '\>', @:)
 
   call feedkeys(":language collate \<c-a>\<c-b>\"\<cr>", 'tx')
-  call assert_match('^"language .*\<' . lang . '\>', @:)
+  call assert_match('^"language .*\<' .. lang .. '\>', @:)
 endfunc
 
 func Test_cmdline_complete_env_variable()
@@ -2103,7 +2105,7 @@ func Test_cmdline_overstrike()
   let encoding_save = &encoding
 
   for e in encodings
-    exe 'set encoding=' . e
+    exe 'set encoding=' .. e
 
     " Test overstrike in the middle of the command line.
     call feedkeys(":\"01234\<home>\<right>\<right>ab\<right>\<insert>cd\<enter>", 'xt')
@@ -5153,7 +5155,7 @@ func Test_window_size_stays_same_after_changing_cmdheight()
   set laststatus=2
   let expected = winheight(0)
   function! Function_name() abort
-    call feedkeys(":"..repeat('x', &columns), 'x')
+    call feedkeys(":" .. repeat('x', &columns), 'x')
     let &cmdheight=2
     let &cmdheight=1
     redraw
@@ -5199,7 +5201,7 @@ endfunc
 func Test_ex_command_completion()
   " required for :*
   set cpo+=*
-  let list = filter(getcompletion('', 'command'), 'exists(":" . v:val) == 0')
+  let list = filter(getcompletion('', 'command'), 'exists(":" .. v:val) == 0')
   " :++ and :-- are only valid in Vim9 script context, so they can be ignored
   call assert_equal(['++', '--'], sort(list))
   call assert_equal(2, exists(':k'))
@@ -5338,11 +5340,11 @@ func Test_search_complete()
     call assert_equal('these', getline('.'))
     call feedkeys($"gg/the{trig}\<c-n>\<cr>", 'tx')
     call assert_equal('thethe', getline('.'))
-    call feedkeys($"gg/the{trig}".repeat("\<c-n>", 5)."\<cr>", 'tx')
+    call feedkeys($"gg/the{trig}" .. repeat("\<c-n>", 5) .. "\<cr>", 'tx')
     call assert_equal('these', getline('.'))
     call feedkeys($"G?the{trig}\<cr>", 'tx')
     call assert_equal('thethere', getline('.'))
-    call feedkeys($"G?the{trig}".repeat("\<c-p>", 5)."\<cr>", 'tx')
+    call feedkeys($"G?the{trig}" .. repeat("\<c-p>", 5) .. "\<cr>", 'tx')
     call assert_equal('thethere', getline('.'))
 
     " Beginning of word pattern (<) retains '<'
@@ -5368,10 +5370,10 @@ func Test_search_complete()
 
   " CTRL-T goes to the previous match
   " first match
-  call feedkeys("G?the\<c-z>".repeat("\<c-n>", 2)."\<c-t>\<cr>", 'tx')
+  call feedkeys("G?the\<c-z>" .. repeat("\<c-n>", 2) .. "\<c-t>\<cr>", 'tx')
   call assert_equal('thethere', getline('.'))
   " second match
-  call feedkeys("G?the\<c-z>".repeat("\<c-n>", 2).repeat("\<c-t>", 2)."\<cr>", 'tx')
+  call feedkeys("G?the\<c-z>" .. repeat("\<c-n>", 2) .. repeat("\<c-t>", 2) .. "\<cr>", 'tx')
   call assert_equal('thethe', getline('.'))
 
   " wild menu is cleared properly
@@ -5382,11 +5384,11 @@ func Test_search_complete()
 
   " Do not expand if offset is present (/pattern/offset and ?pattern?offset)
   for pat in ["/", "/2", "/-3", "\\/"]
-    call feedkeys("/the" . pat . "\<c-z>\<f9>", 'tx')
+    call feedkeys("/the" .. pat .. "\<c-z>\<f9>", 'tx')
     call assert_equal({}, g:compl_info)
   endfor
   for pat in ["?", "?2", "?-3", "\\\\?"]
-    call feedkeys("?the" . pat . "\<c-z>\<f9>", 'tx')
+    call feedkeys("?the" .. pat .. "\<c-z>\<f9>", 'tx')
     call assert_equal({}, g:compl_info)
   endfor
 
@@ -5661,7 +5663,7 @@ func Test_pum_scroll_noselect()
   let rows = 10
   let buf = RunVimInTerminal('-S XTest_pum_scroll', {'rows': rows})
 
-  call term_sendkeys(buf, ":TestCmd \<tab>" . repeat("\<c-n>", 20))
+  call term_sendkeys(buf, ":TestCmd \<tab>" .. repeat("\<c-n>", 20))
   call WaitForTermCurPosAndLinesToMatch(buf, [rows, (strlen(':TestCmd a20') + 1)], g:test_timeout, ((rows - 1), '\<a23\s\+$'))
   call VerifyScreenDump(buf, 'Test_pum_scroll_noselect_1', {})
 

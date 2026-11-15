@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test argument list commands
 
 func Reset_arglist()
@@ -194,7 +196,7 @@ func Test_argument()
     " No trailing newline with one item per row.
     let long_arg = repeat('X', 81)
     exe 'args ' .. long_arg
-    call assert_equal("\n[".long_arg.']', execute('args'))
+    call assert_equal("\n[" .. long_arg .. ']', execute('args'))
   finally
     let &columns = save_columns
   endtry
@@ -229,7 +231,7 @@ func Test_list_arguments()
   redir => result
   args
   redir END
-  call assert_match('\[' . aarg . '] \+' . carg . '\n' . barg . ' \+' . darg, trim(result))
+  call assert_match('\[' .. aarg .. '] \+' .. carg .. '\n' .. barg .. ' \+' .. darg, trim(result))
 
   " if one arg is longer than half the screen make one column
   exe 'argdel' aarg
@@ -238,7 +240,7 @@ func Test_list_arguments()
   redir => result
   args
   redir END
-  call assert_match(aarg . '\n\[' . barg . ']\n' . carg . '\n' . darg, trim(result))
+  call assert_match(aarg .. '\n\[' .. barg .. ']\n' .. carg .. '\n' .. darg, trim(result))
 
   %argdelete
 endfunc
@@ -568,7 +570,7 @@ endfunc
 func Test_large_arg()
   " Argument longer or equal to the number of columns used to cause
   " access to invalid memory.
-  exe 'argadd ' .repeat('x', &columns)
+  exe 'argadd ' .. repeat('x', &columns)
   args
 endfunc
 

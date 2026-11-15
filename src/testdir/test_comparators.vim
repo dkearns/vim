@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for comparators
 
 function Test_Comparators()

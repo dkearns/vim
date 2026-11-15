@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the :checkpath command
 
 " Test for 'include' without \zs or \ze
@@ -27,7 +29,7 @@ func Test_checkpath1()
 endfunc
 
 func DotsToSlashes()
-  return substitute(v:fname, '\.', '/', 'g') . '.b'
+  return substitute(v:fname, '\.', '/', 'g') .. '.b'
 endfunc
 
 " Test for 'include' with \zs and \ze

@@ -1,8 +1,10 @@
+scriptversion 4
+
 " Test for :cd and chdir()
 
 func Test_cd_large_path()
   " This used to crash with a heap write overflow.
-  call assert_fails('cd ' . repeat('x', 5000), 'E344:')
+  call assert_fails('cd ' .. repeat('x', 5000), 'E344:')
 endfunc
 
 func Test_cd_up_and_down()

@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for :[count]close! command
 
 func Test_close_count()

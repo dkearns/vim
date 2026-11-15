@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for b:changedtick
 
 func Test_changedtick_increments()

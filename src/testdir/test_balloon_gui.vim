@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for 'ballooneval' in the GUI.
 
 CheckGui

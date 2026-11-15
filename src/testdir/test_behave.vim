@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test the :behave command
 
 func Test_behave()

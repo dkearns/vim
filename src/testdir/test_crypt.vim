@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for encryption.
 
 CheckFeature cryptv
@@ -43,7 +45,7 @@ func Test_head_only_4()
 endfunc
 
 func Crypt_uncrypt(method)
-  exe "set cryptmethod=" . a:method
+  exe "set cryptmethod=" .. a:method
   " If the blowfish test fails 'cryptmethod' will be 'zip' now.
   call assert_equal(a:method, &cryptmethod)
 
@@ -113,12 +115,12 @@ endfunc
 func Uncrypt_stable(method, crypted_text, key, uncrypted_text)
   split Xtest_stable.txt
   set bin noeol key= fenc=latin1
-  exe "set cryptmethod=" . a:method
+  exe "set cryptmethod=" .. a:method
   call setline(1, a:crypted_text)
   w!
   bwipe!
   set nobin
-  call feedkeys(":split Xtest_stable.txt\<CR>" . a:key . "\<CR>", 'xt')
+  call feedkeys(":split Xtest_stable.txt\<CR>" .. a:key .. "\<CR>", 'xt')
   call assert_equal(a:uncrypted_text, getline(1, len(a:uncrypted_text)))
   bwipe!
   call delete('Xtest_stable.txt')
@@ -132,7 +134,7 @@ func Uncrypt_stable_xxd(method, hex, key, uncrypted_text, verbose)
   " use xxd to write the binary content
   call system(s:xxd_cmd .. ' -r >Xtest_stable_xxd.txt', a:hex)
   let cmd = (a:verbose ? ':verbose' : '') ..
-        \ ":split Xtest_stable_xxd.txt\<CR>" . a:key . "\<CR>"
+        \ ":split Xtest_stable_xxd.txt\<CR>" .. a:key .. "\<CR>"
   call feedkeys(cmd, 'xt')
   call assert_equal(a:uncrypted_text, getline(1, len(a:uncrypted_text)))
   bwipe!

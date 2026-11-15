@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for 'conceal'.
 
 CheckFeature conceal

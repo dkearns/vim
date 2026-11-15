@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test to verify that the cmd list in runtime/doc/index.txt contains all of
 " the commands in src/ex_cmds.h. It doesn't map the other way round because
 " index.txt contains some shorthands like :!! which are useful to list, but

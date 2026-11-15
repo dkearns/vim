@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for related f{char} and t{char} using utf-8.
 
 " Test for t,f,F,T movement commands

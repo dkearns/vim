@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the Blob types
 
 import './util/vim9.vim' as v9

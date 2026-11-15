@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the changelist functionality
 
 " When splitting a window the changelist position is wrong.

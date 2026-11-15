@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for breakindent
 "
 " Note: if you get strange failures when adding new tests, it might be that
@@ -541,7 +543,7 @@ func Test_breakindent16()
   " Check that overlong lines are indented correctly.
   let s:input = ""
   call s:test_windows('setl breakindent briopt=min:0 ts=4')
-  call setline(1, "\t".repeat("1234567890", 10))
+  call setline(1, "\t" .. repeat("1234567890", 10))
   resize 6
   norm! 1gg$
   redraw!
@@ -567,7 +569,7 @@ func Test_breakindent16_vartabs()
   " Check that overlong lines are indented correctly.
   let s:input = ""
   call s:test_windows('setl breakindent briopt=min:0 ts=4 vts=4')
-  call setline(1, "\t".repeat("1234567890", 10))
+  call setline(1, "\t" .. repeat("1234567890", 10))
   resize 6
   norm! 1gg$
   redraw!
@@ -592,7 +594,7 @@ func Test_breakindent17_vartabs()
   CheckFeature vartabs
   let s:input = ""
   call s:test_windows('setl breakindent list listchars=tab:<-> showbreak=+++')
-  call setline(1, "\t" . repeat('a', 63))
+  call setline(1, "\t" .. repeat('a', 63))
   vert resize 30
   norm! 1gg$
   redraw!
@@ -610,7 +612,7 @@ func Test_breakindent18_vartabs()
   CheckFeature vartabs
   let s:input = ""
   call s:test_windows('setl breakindent list listchars=tab:<->')
-  call setline(1, "\t" . repeat('a', 63))
+  call setline(1, "\t" .. repeat('a', 63))
   vert resize 30
   norm! 1gg$
   redraw!

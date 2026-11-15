@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for displaying stuff
 
 if !has('gui_running') && has('unix')
@@ -24,10 +26,10 @@ func Test_display_foldcolumn()
 
   call cursor(2, 1)
   norm! zt
-  let lines = ScreenLines([1,2], winwidth(0))
+  let lines = ScreenLines([1, 2], winwidth(0))
   call assert_equal(expect, lines)
   set fdc=2
-  let lines = ScreenLines([1,2], winwidth(0))
+  let lines = ScreenLines([1, 2], winwidth(0))
   let expect = [
         \ "  e more noise blah blah<",
         \ "  82> more stuff here    "
@@ -46,19 +48,19 @@ func Test_display_foldtext_mbyte()
   exe "set foldmethod=manual foldtext=foldtext() fillchars=fold:\u2500,vert:\u2502 fdc=2"
   call cursor(2, 1)
   norm! zf13G
-  let lines=ScreenLines([1,3], winwidth(0)+1)
+  let lines=ScreenLines([1, 3], winwidth(0) + 1)
   let expect=[
         \ "  1                                     \u2502",
-        \ "+ +-- 12 lines: 2". repeat("\u2500", 23). "\u2502",
+        \ "+ +-- 12 lines: 2" .. repeat("\u2500", 23) .. "\u2502",
         \ "  14                                    \u2502",
         \ ]
   call assert_equal(expect, lines)
 
   set fillchars=fold:-,vert:\|
-  let lines=ScreenLines([1,3], winwidth(0)+1)
+  let lines=ScreenLines([1, 3], winwidth(0) + 1)
   let expect=[
         \ "  1                                     |",
-        \ "+ +-- 12 lines: 2". repeat("-", 23). "|",
+        \ "+ +-- 12 lines: 2" .. repeat("-", 23) .. "|",
         \ "  14                                    |",
         \ ]
   call assert_equal(expect, lines)
@@ -114,7 +116,7 @@ func Test_display_listchars_precedes()
   call cursor(1, 1)
   " move to end of line and scroll 2 characters back
   norm! $2zh
-  let lines=ScreenLines([1,4], winwidth(0)+1)
+  let lines=ScreenLines([1, 4], winwidth(0) + 1)
   let expect = [
         \ " aaa aa $ |",
         \ "$         |",
@@ -126,7 +128,7 @@ func Test_display_listchars_precedes()
   call cursor(1, 1)
   " move to end of line and scroll 2 characters back
   norm! $2zh
-  let lines = ScreenLines([1,4], winwidth(0)+1)
+  let lines = ScreenLines([1, 4], winwidth(0) + 1)
   let expect = [
         \ "<aaa aa $ |",
         \ "<         |",
@@ -139,7 +141,7 @@ func Test_display_listchars_precedes()
   " the complete line should be displayed in the window
   norm! $
 
-  let lines = ScreenLines([1,10], winwidth(0)+1)
+  let lines = ScreenLines([1, 10], winwidth(0) + 1)
   let expect = [
         \ "<aaa aaa a|",
         \ "a aaa aaa |",
@@ -170,7 +172,7 @@ func Test_scroll_CursorLineNr_update()
   END
   let filename = 'Xdrawscreen'
   call writefile(lines, filename, 'D')
-  let buf = RunVimInTerminal('-S '.filename, #{rows: 5, cols: 50})
+  let buf = RunVimInTerminal('-S ' .. filename, #{rows: 5, cols: 50})
   call term_sendkeys(buf, "k")
   call VerifyScreenDump(buf, 'Test_winline_rnu', {})
 
@@ -224,7 +226,7 @@ func Test_unprintable_fileformats()
   END
   let filename = 'Xunprintable'
   call writefile(lines, filename, 'D')
-  let buf = RunVimInTerminal('-S '.filename, #{rows: 9, cols: 50})
+  let buf = RunVimInTerminal('-S ' .. filename, #{rows: 9, cols: 50})
   call VerifyScreenDump(buf, 'Test_display_unprintable_01', {})
   call term_sendkeys(buf, "\<C-W>\<C-W>\<C-L>")
   call VerifyScreenDump(buf, 'Test_display_unprintable_02', {})

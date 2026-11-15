@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Some tests, that used to crash Vim
 source util/screendump.vim
 

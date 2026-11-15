@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for diff mode
 
 source util/screendump.vim
@@ -457,7 +459,7 @@ func Test_dp_do_buffer()
 
   " dp and do with valid buffer number.
   call assert_equal('one', getline('.'))
-  exe 'norm ' . bn1 . 'do'
+  exe 'norm ' .. bn1 .. 'do'
   call assert_equal('10', getline('.'))
   21
   call assert_equal('two', getline('.'))
@@ -465,7 +467,7 @@ func Test_dp_do_buffer()
   call assert_equal('20', getline('.'))
 
   31
-  exe 'norm ' . bn1 . 'dp'
+  exe 'norm ' .. bn1 .. 'dp'
   41
   diffput one
   wincmd w
@@ -479,8 +481,8 @@ func Test_dp_do_buffer()
   let bn3=bufnr('%')
   wincmd w
   51
-  call assert_fails('exe "norm" . bn3 . "dp"', 'E103:')
-  call assert_fails('exe "norm" . bn3 . "do"', 'E103:')
+  call assert_fails('exe "norm" .. bn3 .. "dp"', 'E103:')
+  call assert_fails('exe "norm" .. bn3 .. "do"', 'E103:')
   call assert_fails('diffput not_in_diff_mode', 'E94:')
   call assert_fails('diffget not_in_diff_mode', 'E94:')
 
@@ -761,7 +763,7 @@ func Test_diffexpr()
   func DiffExpr()
     " Prepend some text to check diff type detection
     call writefile(['warning', '  message'], v:fname_out)
-    silent exe '!diff ' . v:fname_in . ' ' . v:fname_new . '>>' . v:fname_out
+    silent exe '!diff ' .. v:fname_in .. ' ' .. v:fname_new .. '>>' .. v:fname_out
   endfunc
   set diffexpr=DiffExpr()
   set diffopt=foldcolumn:0
@@ -828,7 +830,7 @@ func Test_diffpatch()
     if name != 'Xpatch'
       call rename('Xpatch', name)
     endif
-    exe 'diffpatch ' . escape(name, '$')
+    exe 'diffpatch ' .. escape(name, '$')
     call assert_equal(['1', '2x', '3', '4'], getline(1, '$'))
     if name != 'Xpatch'
       call rename(name, 'Xpatch')
@@ -857,7 +859,7 @@ endfunc
 
 func Test_diff_too_many_buffers()
   for i in range(1, 8)
-    exe "new Xtest" . i
+    exe "new Xtest" .. i
     diffthis
   endfor
   new Xtest9
@@ -984,7 +986,7 @@ func VerifyBoth(buf, dumpfile, extra)
   CheckScreendump
 
   " trailing : for leaving the cursor on the command line
-  for cmd in [":set diffopt=filler" . a:extra . "\<CR>:", ":set diffopt+=internal\<CR>:"]
+  for cmd in [":set diffopt=filler" .. a:extra .. "\<CR>:", ":set diffopt+=internal\<CR>:"]
     call term_sendkeys(a:buf, cmd)
     if VerifyScreenDump(a:buf, a:dumpfile, {}, cmd =~ 'internal' ? 'internal' : 'external')
       " don't let the next iteration overwrite the "failed" file.
@@ -1005,7 +1007,7 @@ func VerifyInternal(buf, dumpfile, extra)
 
   call term_sendkeys(a:buf, ":diffupdate!\<CR>")
   " trailing : for leaving the cursor on the command line
-  call term_sendkeys(a:buf, ":set diffopt=internal,filler" . a:extra . "\<CR>:")
+  call term_sendkeys(a:buf, ":set diffopt=internal,filler" .. a:extra .. "\<CR>:")
   call VerifyScreenDump(a:buf, a:dumpfile, {})
 endfunc
 
@@ -1544,7 +1546,7 @@ func Test_diff_and_scroll()
   diffthis
   wincmd p
   diffthis
-  execute 'normal ' . winheight(0) . "\<C-d>"
+  execute 'normal ' .. winheight(0) .. "\<C-d>"
 
   bwipe!
   bwipe!
@@ -3744,7 +3746,7 @@ func Test_diff_fold_scan_finger()
   " Change one line in every 30-line block, far enough apart to stay separate.
   let changes = range(30, 570, 30)
   for c in changes
-    let other[c - 1] = 'x' . other[c - 1]
+    let other[c - 1] = 'x' .. other[c - 1]
   endfor
   call setline(1, other)
   diffthis
@@ -3773,19 +3775,19 @@ func Test_diff_fold_scan_finger()
 
   " Walk the folds forward (lnum increasing: exercises the resume path).
   for [s, e] in expected
-    call assert_equal(s, foldclosed(s), 'foldclosed at ' . s)
-    call assert_equal(e, foldclosedend(s), 'foldclosedend at ' . s)
+    call assert_equal(s, foldclosed(s), 'foldclosed at ' .. s)
+    call assert_equal(e, foldclosedend(s), 'foldclosedend at ' .. s)
   endfor
 
   " Walk the folds backward (lnum decreasing: forces the finger to restart).
   for [s, e] in reverse(copy(expected))
-    call assert_equal(s, foldclosed(e), 'reverse foldclosed at ' . e)
-    call assert_equal(e, foldclosedend(e), 'reverse foldclosedend at ' . e)
+    call assert_equal(s, foldclosed(e), 'reverse foldclosed at ' .. e)
+    call assert_equal(e, foldclosedend(e), 'reverse foldclosedend at ' .. e)
   endfor
 
   " The context lines around every change must not be in a closed fold.
   for c in changes
-    call assert_equal(-1, foldclosed(c), 'change line ' . c . ' visible')
+    call assert_equal(-1, foldclosed(c), 'change line ' .. c .. ' visible')
   endfor
 
   " The other window (different buffer index) must produce the same folds.
@@ -3793,15 +3795,15 @@ func Test_diff_fold_scan_finger()
   call cursor(300, 1)
   normal! zx
   for [s, e] in expected
-    call assert_equal(s, foldclosed(s), 'winone foldclosed at ' . s)
-    call assert_equal(e, foldclosedend(s), 'winone foldclosedend at ' . s)
+    call assert_equal(s, foldclosed(s), 'winone foldclosed at ' .. s)
+    call assert_equal(e, foldclosedend(s), 'winone foldclosedend at ' .. s)
   endfor
 
   " Editing invalidates the finger; a new change deep inside a fold must split
   " it and become visible.
   call win_gotoid(wintwo)
   call cursor(300, 1)
-  call setline(315, 'x' . getline(315))
+  call setline(315, 'x' .. getline(315))
   diffupdate
   normal! zx
   call assert_equal(305, foldclosed(305))

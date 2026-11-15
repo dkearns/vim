@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for not changing curswant
 
 func Test_curswant()

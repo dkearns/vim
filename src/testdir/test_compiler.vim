@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test the :compiler command
 
 func Test_compiler()
@@ -33,7 +35,7 @@ func Test_compiler()
   call feedkeys(":make\<CR>\<CR>", 'tx')
   let a=execute('clist')
   call assert_match('\n \d\+ Xfoo.pl:3: Global symbol "$foo" '
-  \ .               'requires explicit package name', a)
+  \ ..              'requires explicit package name', a)
 
   compiler make
   call assert_fails('let b:current_compiler', 'E121:')

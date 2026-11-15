@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for user command counts.
 
 func Test_command_count_0()
@@ -147,11 +149,11 @@ func Test_command_count_3()
   let buf_bbb = bufnr('%')
   e ccc
   let buf_ccc = bufnr('%')
-  exe bufnr . 'buf'
+  exe bufnr .. 'buf'
   call assert_equal([1, 1, 1], [buflisted(buf_aaa), buflisted(buf_bbb), buflisted(buf_ccc)])
-  exe buf_bbb . "," . buf_ccc . "bdelete"
+  exe buf_bbb .. "," .. buf_ccc .. "bdelete"
   call assert_equal([1, 0, 0], [buflisted(buf_aaa), buflisted(buf_bbb), buflisted(buf_ccc)])
-  exe buf_aaa . "bdelete"
+  exe buf_aaa .. "bdelete"
   call assert_equal([0, 0, 0], [buflisted(buf_aaa), buflisted(buf_bbb), buflisted(buf_ccc)])
 endfunc
 
@@ -174,15 +176,15 @@ func Test_command_count_4()
   call assert_equal([2, 3, 4], windows)
   only!
 
-  exe bufnr . 'buf'
+  exe bufnr .. 'buf'
   let bufnr = bufnr('%')
   let buffers = []
   .,$-bufdo call add(buffers, bufnr('%'))
   call assert_equal([bufnr, bufnr + 1, bufnr + 2, bufnr + 3, bufnr + 4], buffers)
 
-  exe (bufnr + 3) . 'bdel'
+  exe (bufnr + 3) .. 'bdel'
   let buffers = []
-  exe (bufnr + 2) . ',' . (bufnr + 5) . "bufdo call add(buffers, bufnr('%'))"
+  exe (bufnr + 2) .. ',' .. (bufnr + 5) .. "bufdo call add(buffers, bufnr('%'))"
   call assert_equal([bufnr + 2, bufnr + 4, bufnr +  5], buffers)
 
   " create tabpages to get 5

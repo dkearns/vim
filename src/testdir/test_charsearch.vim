@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for character search commands - t, T, f, F, ; and ,
 
 func Test_charsearch()

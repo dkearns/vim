@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for all command modifiers in
 
 def s:memoize_cmdmods(): func(): list<string>

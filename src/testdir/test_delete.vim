@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for delete().
 
 source util/screendump.vim

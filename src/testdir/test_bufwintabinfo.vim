@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the getbufinfo(), getwininfo() and gettabinfo() functions
 
 func Test_getbufwintabinfo()
@@ -35,7 +37,7 @@ func Test_getbufwintabinfo()
   if has('signs')
     call append(0, ['Linux', 'Windows', 'Mac'])
     sign define Mark text=>> texthl=Search
-    exe "sign place 2 line=3 name=Mark buffer=" . bufnr('%')
+    exe "sign place 2 line=3 name=Mark buffer=" .. bufnr('%')
     let l = getbufinfo('%')
     call assert_equal(2, l[0].signs[0].id)
     call assert_equal(3, l[0].signs[0].lnum)

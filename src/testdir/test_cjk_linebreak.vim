@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for CJK linebreak
 
 scriptencoding utf-8
@@ -9,7 +11,7 @@ func Run_cjk_linebreak_after(rigorous)
         \ '…', '‰', '‱', '‼', '⁇', '⁈', '⁉', '℃', '℉', '、', '。', '〉', '》',
         \ '」', '』', '】', '〕', '〗', '〙', '〛', '！', '）', '，', '．', '：',
         \ '；', '？', '］', '｝']
-    call setline('.', '这是一个测试' .. punct.'试试 CJK 行禁则补丁。')
+    call setline('.', '这是一个测试' .. punct .. '试试 CJK 行禁则补丁。')
     normal gqq
     if a:rigorous
       call assert_equal('这是一个测', getline(1))
@@ -35,7 +37,7 @@ func Run_cjk_linebreak_before()
   for punct in [
         \ '(', '<', '[', '`', '{', '‘', '“', '〈', '《', '「', '『', '【', '〔',
         \ '〖', '〘', '〚', '（', '［', '｛']
-    call setline('.', '这是个测试' .. punct.'试试 CJK 行禁则补丁。')
+    call setline('.', '这是个测试' .. punct .. '试试 CJK 行禁则补丁。')
     normal gqq
     call assert_equal('这是个测试', getline(1))
     %d_
@@ -93,7 +95,7 @@ func Test_cjk_linebreak_join_punct()
     call setline(2, 'English')
     set formatoptions=croqn2mB1j
     normal ggJ
-    call assert_equal('文本文本' .. punct.'English', getline(1))
+    call assert_equal('文本文本' .. punct .. 'English', getline(1))
     %d_
   endfor
 endfunc
