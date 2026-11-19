@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for 'listchars' display with 'list' and :list
 
 source util/screendump.vim
@@ -508,7 +510,7 @@ func Test_listchars()
   call Check_listchars([expected], 1, &columns)
 
   set list
-  let expected = expected[:-2] . 'Z'
+  let expected = expected[:-2] .. 'Z'
   call Check_listchars([expected], 1, &columns)
 
   enew!

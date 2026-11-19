@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test editing line in Ex mode (see :help Q and :help gQ).
 
 " Helper function to test editing line in Q Ex mode
@@ -30,7 +32,7 @@ func Test_ex_mode()
   set sw=2
 
   for e in ['utf8', 'latin1']
-    exe 'set encoding=' . e
+    exe 'set encoding=' .. e
 
     call assert_equal(['bar', 'bar'],             Ex("foo bar\<C-u>bar"), e)
     call assert_equal(["1\<C-u>2", "1\<C-u>2"],   Ex("1\<C-v>\<C-u>2"), e)

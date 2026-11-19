@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for large files
 " This is only executed manually: "make test_largefile".
 " This is not run as part of "make test".

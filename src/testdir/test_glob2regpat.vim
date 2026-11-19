@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test glob2regpat()
 
 import './util/vim9.vim' as v9

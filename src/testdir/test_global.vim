@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for :global and :vglobal
 
 func Test_yank_put_clipboard()

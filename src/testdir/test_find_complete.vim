@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the 'find' command completion.
 
 " Do all the tests in a separate window to avoid E211 when we recursively
@@ -9,7 +11,7 @@ func Test_find_complete()
   " we start from a clean state.
   call delete("Xfind", "rf")
   let cwd = getcwd()
-  let test_out = cwd . '/test.out'
+  let test_out = cwd .. '/test.out'
   call mkdir('Xfind', 'R')
   cd Xfind
 
@@ -52,7 +54,7 @@ func Test_find_complete()
   call assert_equal('E.T.', getline(1))
 
   " Rerun the previous three find completions, using fullpath in 'path'
-  exec "set path=" . cwd . "/Xfind/**"
+  exec "set path=" .. cwd .. "/Xfind/**"
 
   call feedkeys(":find file\t\n", "xt")
   call assert_equal('Holy Grail', getline(1))
@@ -107,7 +109,7 @@ func Test_find_complete()
   call writefile(['Voyager 1'], 'foo/x/bar/voyager.txt')
   call writefile(['Voyager 2'], 'foo/y/bar/voyager.txt')
 
-  exec "set path=" . cwd . "/Xfind/**"
+  exec "set path=" .. cwd .. "/Xfind/**"
   call feedkeys(":find voyager\t\n", "xt")
   call assert_equal('Voyager 1', getline(1))
   call feedkeys(":find voyager\t\t\n", "xt")
@@ -138,7 +140,7 @@ func Test_find_complete()
   call assert_equal('Jimmy Hoffa', getline(1))
 
   " Test for relative to current buffer 'path' item
-  call chdir(cwd . "/Xfind/")
+  call chdir(cwd .. "/Xfind/")
   set path=./path
   " Open the file where Jimmy Hoffa is found
   e in/file.txt

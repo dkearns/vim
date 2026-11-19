@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for expanding file names
 
 func Test_with_directories()
@@ -76,7 +78,7 @@ func Test_expandcmd()
   edit Xpandfile3
   edit Xpandfile4
   let bnum = bufnr('Xpandfile2')
-  call assert_equal('e Xpandfile2', expandcmd('e #' . bnum))
+  call assert_equal('e Xpandfile2', expandcmd('e #' .. bnum))
   call setline('.', 'Vim!@#')
   call assert_equal('e Vim', expandcmd('e <cword>'))
   call assert_equal('e Vim!@#', expandcmd('e <cWORD>'))

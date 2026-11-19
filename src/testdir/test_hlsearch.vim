@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for v:hlsearch
 
 source util/screendump.vim
@@ -66,7 +68,7 @@ func Test_hlsearch_eol_highlight()
   exe "normal! /$\<CR>" | redraw
   let attr = screenattr(1, 1)
   for row in range(2, 10)
-    call assert_equal(attr, screenattr(row, 1), 'in line ' . row)
+    call assert_equal(attr, screenattr(row, 1), 'in line ' .. row)
   endfor
   set nohlsearch
   bwipe!

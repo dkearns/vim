@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for ":highlight" and highlighting.
 
 source util/screendump.vim
@@ -51,7 +53,7 @@ func Test_highlight()
 endfunc
 
 func HighlightArgs(name)
-  return 'hi ' . substitute(split(execute('hi ' . a:name), '\n')[0], '\<xxx\>', '', '')
+  return 'hi ' .. substitute(split(execute('hi ' .. a:name), '\n')[0], '\<xxx\>', '', '')
 endfunc
 
 func IsColorable()
@@ -63,7 +65,7 @@ func HiCursorLine()
   if has('gui_running')
     let guibg = matchstr(hiCursorLine, 'guibg=\w\+')
     let hi_ul = 'hi CursorLine gui=underline guibg=NONE'
-    let hi_bg = 'hi CursorLine gui=NONE ' . guibg
+    let hi_bg = 'hi CursorLine gui=NONE ' .. guibg
   else
     let hi_ul = 'hi CursorLine cterm=underline ctermbg=NONE'
     let hi_bg = 'hi CursorLine cterm=NONE ctermbg=Gray'
@@ -274,7 +276,7 @@ func Test_highlight_eol_with_cursorline_linewrap()
   let [hiCursorLine, hi_ul, hi_bg] = HiCursorLine()
 
   call NewWindow('topleft 5', 10)
-  call setline(1, [repeat('a', 51) . 'bcd', ''])
+  call setline(1, [repeat('a', 51) .. 'bcd', ''])
   call matchadd('Search', '\n')
 
   setlocal wrap
@@ -375,7 +377,7 @@ func Test_highlight_eol_with_cursorline_sign()
   call matchadd('Search', '\n')
 
   sign define Sign text=>>
-  exe 'sign place 1 line=1 name=Sign buffer=' . bufnr('')
+  exe 'sign place 1 line=1 name=Sign buffer=' .. bufnr('')
   let attrs0 = ScreenAttrs(1, 10)[0]
   setlocal cursorline
 
@@ -431,7 +433,7 @@ func Test_highlight_eol_with_cursorline_breakindent()
   call NewWindow('topleft 5', 10)
   set showbreak=xxx
   setlocal breakindent breakindentopt=min:0,shift:1 showbreak=>
-  call setline(1, ' ' . repeat('a', 9) . 'bcd')
+  call setline(1, ' ' .. repeat('a', 9) .. 'bcd')
   call matchadd('Search', '\n')
   let attrs0 = ScreenAttrs(2, 10)[0]
   setlocal cursorline
@@ -837,7 +839,7 @@ func Test_highlight_cmd_errors()
   " Try using a very long terminal code. Define a dummy terminal code for this
   " test.
   let &t_fo = "\<Esc>1;"
-  let c = repeat("t_fo,", 100) . "t_fo"
+  let c = repeat("t_fo,", 100) .. "t_fo"
   call assert_fails('exe "hi Xgroup1 start=" . c', 'E422:')
   let &t_fo = ""
 endfunc

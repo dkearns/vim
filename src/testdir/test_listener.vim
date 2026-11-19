@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for Listeners:
 " listener_add() and listener_remove()
 " redraw_listener_add() and redraw_listener_remove()

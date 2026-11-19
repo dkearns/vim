@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test findfile() and finddir()
 
 import './util/vim9.vim' as v9
@@ -100,10 +102,10 @@ func Test_findfile()
 
   " Test upwards search with stop-directory.
   cd Xdir2
-  let l = findfile('bar', ';' . save_dir . '/Xfinddir1/Xdir2/Xdir3/', -1)
+  let l = findfile('bar', ';' .. save_dir .. '/Xfinddir1/Xdir2/Xdir3/', -1)
   call assert_equal(1, len(l))
   call assert_match('.*/Xfinddir1/Xdir2/Xdir3/bar', l[0])
-  let l = findfile('bar', ';' . save_dir . '/Xfinddir1/Xdir2/Xdir3', -1)
+  let l = findfile('bar', ';' .. save_dir .. '/Xfinddir1/Xdir2/Xdir3', -1)
   call assert_equal(1, len(l))
   call assert_match('.*/Xfinddir1/Xdir2/Xdir3/bar', l[0])
   let l = findfile('bar', ';../', -1)
@@ -113,10 +115,10 @@ func Test_findfile()
   call assert_equal(1, len(l))
   call assert_match('.*/Xfinddir1/Xdir2/Xdir3/bar', l[0])
 
-  let l = findfile('bar', ';' . save_dir . '/Xfinddir1/Xdir2/', -1)
+  let l = findfile('bar', ';' .. save_dir .. '/Xfinddir1/Xdir2/', -1)
   call assert_equal(1, len(l))
   call assert_match('.*/Xfinddir1/Xdir2/Xdir3/bar', l[0])
-  let l = findfile('bar', ';' . save_dir . '/Xfinddir1/Xdir2', -1)
+  let l = findfile('bar', ';' .. save_dir .. '/Xfinddir1/Xdir2', -1)
   call assert_equal(1, len(l))
   call assert_match('.*/Xfinddir1/Xdir2/Xdir3/bar', l[0])
   let l = findfile('bar', ';../../', -1)
@@ -126,11 +128,11 @@ func Test_findfile()
   call assert_equal(1, len(l))
   call assert_match('.*/Xfinddir1/Xdir2/Xdir3/bar', l[0])
 
-  let l = findfile('bar', ';' . save_dir . '/Xfinddir1/', -1)
+  let l = findfile('bar', ';' .. save_dir .. '/Xfinddir1/', -1)
   call assert_equal(2, len(l))
   call assert_match('.*/Xfinddir1/Xdir2/Xdir3/bar', l[0])
   call assert_match('.*/Xfinddir1/bar',             l[1])
-  let l = findfile('bar', ';' . save_dir . '/Xfinddir1', -1)
+  let l = findfile('bar', ';' .. save_dir .. '/Xfinddir1', -1)
   call assert_equal(2, len(l))
   call assert_match('.*/Xfinddir1/Xdir2/Xdir3/bar', l[0])
   call assert_match('.*/Xfinddir1/bar',             l[1])
@@ -197,8 +199,8 @@ func Test_finddir()
   call assert_match('.*/Xfinddir1', finddir('Xfinddir1', ';'))
 
   " Test upwards search with stop-directory.
-  call assert_match('.*/Xfinddir1', finddir('Xfinddir1', ';' . save_dir . '/'))
-  call assert_equal('',         finddir('Xfinddir1', ';' . save_dir . '/Xfinddir1/'))
+  call assert_match('.*/Xfinddir1', finddir('Xfinddir1', ';' .. save_dir .. '/'))
+  call assert_equal('',         finddir('Xfinddir1', ';' .. save_dir .. '/Xfinddir1/'))
 
   " Test combined downwards and upwards dir search from Xdir2/.
   cd ..

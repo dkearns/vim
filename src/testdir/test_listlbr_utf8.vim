@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for linebreak and list option in utf-8 mode
 
 set encoding=utf-8
@@ -162,7 +164,7 @@ endfunc
 
 func Test_visual_block_and_selection_exclusive()
   call s:test_windows('setl selection=exclusive')
-  call setline(1, "long line: " . repeat("foobar ", 40) . "TARGETÃ' at end")
+  call setline(1, "long line: " .. repeat("foobar ", 40) .. "TARGETÃ' at end")
   exe "norm! $3B\<C-v>eAx\<Esc>"
   let lines = s:screen_lines([1, 10], winwidth(0))
   let expect = [
@@ -185,7 +187,7 @@ func Test_multibyte_sign_and_colorcolumn()
   call s:test_windows("setl nolinebreak cc=3 list listchars=nbsp:\u2423,tab:\u2595\u2014,trail:\u02d1,eol:\ub6")
   call setline(1, ["", "a b c", "a b c"])
   exe "sign define foo text=\uff0b"
-  exe "sign place 1 name=foo line=2 buffer=" . bufnr('%')
+  exe "sign place 1 name=foo line=2 buffer=" .. bufnr('%')
   redraw!
   norm! ggj0
   let signwidth = strdisplaywidth("\uff0b")
@@ -235,7 +237,7 @@ endfunc
 
 func Test_multibyte_wrap_and_breakat()
   call s:test_windows("setl sbr= brk+=>")
-  call setline(1, repeat('a', 17) . repeat('あ', 2))
+  call setline(1, repeat('a', 17) .. repeat('あ', 2))
   redraw!
   let lines = s:screen_lines([1, 2], winwidth(0))
   let expect = [
@@ -249,16 +251,16 @@ endfunc
 func Test_chinese_char_on_wrap_column()
   call s:test_windows("setl nolbr wrap sbr=")
   call setline(1, [
-\ 'aaaaaaaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaaaaa中'.
+\ 'aaaaaaaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaaaaa中' ..
 \ 'hello'])
   call cursor(1,1)
   norm! $
@@ -287,16 +289,16 @@ endfunc
 func Test_chinese_char_on_wrap_column_sbr()
   call s:test_windows("setl nolbr wrap sbr=!!!")
   call setline(1, [
-\ 'aaaaaaaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaa中'.
-\ 'aaaaaaaaaaaaaa中'.
+\ 'aaaaaaaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaa中' ..
+\ 'aaaaaaaaaaaaaa中' ..
 \ 'hello'])
   call cursor(1,1)
   norm! $

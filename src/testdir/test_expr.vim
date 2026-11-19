@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for expressions.
 
 import './util/vim9.vim' as v9
@@ -975,8 +977,8 @@ func Test_expr_completion()
 	\ 'lexpr',
 	\ 'laddexpr',
 	\ 'lgetexpr']
-    call feedkeys(":" . cmd . " getl\<Tab>\<Home>\"\<CR>", 'xt')
-    call assert_equal('"' . cmd . ' getline(', getreg(':'))
+    call feedkeys(":" .. cmd .. " getl\<Tab>\<Home>\"\<CR>", 'xt')
+    call assert_equal('"' .. cmd .. ' getline(', getreg(':'))
   endfor
 
   " completion for the expression register

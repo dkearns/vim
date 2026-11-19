@@ -1,3 +1,5 @@
+scriptversion 4
+
 CheckFeature image
 
 source util/check.vim

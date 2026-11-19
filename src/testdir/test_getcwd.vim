@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for getcwd()
 
 func GetCwdInfo(win, tab)
@@ -5,7 +7,7 @@ func GetCwdInfo(win, tab)
   let mod = ":t"
   if a:tab > 0 && a:tab != tabpagenr()
     let tab_changed = 1
-    exec "tabnext " . a:tab
+    exec "tabnext " .. a:tab
   endif
   let bufname = fnamemodify(bufname(winbufnr(a:win)), mod)
   if tab_changed
@@ -21,7 +23,7 @@ func GetCwdInfo(win, tab)
     let dirname = fnamemodify(getcwd(a:win, a:tab), mod)
     let lflag = a:win->haslocaldir(a:tab)
   endif
-  return bufname . ' ' . dirname . ' ' . lflag
+  return bufname .. ' ' .. dirname .. ' ' .. lflag
 endfunc
 
 " Do all test in a separate window to avoid E211 when we recursively
@@ -115,7 +117,7 @@ endfunc
 function Test_GetCwd_lcd_shellslash()
   new
   let root = fnamemodify('/', ':p')
-  exe 'lcd '.root
+  exe 'lcd '.. root
   let cwd = getcwd()
   if !exists('+shellslash') || &shellslash
     call assert_equal(cwd[-1:], '/')

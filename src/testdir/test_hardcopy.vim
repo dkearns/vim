@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test :hardcopy
 
 func s:HasPostscript()

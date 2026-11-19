@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for :undo
 
 func Test_ex_undo()

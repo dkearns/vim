@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for 'fileformat'
 
 " Test behavior of fileformat after bwipeout of last buffer
@@ -11,7 +13,7 @@ func Test_fileformat_after_bw()
   else  " must be mac
     let test_fileformats = 'dos'
   endif
-  exec 'set fileformats='.test_fileformats
+  exec 'set fileformats=' .. test_fileformats
   bwipeout!
   call assert_equal(test_fileformats, &fileformat)
   set fileformats&
@@ -46,7 +48,7 @@ func s:file2str(fname)
   let b = readfile(a:fname, 'B')
   let s = ''
   for c in b
-    let s .= nr2char(c)
+    let s ..= nr2char(c)
   endfor
   return s
 endfunc

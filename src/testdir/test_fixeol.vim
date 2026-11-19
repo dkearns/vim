@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for 'fixeol', 'eof' and 'eol'
 
 func Test_fixeol()

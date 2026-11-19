@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for :help! {subject}
 
 func Test_help_tagjump()
@@ -161,9 +163,9 @@ func Test_help_tagjump()
 
   " Use special patterns in the help tag
   for h in ['/\w', '/\%^', '/\%(', '/\zs', '/\@<=', '/\_$', '[++opt]', '/\{']
-    exec "help! " . h
+    exec "help! " .. h
     call assert_equal("help", &filetype)
-    let pat = '\*' . escape(h, '\$[') . '\*'
+    let pat = '\*' .. escape(h, '\$[') .. '\*'
     call assert_true(getline('.') =~ pat, pat)
     helpclose
   endfor
@@ -197,15 +199,15 @@ func s:doc_config_setup()
       let tagfname = 'tags'
       let docfname = 'testdoc.txt'
     else
-      let tagfname = 'tags-' . lang
-      let docfname = 'testdoc.' . lang . 'x'
+      let tagfname = 'tags-' .. lang
+      let docfname = 'testdoc.' .. lang .. 'x'
     endif
-    let docdir = "Xdocdir1/doc-" . lang . "/doc"
+    let docdir = "Xdocdir1/doc-" .. lang .. "/doc"
     call mkdir(docdir, "p")
-    call writefile(["\t*test-char*", "\t*test-col*"], docdir . '/' . docfname)
-    call writefile(["test-char\t" . docfname . "\t/*test-char*",
-          \         "test-col\t" . docfname . "\t/*test-col*"],
-          \         docdir . '/' . tagfname)
+    call writefile(["\t*test-char*", "\t*test-col*"], docdir .. '/' .. docfname)
+    call writefile(["test-char\t" .. docfname .. "\t/*test-char*",
+          \         "test-col\t" .. docfname .. "\t/*test-col*"],
+          \         docdir .. '/' .. tagfname)
   endfor
 endfunc
 
@@ -290,7 +292,7 @@ func Test_help_respect_current_file_lang()
 
     if has('multi_lang')
       function s:check_help_file_ext(help_keyword, ext)
-        exec 'help ' . a:help_keyword
+        exec 'help ' .. a:help_keyword
         call assert_equal(a:ext, expand('%:e'))
         call feedkeys("\<C-]>", 'tx')
         call assert_equal(a:ext, expand('%:e'))

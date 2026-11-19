@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test filecopy()
 
 func Test_copy_file_to_file()

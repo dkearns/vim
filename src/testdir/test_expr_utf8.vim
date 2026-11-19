@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for expressions using utf-8.
 
 func Test_strgetchar()

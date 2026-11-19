@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for i_CTRL-W
 
 func Test_erasebackword()

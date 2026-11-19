@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for getwinvar(), gettabvar(), gettabwinvar() and get().
 
 func Test_var()

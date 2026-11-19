@@ -1,26 +1,29 @@
+scriptversion 4
+
 " Test for expanding dllpath options
 
 func s:test_expand_dllpath(optname)
-  let $TEST_EXPAND_DLLPATH = '/dllpath/lib' . substitute(a:optname, '\zedll$', '.', '')
-  execute 'let dllpath_save = &' . a:optname
-  try
-    execute 'set ' . a:optname . '=$TEST_EXPAND_DLLPATH'
-    execute 'call assert_equal("' . $TEST_EXPAND_DLLPATH . '", &' . a:optname . ')'
+  let $TEST_EXPAND_DLLPATH = '/dllpath/lib' .. substitute(a:optname, '\zedll$', '.', '')
 
-    execute 'set ' . a:optname . '=~' . $TEST_EXPAND_DLLPATH
+  execute 'let dllpath_save = &' .. a:optname
+  try
+    execute 'set ' .. a:optname .. '=$TEST_EXPAND_DLLPATH'
+    execute 'call assert_equal("' .. $TEST_EXPAND_DLLPATH .. '", &' .. a:optname .. ')'
+
+    execute 'set ' .. a:optname .. '=~' .. $TEST_EXPAND_DLLPATH
     let home = substitute($HOME, '\\', '/', 'g')
-    execute 'call assert_equal("' . home . $TEST_EXPAND_DLLPATH . '", &' . a:optname . ')'
+    execute 'call assert_equal("' .. home .. $TEST_EXPAND_DLLPATH .. '", &' .. a:optname .. ')'
   finally
-    execute 'let &' . a:optname . ' = dllpath_save'
+    execute 'let &' .. a:optname .. ' = dllpath_save'
     let $TEST_EXPAND_DLLPATH = ''
   endtry
 endfunc
 
 func s:generate_test_if_exists(optname)
-  if exists('+' . a:optname)
+  if exists('+' .. a:optname)
     execute join([
-          \ 'func Test_expand_' . a:optname . '()',
-          \ '  call s:test_expand_dllpath("' . a:optname . '")',
+          \ 'func Test_expand_' .. a:optname .. '()',
+          \ '  call s:test_expand_dllpath("' .. a:optname .. '")',
           \ 'endfunc'
           \ ], "\n")
   endif

@@ -1,9 +1,11 @@
+scriptversion 4
+
 " Test for folding
 
 source util/screendump.vim
 
 func PrepIndent(arg)
-  return [a:arg] + repeat(["\t".a:arg], 5)
+  return [a:arg] + repeat(["\t" .. a:arg], 5)
 endfu
 
 func Test_address_fold_new_default_commentstring()
@@ -245,7 +247,7 @@ endfunc
 func Test_manual_fold_with_filter()
   CheckExecutable cat
   for type in ['manual', 'marker']
-    exe 'set foldmethod=' . type
+    exe 'set foldmethod=' .. type
     new
     call setline(1, range(1, 20))
     4,$fold
@@ -621,7 +623,7 @@ func Test_fold_error()
   call setline(1, [1, 2])
 
   for fm in ['indent', 'expr', 'syntax', 'diff']
-    exe 'set foldmethod=' . fm
+    exe 'set foldmethod=' .. fm
     call assert_fails('norm zf', 'E350:')
     call assert_fails('norm zd', 'E351:')
     call assert_fails('norm zE', 'E352:')
@@ -783,7 +785,7 @@ func Test_fold_create_marker_in_C()
     call append(0, content)
     call cursor(c + 1, 1)
     norm! zfG
-    call assert_equal(content[c] . (c < 4 ? '{{{' : '/* {{{ */'), getline(c + 1))
+    call assert_equal(content[c] .. (c < 4 ? '{{{' : '/* {{{ */'), getline(c + 1))
   endfor
 
   set fdm& fdl&

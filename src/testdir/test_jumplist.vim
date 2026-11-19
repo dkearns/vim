@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the jumplist functionality
 
 " Tests for the getjumplist() function
@@ -13,7 +15,7 @@ func Test_getjumplist()
 
   let lines = []
   for i in range(1, 100)
-    call add(lines, "Line " . i)
+    call add(lines, "Line " .. i)
   endfor
   call writefile(lines, "Xtest", 'D')
 

@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test :setfiletype
 
 " Make VIMRUNTIME and &rtp absolute.
@@ -3616,12 +3618,12 @@ func Test_cucumber_code_injection()
         \ '  Scenario: trigger',
         \ '    Given xyzzy',
         \ ], 'Xcucu/features/test.feature')
-  let marker = getcwd() . '/Xcucu/MARKER'
+  let marker = getcwd() .. '/Xcucu/MARKER'
   " Malicious step: terminates the regex literal, injects Ruby system(),
   " comments the trailing slash.  With the fix, the pattern is passed to
   " Regexp.new() instead of Kernel.eval() and the payload is inert.
   call writefile([
-        \ 'Given /xyzzy/; system("touch ' . marker . '"); #/ do',
+        \ 'Given /xyzzy/; system("touch ' .. marker .. '"); #/ do',
         \ 'end',
         \ ], 'Xcucu/features/step_definitions/poc.rb')
 

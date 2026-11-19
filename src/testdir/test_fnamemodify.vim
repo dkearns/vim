@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test filename modifiers.
 
 func Test_fnamemodify()
@@ -40,15 +42,15 @@ func Test_fnamemodify()
   call chdir($HOME)
   call assert_equal('foobar', fnamemodify('~/foobar', ':~:.'))
   call chdir(cwd)
-  call mkdir($HOME . '/XXXXXXXX/a', 'p')
-  call mkdir($HOME . '/XXXXXXXX/b', 'p')
-  call chdir($HOME . '/XXXXXXXX/a/')
-  call assert_equal('foo', fnamemodify($HOME . '/XXXXXXXX/a/foo', ':p:~:.'))
-  call assert_equal('~/XXXXXXXX/b/foo', fnamemodify($HOME . '/XXXXXXXX/b/foo', ':p:~:.'))
-  call mkdir($HOME . '/XXXXXXXX/a.ext', 'p')
-  call assert_equal('~/XXXXXXXX/a.ext/foo', fnamemodify($HOME . '/XXXXXXXX/a.ext/foo', ':p:~:.'))
+  call mkdir($HOME .. '/XXXXXXXX/a', 'p')
+  call mkdir($HOME .. '/XXXXXXXX/b', 'p')
+  call chdir($HOME .. '/XXXXXXXX/a/')
+  call assert_equal('foo', fnamemodify($HOME .. '/XXXXXXXX/a/foo', ':p:~:.'))
+  call assert_equal('~/XXXXXXXX/b/foo', fnamemodify($HOME .. '/XXXXXXXX/b/foo', ':p:~:.'))
+  call mkdir($HOME .. '/XXXXXXXX/a.ext', 'p')
+  call assert_equal('~/XXXXXXXX/a.ext/foo', fnamemodify($HOME .. '/XXXXXXXX/a.ext/foo', ':p:~:.'))
   call chdir(cwd)
-  call delete($HOME . '/XXXXXXXX', 'rf')
+  call delete($HOME .. '/XXXXXXXX', 'rf')
 
   call assert_equal('''abc def''', fnamemodify('abc def', ':S'))
   call assert_equal('''abc" "def''', fnamemodify('abc" "def', ':S'))

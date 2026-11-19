@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests specifically for the GUI
 
 CheckCanRunGui
@@ -133,12 +135,12 @@ func Test_quoteplus()
         \ .. GetVimCommand() .. ' --noplugin --not-a-term -c ''%s'''
   " Ignore the "failed to create input context" error.
   let cmd = 'call test_ignore_error("E285") | '
-        \ . 'gui -f | '
-        \ . 'call feedkeys("'
-        \ . '\"+p'
-        \ . ':s/' . test_call . '/' . test_response . '/\<CR>'
-        \ . '\"+yis'
-        \ . ':q!\<CR>", "tx")'
+        \ .. 'gui -f | '
+        \ .. 'call feedkeys("'
+        \ .. '\"+p'
+        \ .. ':s/' .. test_call .. '/' .. test_response .. '/\<CR>'
+        \ .. '\"+yis'
+        \ .. ':q!\<CR>", "tx")'
   let run_vimtest = printf(testee, cmd)
 
   " Set the quoteplus register to test_call, and another gvim will launched.
@@ -277,10 +279,10 @@ func Test_set_balloonexpr()
   new
   func MyBalloonExpr()
       return 'Cursor is at line ' . v:beval_lnum .
-	      \', column ' . v:beval_col .
-	      \ ' of file ' .  bufname(v:beval_bufnr) .
-	      \ ' on word "' . v:beval_text . '"' .
-	      \ ' in window ' . v:beval_winid . ' (#' . v:beval_winnr . ')'
+	      \', column ' .. v:beval_col .
+	      \ ' of file ' ..  bufname(v:beval_bufnr) .
+	      \ ' on word "' .. v:beval_text .. '"' .
+	      \ ' in window ' .. v:beval_winid .. ' (#' .. v:beval_winnr .. ')'
   endfunc
   setl balloonexpr=MyBalloonExpr()
   setl ballooneval
@@ -359,21 +361,21 @@ func Test_set_guicursor()
   " Argument List Example 1
   let opt_list = copy(default)
   let opt_list[0] = "n-c-v:block-nCursor"
-  exec "set guicursor=" . join(opt_list, ',')
+  exec "set guicursor=" .. join(opt_list, ',')
   call assert_equal(join(opt_list, ','), &guicursor)
   unlet opt_list
 
   " Argument List Example 2
   let opt_list = copy(default)
   let opt_list[3] = "i-ci:ver30-iCursor-blinkwait300-blinkon200-blinkoff150"
-  exec "set guicursor=" . join(opt_list, ',')
+  exec "set guicursor=" .. join(opt_list, ',')
   call assert_equal(join(opt_list, ','), &guicursor)
   unlet opt_list
 
   " 'a' Mode
   set guicursor&
-  let &guicursor .= ',a:blinkon0'
-  call assert_equal(join(default, ',') . ",a:blinkon0", &guicursor)
+  let &guicursor ..= ',a:blinkon0'
+  call assert_equal(join(default, ',') .. ",a:blinkon0", &guicursor)
 
   let &guicursor = guicursor_saved
 endfunc
@@ -466,15 +468,15 @@ func Test_set_guifontset()
   " be chosen meticulously.
   let font_head = '-misc-fixed-medium-r-normal--14'
 
-  let font_aw70 = font_head . '-130-75-75-c-70'
-  let font_aw140 = font_head . '-130-75-75-c-140'
+  let font_aw70 = font_head .. '-130-75-75-c-70'
+  let font_aw140 = font_head .. '-130-75-75-c-140'
 
-  let font_jisx0201 = font_aw70 . '-jisx0201.1976-0'
-  let font_jisx0208 = font_aw140 . '-jisx0208.1983-0'
+  let font_jisx0201 = font_aw70 .. '-jisx0201.1976-0'
+  let font_jisx0208 = font_aw140 .. '-jisx0208.1983-0'
 
   let full_XLFDs = join([ font_jisx0208, font_jisx0201 ], ',')
   let short_XLFDs = join([ font_aw140, font_aw70 ], ',')
-  let singleton = font_head . '-*'
+  let singleton = font_head .. '-*'
   let aliases = 'k14,r14'
 
   " Second, among 'locales', look up such a locale that gets 'set
@@ -493,7 +495,7 @@ func Test_set_guifontset()
     let done = 0
     for fontset in fontsets
       try
-	exec 'set guifontset=' . fontset
+	exec 'set guifontset=' .. fontset
       catch /^Vim\%((\a\+)\)\=:E\%(250\|252\|234\|597\|598\)/
 	break
       endtry
@@ -512,7 +514,7 @@ func Test_set_guifontset()
     " N.B. 'v:ctype' has already been set to an appropriate value in the
     " previous loop.
     for fontset in fontsets
-      exec 'set guifontset=' . fontset
+      exec 'set guifontset=' .. fontset
       call assert_equal(fontset, &guifontset)
     endfor
   endif
@@ -540,7 +542,7 @@ func Test_set_guifontwide()
     else
       let &guifont = system('fc-match -f "%{family[0]} %{size}" monospace:size=10:lang=en')
       let wide = system('fc-match -f "%{family[0]} %{size}" monospace:size=10:lang=ja')
-      exec 'set guifontwide=' . fnameescape(wide)
+      exec 'set guifontwide=' .. fnameescape(wide)
       call assert_equal(wide, &guifontwide)
     endif
 
@@ -550,7 +552,7 @@ func Test_set_guifontwide()
   elseif has('gui_motif')
     " guifontwide is premised upon the xfontset feature.
     if !has('xfontset')
-      let skipped = g:not_supported . 'xfontset'
+      let skipped = g:not_supported .. 'xfontset'
     else
       let encoding_saved    = &encoding
       let guifont_saved     = &guifont
@@ -567,12 +569,12 @@ func Test_set_guifontwide()
 
       " Case 1-1: Automatic selection
       set guifontwide=
-      exec 'set guifont=' . nfont
+      exec 'set guifont=' .. nfont
       call assert_equal(wfont, &guifontwide)
 
       " Case 1-2: Manual selection
-      exec 'set guifontwide=' . wfont
-      exec 'set guifont=' . nfont
+      exec 'set guifontwide=' .. wfont
+      exec 'set guifont=' .. nfont
       call assert_equal(wfont, &guifontwide)
 
       " Case 2: guifontset is invalid
@@ -585,12 +587,12 @@ func Test_set_guifontwide()
 
       " Case 2-1: Automatic selection
       set guifontwide=
-      exec 'set guifont=' . nfont
+      exec 'set guifont=' .. nfont
       call assert_equal(wfont, &guifontwide)
 
       " Case 2-2: Manual selection
-      exec 'set guifontwide=' . wfont
-      exec 'set guifont=' . nfont
+      exec 'set guifontwide=' .. wfont
+      exec 'set guifont=' .. nfont
       call assert_equal(wfont, &guifontwide)
 
       let &guifontwide = guifontwide_saved
@@ -687,17 +689,17 @@ func Test_set_guioptions()
     call assert_equal('egmrLtT', &guioptions)
 
     set guioptions+=s
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('egmrLtTs', &guioptions)
     set guioptions-=s
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('egmrLtT', &guioptions)
 
     set guioptions+=d
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('egmrLtTd', &guioptions)
     set guioptions-=d
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('egmrLtT', &guioptions)
 
   else
@@ -711,89 +713,89 @@ func Test_set_guioptions()
 
     " Remove all default GUI ornaments
     set guioptions-=T
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegimrLt', &guioptions)
     set guioptions-=t
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegimrL', &guioptions)
     set guioptions-=L
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegimr', &guioptions)
     set guioptions-=r
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegim', &guioptions)
     set guioptions-=m
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegi', &guioptions)
 
     " Try non-default GUI ornaments
     set guioptions+=l
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegil', &guioptions)
     set guioptions-=l
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegi', &guioptions)
 
     set guioptions+=R
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegiR', &guioptions)
     set guioptions-=R
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegi', &guioptions)
 
     set guioptions+=b
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegib', &guioptions)
     set guioptions+=h
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegibh', &guioptions)
     set guioptions-=h
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegib', &guioptions)
     set guioptions-=b
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegi', &guioptions)
 
     set guioptions+=v
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegiv', &guioptions)
     set guioptions-=v
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegi', &guioptions)
 
     if has('gui_motif')
       set guioptions+=F
-      exec 'sleep' . duration
+      exec 'sleep' .. duration
       call assert_equal('aegiF', &guioptions)
       set guioptions-=F
-      exec 'sleep' . duration
+      exec 'sleep' .. duration
       call assert_equal('aegi', &guioptions)
     endif
 
     if has('gui_gtk3')
       set guioptions+=d
-      exec 'sleep' . duration
+      exec 'sleep' .. duration
       call assert_equal('aegid', &guioptions)
       set guioptions-=d
-      exec 'sleep' . duration
+      exec 'sleep' .. duration
       call assert_equal('aegi', &guioptions)
     endif
 
     " Restore GUI ornaments to the default state.
     set guioptions+=m
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegim', &guioptions)
     set guioptions+=r
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegimr', &guioptions)
     set guioptions+=L
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegimrL', &guioptions)
     set guioptions+=t
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal('aegimrLt', &guioptions)
     set guioptions+=T
-    exec 'sleep' . duration
+    exec 'sleep' .. duration
     call assert_equal("aegimrLtT", &guioptions)
 
     wincmd o
@@ -947,7 +949,7 @@ func Test_gui_dash_g()
 	au GUIEnter * qall
   END
   call writefile(lines, 'Xscriptgui', 'D')
-  call system(cmd . ' -g')
+  call system(cmd .. ' -g')
   call WaitForAssert({-> assert_equal(['insertmode: 0'], readfile('Xtestgui'))})
 endfunc
 
@@ -960,7 +962,7 @@ func Test_gui_dash_y()
 	au GUIEnter * qall
   END
   call writefile(lines, 'Xscriptgui', 'D')
-  call system(cmd . ' -y')
+  call system(cmd .. ' -y')
   call WaitForAssert({-> assert_equal(['insertmode: 1'], readfile('Xtestgui'))})
 endfunc
 
@@ -976,7 +978,7 @@ func Test_gui_run_cmd_in_terminal()
     " assume all the other systems have a cat command
     let cmd = 'cat'
   endif
-  exe "silent !" . cmd . " test_gui.vim"
+  exe "silent !" .. cmd .. " test_gui.vim"
   " TODO: how to check that the command ran in a separate terminal?
   " Maybe check for $TERM (dumb vs xterm) in the spawned shell?
   let &guioptions = save_guioptions
@@ -1833,7 +1835,7 @@ func Test_CursorHold_not_triggered_at_startup()
         \ 'call timer_start(400, {-> execute(''call writefile(["g:cursorhold_triggered=" . g:cursorhold_triggered], "Xcursorhold.log", "a") | qa!'')})',
         \ ], 'Xcursorhold_test.vim')
 
-  let vimcmd = v:progpath . ' -g -f -N -u NONE -i NONE -S Xcursorhold_test.vim'
+  let vimcmd = v:progpath .. ' -g -f -N -u NONE -i NONE -S Xcursorhold_test.vim'
   call system(vimcmd)
 
   let lines = filereadable('Xcursorhold.log') ? readfile('Xcursorhold.log') : []

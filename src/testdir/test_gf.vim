@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for the gf and gF (goto file) commands
 
 " This is a test if a URL is recognized by "gf", with the cursor before and

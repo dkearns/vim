@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for insert completion
 
 source util/screendump.vim
@@ -658,12 +660,12 @@ func ScrollInfoWindowTest(mvmt, count, fline)
   set completefunc=ScrollInfoWindowUserDefinedFn
   let keyseq = "i\<C-X>\<C-U>\<C-N>"
   for _ in range(a:count)
-    let keyseq .= (a:mvmt == "pageup" ? "\<C-R>\<C-R>=ScrollInfoWindowPageUp()\<CR>" :
+    let keyseq ..= (a:mvmt == "pageup" ? "\<C-R>\<C-R>=ScrollInfoWindowPageUp()\<CR>" :
           \ "\<C-R>\<C-R>=ScrollInfoWindowPageDown()\<CR>")
   endfor
-  let keyseq .= "\<C-R>\<C-R>=string(popup_getpos(popup_findinfo()))\<CR>\<ESC>"
+  let keyseq ..= "\<C-R>\<C-R>=string(popup_getpos(popup_findinfo()))\<CR>\<ESC>"
   call feedkeys(keyseq, "tx")
-  call assert_match('''firstline'': ' . a:fline, getline(1))
+  call assert_match('''firstline'': ' .. a:fline, getline(1))
   bwipe!
   set completeopt&
   set completepopup&
@@ -692,27 +694,27 @@ func CompleteInfoTestUserDefinedFn(mvmt, idx, noselect)
   else
     set completeopt=menu,preview
   endif
-  let items = "[" .
-        \ "{'word': 'foo', 'menu': '', 'kind_hlgroup': '', 'abbr_hlgroup': '', 'user_data': '', 'info': '', 'kind': '', 'abbr': ''}, " .
-        \ "{'word': 'bar', 'menu': '', 'kind_hlgroup': '', 'abbr_hlgroup': '', 'user_data': '', 'info': '', 'kind': '', 'abbr': ''}, " .
-        \ "{'word': 'baz', 'menu': '', 'kind_hlgroup': '', 'abbr_hlgroup': '', 'user_data': '', 'info': '', 'kind': '', 'abbr': ''}, " .
-        \ "{'word': 'qux', 'menu': '', 'kind_hlgroup': '', 'abbr_hlgroup': '', 'user_data': '', 'info': '', 'kind': '', 'abbr': ''}" .
+  let items = "[" ..
+        \ "{'word': 'foo', 'menu': '', 'kind_hlgroup': '', 'abbr_hlgroup': '', 'user_data': '', 'info': '', 'kind': '', 'abbr': ''}, " ..
+        \ "{'word': 'bar', 'menu': '', 'kind_hlgroup': '', 'abbr_hlgroup': '', 'user_data': '', 'info': '', 'kind': '', 'abbr': ''}, " ..
+        \ "{'word': 'baz', 'menu': '', 'kind_hlgroup': '', 'abbr_hlgroup': '', 'user_data': '', 'info': '', 'kind': '', 'abbr': ''}, " ..
+        \ "{'word': 'qux', 'menu': '', 'kind_hlgroup': '', 'abbr_hlgroup': '', 'user_data': '', 'info': '', 'kind': '', 'abbr': ''}" ..
         \ "]"
   new
   set completefunc=CompleteInfoUserDefinedFn
-  call feedkeys("i\<C-X>\<C-U>" . a:mvmt . "\<C-R>\<C-R>=string(complete_info())\<CR>\<ESC>", "tx")
+  call feedkeys("i\<C-X>\<C-U>" .. a:mvmt .. "\<C-R>\<C-R>=string(complete_info())\<CR>\<ESC>", "tx")
   let completed = a:idx != -1 ? ['foo', 'bar', 'baz', 'qux']->get(a:idx) : ''
-  call assert_equal(completed. "{'preinserted_text': '', 'pum_visible': 1, 'mode': 'function', 'selected': " . a:idx . ", 'items': " . items . "}", getline(1))
+  call assert_equal(completed .. "{'preinserted_text': '', 'pum_visible': 1, 'mode': 'function', 'selected': " .. a:idx .. ", 'items': " .. items .. "}", getline(1))
   %d
   set complete=.,FCompleteInfoUserDefinedFn
-  call feedkeys("i\<C-N>" . a:mvmt . "\<C-R>\<C-R>=string(complete_info())\<CR>\<ESC>", "tx")
+  call feedkeys("i\<C-N>" .. a:mvmt .. "\<C-R>\<C-R>=string(complete_info())\<CR>\<ESC>", "tx")
   let completed = a:idx != -1 ? ['foo', 'bar', 'baz', 'qux']->get(a:idx) : ''
-  call assert_equal(completed. "{'preinserted_text': '', 'pum_visible': 1, 'mode': 'keyword', 'selected': " . a:idx . ", 'items': " . items . "}", getline(1))
+  call assert_equal(completed .. "{'preinserted_text': '', 'pum_visible': 1, 'mode': 'keyword', 'selected': " .. a:idx .. ", 'items': " .. items .. "}", getline(1))
   %d
   set complete=.,F
-  call feedkeys("i\<C-N>" . a:mvmt . "\<C-R>\<C-R>=string(complete_info())\<CR>\<ESC>", "tx")
+  call feedkeys("i\<C-N>" .. a:mvmt .. "\<C-R>\<C-R>=string(complete_info())\<CR>\<ESC>", "tx")
   let completed = a:idx != -1 ? ['foo', 'bar', 'baz', 'qux']->get(a:idx) : ''
-  call assert_equal(completed. "{'preinserted_text': '', 'pum_visible': 1, 'mode': 'keyword', 'selected': " . a:idx . ", 'items': " . items . "}", getline(1))
+  call assert_equal(completed .. "{'preinserted_text': '', 'pum_visible': 1, 'mode': 'keyword', 'selected': " .. a:idx .. ", 'items': " .. items .. "}", getline(1))
   bwipe!
   set completeopt& completefunc& complete&
 endfunc
@@ -1955,7 +1957,7 @@ func Test_cpt_func_refresh_always_fail()
   let g:CallCount = 0
   exe "normal! Gof\<C-N>oo\<c-r>=complete_info([\"items\", \"selected\"])\<cr>"
   call assert_equal('foo{''selected'': -1, ''items'': [{''word'': ''fooo1'', ''menu'': '''', '
-        \ . '''kind_hlgroup'': '''', ''abbr_hlgroup'': '''', ''user_data'': '''', ''info'': '''', ''kind'': '''', ''abbr'': ''''}]}',
+        \ .. '''kind_hlgroup'': '''', ''abbr_hlgroup'': '''', ''user_data'': '''', ''info'': '''', ''kind'': '''', ''abbr'': ''''}]}',
         \ getline(2))
   call assert_equal(3, g:CallCount)
   %d
@@ -1971,7 +1973,7 @@ func Test_cpt_func_refresh_always_fail()
   let g:CallCount = 0
   exe "normal! Gof\<C-N>o\<bs>\<c-r>=complete_info([\"items\", \"selected\"])\<cr>"
   call assert_equal('f{''selected'': -1, ''items'': [{''word'': ''fooo1'', ''menu'': '''', '
-        \ . '''kind_hlgroup'': '''', ''abbr_hlgroup'': '''', ''user_data'': '''', ''info'': '''', ''kind'': '''', ''abbr'': ''''}]}',
+        \ .. '''kind_hlgroup'': '''', ''abbr_hlgroup'': '''', ''user_data'': '''', ''info'': '''', ''kind'': '''', ''abbr'': ''''}]}',
         \ getline(2))
   call assert_equal(3, g:CallCount)
   %d
@@ -1979,7 +1981,7 @@ func Test_cpt_func_refresh_always_fail()
   let g:CallCount = 0
   exe "normal! Gof\<C-N>oo\<bs>\<c-r>=complete_info([\"items\", \"selected\"])\<cr>"
   call assert_equal('fo{''selected'': -1, ''items'': [{''word'': ''fooo1'', ''menu'': '''', '
-        \ . '''kind_hlgroup'': '''', ''abbr_hlgroup'': '''', ''user_data'': '''', ''info'': '''', ''kind'': '''', ''abbr'': ''''}]}',
+        \ .. '''kind_hlgroup'': '''', ''abbr_hlgroup'': '''', ''user_data'': '''', ''info'': '''', ''kind'': '''', ''abbr'': ''''}]}',
         \ getline(2))
   call assert_equal(3, g:CallCount)
   bw!
@@ -2132,7 +2134,7 @@ func Test_cpt_multi_func_refresh_always()
   set complete=
   exe "normal! if\<C-N>\<c-r>=CompleteMenuMatches()\<cr>"
   " \x0e is <c-n>
-  call assert_equal("f\x0e" . '{''matches'': [], ''selected'': -1}', getline(1))
+  call assert_equal("f\x0e" .. '{''matches'': [], ''selected'': -1}', getline(1))
 
   set completeopt=menuone,noselect
   set complete=FCompleteItems1,FCompleteItems2
@@ -5410,26 +5412,26 @@ func Test_nonkeyword_trigger()
   call feedkeys("S->\<C-N>\<F2>\<Esc>0", 'tx!')
   call assert_equal(['abc', 'abcd', 'fo', '->foo', '->bar'], b:matches->mapnew('v:val.word'))
   call assert_equal('->abc', getline('.'))
-  call feedkeys("S->" . repeat("\<C-N>", 3) . "\<Esc>0", 'tx!')
+  call feedkeys("S->" .. repeat("\<C-N>", 3) .. "\<Esc>0", 'tx!')
   call assert_equal('->fo', getline('.'))
-  call feedkeys("S->" . repeat("\<C-N>", 4) . "\<Esc>0", 'tx!')
+  call feedkeys("S->" .. repeat("\<C-N>", 4) .. "\<Esc>0", 'tx!')
   call assert_equal('->foo', getline('.'))
-  call feedkeys("S->" . repeat("\<C-N>", 4) . "\<C-P>\<Esc>0", 'tx!')
+  call feedkeys("S->" .. repeat("\<C-N>", 4) .. "\<C-P>\<Esc>0", 'tx!')
   call assert_equal('->fo', getline('.'))
-  call feedkeys("S->" . repeat("\<C-N>", 5) . "\<Esc>0", 'tx!')
+  call feedkeys("S->" .. repeat("\<C-N>", 5) .. "\<Esc>0", 'tx!')
   call assert_equal('->bar', getline('.'))
-  call feedkeys("S->" . repeat("\<C-N>", 5) . "\<C-P>\<Esc>0", 'tx!')
+  call feedkeys("S->" .. repeat("\<C-N>", 5) .. "\<C-P>\<Esc>0", 'tx!')
   call assert_equal('->foo', getline('.'))
-  call feedkeys("S->" . repeat("\<C-N>", 6) . "\<Esc>0", 'tx!')
+  call feedkeys("S->" .. repeat("\<C-N>", 6) .. "\<Esc>0", 'tx!')
   call assert_equal('->', getline('.'))
-  call feedkeys("S->" . repeat("\<C-N>", 7) . "\<Esc>0", 'tx!')
+  call feedkeys("S->" .. repeat("\<C-N>", 7) .. "\<Esc>0", 'tx!')
   call assert_equal('->abc', getline('.'))
-  call feedkeys("S->" . repeat("\<C-P>", 7) . "\<Esc>0", 'tx!')
+  call feedkeys("S->" .. repeat("\<C-P>", 7) .. "\<Esc>0", 'tx!')
   call assert_equal('->fo', getline('.'))
   " Replace
   call feedkeys("S# x y z\<Esc>0lR\<C-N>\<Esc>0", 'tx!')
   call assert_equal('#abcy z', getline('.'))
-  call feedkeys("S# x y z\<Esc>0lR" . repeat("\<C-P>", 4) . "\<Esc>0", 'tx!')
+  call feedkeys("S# x y z\<Esc>0lR" .. repeat("\<C-P>", 4) .. "\<Esc>0", 'tx!')
   call assert_equal('#bary z', getline('.'))
 
   bw!
@@ -5526,7 +5528,7 @@ func Test_autocomplete_trigger()
     endif
     call assert_equal(-1, b:selected)
     call assert_equal('#ab', getline('.'))
-    call feedkeys("S#ab" . repeat("\<C-N>", 3) . "\<F3>\<Esc>0", 'tx!')
+    call feedkeys("S#ab" .. repeat("\<C-N>", 3) .. "\<F3>\<Esc>0", 'tx!')
     call assert_equal(fuzzy ? '#abcd' : '#abar', getline('.'))
     call assert_equal(2, b:selected)
 
@@ -5550,20 +5552,20 @@ func Test_autocomplete_trigger()
   " Test 3: Navigate menu containing nonkeyword and keyword items
   call feedkeys("S#a\<F2>\<Esc>0", 'tx!')
   call assert_equal(['abcd', 'abc', '#afoo', '#abar'], b:matches->mapnew('v:val.word'))
-  call feedkeys("S#a" . repeat("\<C-N>", 3) . "\<Esc>0", 'tx!')
+  call feedkeys("S#a" .. repeat("\<C-N>", 3) .. "\<Esc>0", 'tx!')
   call assert_equal('#afoo', getline('.'))
-  call feedkeys("S#a" . repeat("\<C-N>", 3) . "\<C-P>\<Esc>0", 'tx!')
+  call feedkeys("S#a" .. repeat("\<C-N>", 3) .. "\<C-P>\<Esc>0", 'tx!')
   call assert_equal('#abc', getline('.'))
 
   call feedkeys("S#a.a\<F2>\<Esc>0", 'tx!')
   call assert_equal(['abcd', 'abc', '.afoo', '.abar'], b:matches->mapnew('v:val.word'))
-  call feedkeys("S#a.a" . repeat("\<C-N>", 2) . "\<Esc>0", 'tx!')
+  call feedkeys("S#a.a" .. repeat("\<C-N>", 2) .. "\<Esc>0", 'tx!')
   call assert_equal('#a.abc', getline('.'))
-  call feedkeys("S#a.a" . repeat("\<C-N>", 3) . "\<Esc>0", 'tx!')
+  call feedkeys("S#a.a" .. repeat("\<C-N>", 3) .. "\<Esc>0", 'tx!')
   call assert_equal('#a.afoo', getline('.'))
-  call feedkeys("S#a.a" . repeat("\<C-N>", 3) . "\<C-P>\<Esc>0", 'tx!')
+  call feedkeys("S#a.a" .. repeat("\<C-N>", 3) .. "\<C-P>\<Esc>0", 'tx!')
   call assert_equal('#a.abc', getline('.'))
-  call feedkeys("S#a.a" . repeat("\<C-P>", 6) . "\<Esc>0", 'tx!')
+  call feedkeys("S#a.a" .. repeat("\<C-P>", 6) .. "\<Esc>0", 'tx!')
   call assert_equal('#a.abar', getline('.'))
 
   " Test 4a: When autocomplete menu is active, ^X^N completes buffer keywords
@@ -5919,7 +5921,7 @@ func Test_completetimeout_autocompletetimeout()
 
   " Clock does not have fine granularity, so checking 'elapsed time' is only
   " approximate. We can only test that some type of timeout is enforced.
-  call setline(1, map(range(60000), '"foo" . v:val'))
+  call setline(1, map(range(60000), '"foo" .. v:val'))
   set completetimeout=1
   call feedkeys("Gof\<C-N>\<F2>\<Esc>0", 'xt!')
   let match_count = len(b:matches->mapnew('v:val.word'))
@@ -5937,7 +5939,7 @@ func Test_completetimeout_autocompletetimeout()
   " Use enough long words that collecting all of them takes well over the
   " timeout even on a fast machine.
   let pad = repeat('y', 60)
-  call setline(1, map(range(200000), '"foo" . v:val . pad'))
+  call setline(1, map(range(200000), '"foo" .. v:val .. pad'))
   call feedkeys("\<Esc>Sf\<F2>\<Esc>0", 'xt!')
   let match_count = len(b:matches->mapnew('v:val.word'))
   " The timeout must have truncated the collection.

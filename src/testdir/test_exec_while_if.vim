@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for :execute, :while, :for and :if
 
 func Test_exec_while_if()
@@ -6,7 +8,7 @@ func Test_exec_while_if()
   let i = 0
   while i < 12
     let i = i + 1
-    execute "normal o" . i . "\033"
+    execute "normal o" .. i .. "\033"
     if i % 2
       normal Ax
       if i == 9
@@ -17,7 +19,7 @@ func Test_exec_while_if()
       else
         let j = 9
         while j > 0
-          execute "normal" j . "a" . j . "\x1b"
+          execute "normal" j .. "a" .. j .. "\x1b"
           let j = j - 1
         endwhile
       endif

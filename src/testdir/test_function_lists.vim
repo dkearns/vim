@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test to verify that the three function lists:
 "
 "  - global_functions[] in src/evalfunc.c

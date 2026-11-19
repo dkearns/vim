@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test the :filter command modifier
 
 func Test_filter()
@@ -66,7 +68,7 @@ endfunc
 function s:complete_filter_cmd(filtcmd)
   let keystroke = "\<TAB>\<C-R>=execute('let cmdline = getcmdline()')\<CR>\<C-C>"
   let cmdline = ''
-  call feedkeys(':' . a:filtcmd . keystroke, 'ntx')
+  call feedkeys(':' .. a:filtcmd .. keystroke, 'ntx')
   return cmdline
 endfunction
 

@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for lambda and closure
 
 import './util/vim9.vim' as v9

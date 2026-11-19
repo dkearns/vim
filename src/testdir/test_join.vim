@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for joining lines.
 
 func Test_join_with_count()
@@ -38,7 +40,7 @@ func Test_join_marks()
   enew
   call append(0, [
 	      \ "\t\tO sodales, ludite, vos qui",
-	      \ "attamen consulite per voster honur. Tua pulchra " .
+	      \ "attamen consulite per voster honur. Tua pulchra " ..
 	      \ "facies me fay planszer milies",
 	      \ "",
 	      \ "This line.",

@@ -1,3 +1,5 @@
+scriptversion 4
+
 " test float functions
 
 import './util/vim9.vim' as v9

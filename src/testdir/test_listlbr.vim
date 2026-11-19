@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for linebreak and list option (non-utf8)
 
 set encoding=latin1
@@ -97,7 +99,7 @@ endfunc
 
 func Test_should_break()
   call s:test_windows('setl sbr=+ nolist')
-  call setline(1, "1\t" . repeat('a', winwidth(0)-2))
+  call setline(1, "1\t" .. repeat('a', winwidth(0)-2))
   let lines = s:screen_lines([1, 4], winwidth(0))
   let expect = [
 \ "1                   ",
@@ -231,7 +233,7 @@ endfunc
 
 func Test_visual_block_and_vbA()
   call s:test_windows()
-  call setline(1, "long line: " . repeat("foobar ", 40) . "TARGET at end")
+  call setline(1, "long line: " .. repeat("foobar ", 40) .. "TARGET at end")
   exe "norm! $3B\<C-v>eAx\<Esc>"
   let lines = s:screen_lines([1, 10], winwidth(0))
   let expect = [
@@ -295,8 +297,8 @@ func Test_block_replace_after_wrapping()
   call s:test_windows()
   call setline(1, repeat("a", 150))
   exe "norm! 0yypk147|\<C-V>jr0"
-  call assert_equal(repeat("a", 146) . "0aaa", getline(1))
-  call assert_equal(repeat("a", 146) . "0aaa", getline(2))
+  call assert_equal(repeat("a", 146) .. "0aaa", getline(1))
+  call assert_equal(repeat("a", 146) .. "0aaa", getline(2))
   let lines = s:screen_lines([1, 10], winwidth(0))
   let expect = [
 \ "aaaaaaaaaaaaaaaaaaaa",

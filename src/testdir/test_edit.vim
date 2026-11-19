@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for edit functions
 
 if exists("+t_kD")
@@ -178,14 +180,14 @@ func Test_edit_07()
   call setline(1, 'J')
 
   func! ListMonths()
-    call complete(col('.')-1, ['January', 'February', 'March',
+    call complete(col('.') - 1, ['January', 'February', 'March',
     \ 'April', 'May', 'June', 'July', 'August', 'September',
     \ 'October', 'November', 'December'])
     return ''
   endfunc
   inoremap <buffer> <F5> <C-R>=ListMonths()<CR>
 
-  call feedkeys("A\<f5>\<c-p>". repeat("\<down>", 6)."\<c-l>\<down>\<c-l>\<cr>", 'tx')
+  call feedkeys("A\<f5>\<c-p>" .. repeat("\<down>", 6) .. "\<c-l>\<down>\<c-l>\<cr>", 'tx')
   call assert_equal(['July'], getline(1,'$'))
   " 1) Test completion when InsertCharPre kicks in
   %d
@@ -634,7 +636,7 @@ func Test_edit_CTRL_EY()
   call assert_equal(30, winsaveview()['topline'])
   call assert_equal([0, 30, 2, 0], getpos('.'))
   call feedkeys("A\<c-x>\<c-e>\<c-e>\<c-e>\<c-e>\<c-e>", 'tnix')
-  call feedkeys("A\<c-x>".repeat("\<c-y>", 10), 'tnix')
+  call feedkeys("A\<c-x>" .. repeat("\<c-y>", 10), 'tnix')
   call assert_equal(21, winsaveview()['topline'])
   call assert_equal([0, 30, 2, 0], getpos('.'))
   bw!
@@ -663,7 +665,7 @@ func Test_edit_CTRL_I()
   " Tab in completion mode
   let path=expand("%:p:h")
   new
-  call setline(1, [path. "/", ''])
+  call setline(1, [path .. "/", ''])
   call feedkeys("Arunt\<c-x>\<c-f>\<tab>\<cr>\<esc>", 'tnix')
   call assert_match('runtest\.vim', getline(1))
   %d
@@ -1050,7 +1052,7 @@ func MyThesaurus(findstart, base)
     " find strings matching with "a:base"
     let res = []
     for w in mythesaurus
-      if w.word =~ '^' . a:base
+      if w.word =~ '^' .. a:base
         call add(res, w.word)
         call extend(res, split(w.synonyms, ","))
       endif
@@ -1094,8 +1096,8 @@ func Test_edit_CTRL_U()
       " find months matching with "a:base"
       let res = []
       for m in split("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec")
-        if m =~ '^\c'.a:base
-          call add(res, {'word': m, 'abbr': m.' Month', 'icase': 0})
+        if m =~ '^\c' .. a:base
+          call add(res, {'word': m, 'abbr': m .. ' Month', 'icase': 0})
         endif
       endfor
       return {'words': res, 'refresh': 'always'}
@@ -1281,7 +1283,7 @@ func Test_edit_LEFT_RIGHT()
   " Is this a bug, <s-left> does not respect whichwrap option
   call feedkeys("i\<s-left>\<esc>", 'tnix')
   call assert_equal([0, 1, 8, 0], getpos('.'))
-  call feedkeys("i". repeat("\<s-left>", 3). "\<esc>", 'tnix')
+  call feedkeys("i" .. repeat("\<s-left>", 3) .. "\<esc>", 'tnix')
   call assert_equal([0, 1, 1, 0], getpos('.'))
   call feedkeys("i\<right>\<esc>", 'tnix')
   call assert_equal([0, 1, 1, 0], getpos('.'))
@@ -1603,8 +1605,8 @@ func Test_edit_complete_very_long_name()
   " Long directory names only work on Unix.
   CheckUnix
 
-  let dirname = getcwd() . "/Xlongdir"
-  let longdirname = dirname . repeat('/' . repeat('d', 255), 4)
+  let dirname = getcwd() .. "/Xlongdir"
+  let longdirname = dirname .. repeat('/' .. repeat('d', 255), 4)
   try
     call mkdir(longdirname, 'pR')
   catch /E739:/
@@ -1621,7 +1623,7 @@ func Test_edit_complete_very_long_name()
   if winposx >= 0 && winposy >= 0 && !has('gui_running')
     " We did get the window position, but xterm may report the wrong numbers.
     " Move the window to the reported position and compute any offset.
-    exe 'winpos ' . winposx . ' ' . winposy
+    exe 'winpos ' .. winposx .. ' ' .. winposy
     sleep 100m
     let x = getwinposx()
     if x >= 0
@@ -1638,17 +1640,17 @@ func Test_edit_complete_very_long_name()
   set columns=2000
   set noswapfile
 
-  let longfilename = longdirname . '/' . repeat('a', 255)
+  let longfilename = longdirname .. '/' .. repeat('a', 255)
   call writefile(['Totum', 'Table'], longfilename)
   new
-  exe "next Xnofile " . longfilename
+  exe "next Xnofile " .. longfilename
   exe "normal iT\<C-N>"
 
   bwipe!
-  exe 'bwipe! ' . longfilename
+  exe 'bwipe! ' .. longfilename
   let &columns = save_columns
   if winposx >= 0 && winposy >= 0
-    exe 'winpos ' . winposx . ' ' . winposy
+    exe 'winpos ' .. winposx .. ' ' .. winposy
   endif
   set swapfile&
 endfunc
@@ -1749,7 +1751,7 @@ func Test_edit_special_chars()
 
   let t = "o\<C-V>65\<C-V>x42\<C-V>o103 \<C-V>33a\<C-V>xfg\<C-V>o78\<Esc>"
 
-  exe "normal " . t
+  exe "normal " .. t
   call assert_equal("ABC !a\<C-O>g\<C-G>8", getline(2))
 
   bw!
@@ -1897,7 +1899,7 @@ func Test_edit_illegal_filename()
   CheckEnglish
   new
   redir => msg
-  exe 'edit ' . repeat('f', 5000)
+  exe 'edit ' .. repeat('f', 5000)
   redir END
   call assert_match("Illegal file name$", split(msg, "\n")[0])
   close!
@@ -1906,7 +1908,7 @@ endfunc
 " Test for editing a directory
 func Test_edit_is_a_directory()
   CheckEnglish
-  let dirname = getcwd() . "/Xeditdir"
+  let dirname = getcwd() .. "/Xeditdir"
   call mkdir(dirname, 'p')
 
   new
@@ -1916,7 +1918,7 @@ func Test_edit_is_a_directory()
   call assert_match("is a directory$", split(msg, "\n")[0])
   bwipe!
 
-  let dirname .= '/'
+  let dirname ..= '/'
 
   new
   redir => msg

@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for 'lispwords' settings being global-local.
 " And  other lisp indent stuff.
 

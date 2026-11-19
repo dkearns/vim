@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the List and Dict types
 scriptencoding utf-8
 
@@ -563,7 +565,7 @@ endfunc
 func Test_dict_func()
   let d = {}
   func d.func(a) dict
-    return a:a . len(self.data)
+    return a:a .. len(self.data)
   endfunc
   let d.data = [1,2,3]
   call assert_equal('len: 3', d.func('len: '))
@@ -612,7 +614,7 @@ endfunc
 func Test_script_local_dict_func()
   let g:dict = {}
   function g:dict.func() dict
-    return 'g:dict.func' . self.foo[1] . self.foo[0]('asdf')
+    return 'g:dict.func' .. self.foo[1] .. self.foo[0]('asdf')
   endfunc
   let g:dict.foo = ['-', 2, 3]
   call insert(g:dict.foo, function('strlen'))
@@ -682,9 +684,9 @@ endfunc
 func Test_dict_func_remove_in_use()
   let d = {1:1}
   func d.func(a)
-    return "a:" . a:a
+    return "a:" .. a:a
   endfunc
-  let expected = 'a:' . string(get(d, 'func'))
+  let expected = 'a:' .. string(get(d, 'func'))
   call assert_equal(expected, d.func(string(remove(d, 'func'))))
 
   " similar, in a way it also works in Vim9
@@ -865,56 +867,56 @@ func Test_list_locked_var_unlet()
     for u in range(3)
       unlet! l
       let l = [0, [1, [2, 3]], {4: 5, 6: {7: 8}}]
-      exe "lockvar " . depth . " l"
+      exe "lockvar " .. depth .. " l"
       if u == 1
         exe "unlockvar l"
       elseif u == 2
-        exe "unlockvar " . depth . " l"
+        exe "unlockvar " .. depth .. " l"
       endif
-      let ps = islocked("l").islocked("l[1]").islocked("l[1][1]").islocked("l[1][1][0]").'-'.islocked("l[2]").islocked("l[2]['6']").islocked("l[2]['6'][7]")
+      let ps = islocked("l") .. islocked("l[1]") .. islocked("l[1][1]") .. islocked("l[1][1][0]") .. '-' .. islocked("l[2]") .. islocked("l[2]['6']") .. islocked("l[2]['6'][7]")
       call assert_equal(expected[depth][u][0], ps, 'depth: ' .. depth)
       let ps = ''
       try
         unlet l[2]['6'][7]
-        let ps .= 'p'
+        let ps ..= 'p'
       catch
-        let ps .= 'F'
+        let ps ..= 'F'
       endtry
       try
         unlet l[2][6]
-        let ps .= 'p'
+        let ps ..= 'p'
       catch
-        let ps .= 'F'
+        let ps ..= 'F'
       endtry
       try
         unlet l[2]
-        let ps .= 'p'
+        let ps ..= 'p'
       catch
-        let ps .= 'F'
+        let ps ..= 'F'
       endtry
       try
         unlet l[1][1][0]
-        let ps .= 'p'
+        let ps ..= 'p'
       catch
-        let ps .= 'F'
+        let ps ..= 'F'
       endtry
       try
         unlet l[1][1]
-        let ps .= 'p'
+        let ps ..= 'p'
       catch
-        let ps .= 'F'
+        let ps ..= 'F'
       endtry
       try
         unlet l[1]
-        let ps .= 'p'
+        let ps ..= 'p'
       catch
-        let ps .= 'F'
+        let ps ..= 'F'
       endtry
       try
         unlet l
-        let ps .= 'p'
+        let ps ..= 'p'
       catch
-        let ps .= 'F'
+        let ps ..= 'F'
       endtry
       call assert_equal(expected[depth][u][1], ps)
     endfor

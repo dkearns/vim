@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the history functions
 
 CheckFeature cmdline_hist
@@ -29,40 +31,40 @@ function History_Tests(hist)
   call assert_equal('ls', a:hist->histget(-1))
   call assert_equal(4, a:hist->histnr())
 
-  let a=execute('history ' . a:hist)
+  let a=execute('history ' .. a:hist)
   call assert_match("^\n      #  \\S* history\n      3  buffers\n>     4  ls$", a)
   let a=execute('history all')
   call assert_match("^\n      #  .* history\n      3  buffers\n>     4  ls", a)
 
   if len(a:hist) > 0
-    let a=execute('history ' . a:hist . ' 2')
+    let a=execute('history ' .. a:hist .. ' 2')
     call assert_match("^\n      #  \\S* history$", a)
-    let a=execute('history ' . a:hist . ' 3')
+    let a=execute('history ' .. a:hist .. ' 3')
     call assert_match("^\n      #  \\S* history\n      3  buffers$", a)
-    let a=execute('history ' . a:hist . ' 4')
+    let a=execute('history ' .. a:hist .. ' 4')
     call assert_match("^\n      #  \\S* history\n>     4  ls$", a)
-    let a=execute('history ' . a:hist . ' 3,4')
+    let a=execute('history ' .. a:hist .. ' 3,4')
     call assert_match("^\n      #  \\S* history\n      3  buffers\n>     4  ls$", a)
-    let a=execute('history ' . a:hist . ' -1')
+    let a=execute('history ' .. a:hist .. ' -1')
     call assert_match("^\n      #  \\S* history\n>     4  ls$", a)
-    let a=execute('history ' . a:hist . ' -2')
+    let a=execute('history ' .. a:hist .. ' -2')
     call assert_match("^\n      #  \\S* history\n      3  buffers$", a)
-    let a=execute('history ' . a:hist . ' -2,')
+    let a=execute('history ' .. a:hist .. ' -2,')
     call assert_match("^\n      #  \\S* history\n      3  buffers\n>     4  ls$", a)
-    let a=execute('history ' . a:hist . ' -3')
+    let a=execute('history ' .. a:hist .. ' -3')
     call assert_match("^\n      #  \\S* history$", a)
   endif
 
   " Test for removing entries matching a pattern
   for i in range(1, 3)
-      call histadd(a:hist, 'text_' . i)
+      call histadd(a:hist, 'text_' .. i)
   endfor
   call assert_true(histdel(a:hist, 'text_\d\+'))
   call assert_equal('ls', histget(a:hist, -1))
 
   " Test for freeing the entire history list
   for i in range(1, 7)
-      call histadd(a:hist, 'text_' . i)
+      call histadd(a:hist, 'text_' .. i)
   endfor
   call histdel(a:hist)
   for i in range(1, 7)
@@ -72,7 +74,7 @@ function History_Tests(hist)
 
   " Test for freeing an entry at the beginning of the history list
   for i in range(1, 4)
-      call histadd(a:hist, 'text_' . i)
+      call histadd(a:hist, 'text_' .. i)
   endfor
   call histdel(a:hist, 1)
   call assert_equal('', histget(a:hist, 1))

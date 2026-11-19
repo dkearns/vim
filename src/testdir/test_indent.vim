@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for various indent options
 
 func Test_preserveindent()

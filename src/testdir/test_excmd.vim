@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for various Ex commands.
 
 source util/screendump.vim

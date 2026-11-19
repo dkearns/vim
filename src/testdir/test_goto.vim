@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test commands that jump somewhere.
 
 " Create a new buffer using "lines" and place the cursor on the word after the
@@ -8,7 +10,7 @@ func XTest_goto_decl(cmd, lines, line, col)
   call setline(1, a:lines)
   /return/
   normal! W
-  execute 'norm! ' . a:cmd
+  execute 'norm! ' .. a:cmd
   call assert_equal(a:line, line('.'))
   call assert_equal(a:col, col('.'))
   quit!

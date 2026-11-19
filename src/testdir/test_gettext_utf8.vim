@@ -1,3 +1,5 @@
+scriptversion 4
+
 " This fail on CI MacOS 14 because bindtextdomain() is not available there
 " (missing library?)
 CheckNotMac

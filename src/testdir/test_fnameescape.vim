@@ -1,10 +1,12 @@
+scriptversion 4
+
 " Test if fnameescape is correct for special chars like !
 
 func Test_fnameescape()
   let fname = 'Xspa ce'
   let status = v:false
   try
-    exe "w! " . fnameescape(fname)
+    exe "w! " .. fnameescape(fname)
     let status = v:true
   endtry
   call assert_true(status, "Space")
@@ -13,7 +15,7 @@ func Test_fnameescape()
   let fname = 'Xemark!'
   let status = v:false
   try
-    exe "w! " . fname->fnameescape()
+    exe "w! " .. fname->fnameescape()
     let status = v:true
   endtry
   call assert_true(status, "ExclamationMark")

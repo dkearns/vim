@@ -1,3 +1,5 @@
+scriptversion 4
+
 " tests for 'langmap'
 
 CheckFeature langmap

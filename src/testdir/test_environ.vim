@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for environment variables.
 
 scriptencoding utf-8

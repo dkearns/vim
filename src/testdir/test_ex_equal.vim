@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test Ex := command.
 
 func Test_ex_equal()

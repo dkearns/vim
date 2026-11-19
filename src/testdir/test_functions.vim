@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for various functions.
 
 source util/screendump.vim
@@ -13,7 +15,7 @@ func Test_00_bufexists()
   let bn = bufnr('%')
   call assert_equal(1, bufexists(bn))
   call assert_equal(1, bufexists('Xfoo'))
-  call assert_equal(1, bufexists(getcwd() . '/Xfoo'))
+  call assert_equal(1, bufexists(getcwd() .. '/Xfoo'))
   call assert_equal(1, bufexists(0))
   bw
   call assert_equal(0, bufexists(bn))
@@ -189,7 +191,7 @@ endfunc
 
 func Test_strwidth()
   for aw in ['single', 'double']
-    exe 'set ambiwidth=' . aw
+    exe 'set ambiwidth=' .. aw
     call assert_equal(0, strwidth(''))
     call assert_equal(1, strwidth("\t"))
     call assert_equal(3, strwidth('Vim'))
@@ -418,8 +420,8 @@ func Test_resolve_unix()
   " FIXME: these tests result in things like "Xlink2/" instead of "Xlink3/"?!
   "call assert_equal('Xlink3/', resolve('Xlink1/'))
   "call assert_equal('./Xlink3/', resolve('./Xlink1/'))
-  "call assert_equal(getcwd() . '/Xlink3/', resolve(getcwd() . '/Xlink1/'))
-  call assert_equal(getcwd() . '/Xlink3', resolve(getcwd() . '/Xlink1'))
+  "call assert_equal(getcwd() .. '/Xlink3/', resolve(getcwd() .. '/Xlink1/'))
+  call assert_equal(getcwd() .. '/Xlink3', resolve(getcwd() .. '/Xlink1'))
 
   " Test resolve() with a symlink cycle.
   " Xlink1 -> Xlink2
@@ -474,10 +476,10 @@ func Test_resolve_win32()
     call writefile(lines, 'link.vbs')
     silent !cscript link.vbs
     call delete('link.vbs')
-    call assert_equal(s:normalize_fname(getcwd() . '\Xresfile'), s:normalize_fname(resolve('./Xlink.lnk')))
+    call assert_equal(s:normalize_fname(getcwd() .. '\Xresfile'), s:normalize_fname(resolve('./Xlink.lnk')))
     call delete('Xresfile')
 
-    call assert_equal(s:normalize_fname(getcwd() . '\Xresfile'), s:normalize_fname(resolve('./Xlink.lnk')))
+    call assert_equal(s:normalize_fname(getcwd() .. '\Xresfile'), s:normalize_fname(resolve('./Xlink.lnk')))
     call delete('Xlink.lnk')
   else
     echomsg 'skipped test for shortcut file'
@@ -494,7 +496,7 @@ func Test_resolve_win32()
   call assert_equal('Xresfile', resolve('Xresfile'))
   silent !mklink Xlink Xresfile
   if !v:shell_error
-    call assert_equal(s:normalize_fname(getcwd() . '\Xresfile'), s:normalize_fname(resolve('./Xlink')))
+    call assert_equal(s:normalize_fname(getcwd() .. '\Xresfile'), s:normalize_fname(resolve('./Xlink')))
     call delete('Xlink')
   else
     echomsg 'skipped test for symbolic link to a file'
@@ -505,12 +507,12 @@ func Test_resolve_win32()
   call mkdir('Xdir')
   silent !mklink /J Xlink Xdir
   if !v:shell_error
-    call assert_equal(s:normalize_fname(getcwd() . '\Xdir'), s:normalize_fname(resolve(getcwd() . '/Xlink')))
+    call assert_equal(s:normalize_fname(getcwd() .. '\Xdir'), s:normalize_fname(resolve(getcwd() .. '/Xlink')))
 
     call delete('Xdir', 'd')
 
     " test for junction already removed
-    call assert_equal(s:normalize_fname(getcwd() . '\Xlink'), s:normalize_fname(resolve(getcwd() . '/Xlink')))
+    call assert_equal(s:normalize_fname(getcwd() .. '\Xlink'), s:normalize_fname(resolve(getcwd() .. '/Xlink')))
     call delete('Xlink')
   else
     echomsg 'skipped test for junction to a directory'
@@ -521,12 +523,12 @@ func Test_resolve_win32()
   call mkdir('Xdir')
   silent !mklink /D Xlink Xdir
   if !v:shell_error
-    call assert_equal(s:normalize_fname(getcwd() . '\Xdir'), s:normalize_fname(resolve(getcwd() . '/Xlink')))
+    call assert_equal(s:normalize_fname(getcwd() .. '\Xdir'), s:normalize_fname(resolve(getcwd() .. '/Xlink')))
 
     call delete('Xdir', 'd')
 
     " test for symbolic link already removed
-    call assert_equal(s:normalize_fname(getcwd() . '\Xlink'), s:normalize_fname(resolve(getcwd() . '/Xlink')))
+    call assert_equal(s:normalize_fname(getcwd() .. '\Xlink'), s:normalize_fname(resolve(getcwd() .. '/Xlink')))
     call delete('Xlink')
   else
     echomsg 'skipped test for symbolic link to a directory'
@@ -554,8 +556,8 @@ func Test_resolve_win32()
   if !v:shell_error
     w Xdir/text.txt
     call assert_equal('Xdir/text.txt', resolve('Xdir/text.txt'))
-    call assert_equal(s:normalize_fname(getcwd() . '\Xdir\text.txt'), s:normalize_fname(resolve('Xdirlink\text.txt')))
-    call assert_equal(s:normalize_fname(getcwd() . '\Xdir'), s:normalize_fname(resolve('Xdirlink')))
+    call assert_equal(s:normalize_fname(getcwd() .. '\Xdir\text.txt'), s:normalize_fname(resolve('Xdirlink\text.txt')))
+    call assert_equal(s:normalize_fname(getcwd() .. '\Xdir'), s:normalize_fname(resolve('Xdirlink')))
     call delete('Xdirlink')
   else
     echomsg 'skipped test for reparse point'
@@ -821,7 +823,7 @@ endfunc
 " Tests for the mode() function
 let current_modes = ''
 func Save_mode()
-  let g:current_modes = mode(0) . '-' . mode(1)
+  let g:current_modes = mode(0) .. '-' .. mode(1)
   return ''
 endfunc
 
@@ -2354,7 +2356,7 @@ func Test_executable_longname()
     let len = 200
   endif
 
-  let fname = 'X' . repeat('あ', len) . '.bat'
+  let fname = 'X' .. repeat('あ', len) .. '.bat'
   call writefile([], fname)
   call assert_equal(1, executable(fname))
   call delete(fname)
@@ -3020,7 +3022,7 @@ func Test_setbufvar_options()
   let wh = winheight(0)
   let dummy_buf = bufnr('dummy_buf1', v:true)
   call setbufvar(dummy_buf, '&buftype', 'nofile')
-  execute 'belowright vertical split #' . dummy_buf
+  execute 'belowright vertical split #' .. dummy_buf
   call assert_equal(wh, winheight(0))
   let dum1_id = win_getid()
   call setline(1, 'foo')
@@ -3037,7 +3039,7 @@ func Test_setbufvar_options()
   let dummy_buf = bufnr('dummy_buf2', v:true)
   eval 'nofile'->setbufvar(dummy_buf, '&buftype')
   call assert_equal(4, col('.'))
-  execute 'belowright vertical split #' . dummy_buf
+  execute 'belowright vertical split #' .. dummy_buf
   call assert_equal(wh, winheight(0))
 
   bwipe!
@@ -3076,7 +3078,7 @@ func Test_redo_in_nested_functions()
   nnoremap g. :set opfunc=Operator<CR>g@
   function Operator( type, ... )
      let @x = 'XXX'
-     execute 'normal! g`[' . (a:type ==# 'line' ? 'V' : 'v') . 'g`]' . '"xp'
+     execute 'normal! g`[' .. (a:type ==# 'line' ? 'V' : 'v') .. 'g`]' .. '"xp'
   endfunction
 
   function! Apply()
@@ -3128,11 +3130,11 @@ func Test_trim()
   call assert_fails('eval trim("  vim  ", 0)', 'E1174:')
 
   let chars = join(map(range(1, 0x20) + [0xa0], {n -> n->nr2char()}), '')
-  call assert_equal("x", trim(chars . "x" . chars))
+  call assert_equal("x", trim(chars .. "x" .. chars))
 
-  call assert_equal("x", trim(chars . "x" . chars, '', 0))
-  call assert_equal("x" . chars, trim(chars . "x" . chars, '', 1))
-  call assert_equal(chars . "x", trim(chars . "x" . chars, '', 2))
+  call assert_equal("x", trim(chars .. "x" .. chars, '', 0))
+  call assert_equal("x" .. chars, trim(chars .. "x" .. chars, '', 1))
+  call assert_equal(chars .. "x", trim(chars .. "x" .. chars, '', 2))
 
   call assert_fails('let c=trim([])', 'E730:')
 endfunc
@@ -3141,7 +3143,7 @@ endfunc
 func Test_reg_executing_and_recording()
   let s:reg_stat = ''
   func s:save_reg_stat()
-    let s:reg_stat = reg_recording() . ':' . reg_executing()
+    let s:reg_stat = reg_recording() .. ':' .. reg_executing()
     return ''
   endfunc
 
@@ -3393,7 +3395,7 @@ func Test_libcall_libcallnr()
   elseif has('mac')
     let libc = 'libSystem.B.dylib'
   elseif executable('ldd')
-    let libc = matchstr(split(system('ldd ' . GetVimProg())), '/libc\.so\>')
+    let libc = matchstr(split(system('ldd ' .. GetVimProg())), '/libc\.so\>')
   endif
   if get(l:, 'libc', '') ==# ''
     " On Unix, libc.so can be in various places.
@@ -3404,7 +3406,7 @@ func Test_libcall_libcallnr()
       let libc = ''
     elseif has('sun')
       " Set the path to libc.so according to the architecture.
-      let test_bits = system('file ' . GetVimProg())
+      let test_bits = system('file ' .. GetVimProg())
       let test_arch = system('uname -p')
       if test_bits =~ '64-bit' && test_arch =~ 'sparc'
         let libc = '/usr/lib/sparcv9/libc.so'

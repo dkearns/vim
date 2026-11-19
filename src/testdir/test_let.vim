@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for the :let command.
 
 import './util/vim9.vim' as v9
@@ -286,8 +288,8 @@ endfunc
 func Test_let_option_error()
   let _w = &tw
   let &tw = 80
-  call assert_fails('let &tw .= 1', ['E734:', 'E734:'])
-  call assert_fails('let &tw .= []', ['E734:', 'E734:'])
+  call assert_fails('let &tw ..= 1', ['E734:', 'E734:'])
+  call assert_fails('let &tw ..= []', ['E734:', 'E734:'])
   call assert_fails('let &tw = []', ['E745:', 'E745:'])
   call assert_fails('let &tw += []', ['E745:', 'E745:'])
   call assert_equal(80, &tw)
@@ -295,8 +297,8 @@ func Test_let_option_error()
 
   let _w = &autoread
   let &autoread = 1
-  call assert_fails('let &autoread .= 1', ['E734:', 'E734:'])
-  call assert_fails('let &autoread .= []', ['E734:', 'E734:'])
+  call assert_fails('let &autoread ..= 1', ['E734:', 'E734:'])
+  call assert_fails('let &autoread ..= []', ['E734:', 'E734:'])
   call assert_fails('let &autoread = []', ['E745:', 'E745:'])
   call assert_fails('let &autoread += []', ['E745:', 'E745:'])
   call assert_equal(1, &autoread)
@@ -307,7 +309,7 @@ func Test_let_option_error()
   call assert_fails('let &fillchars += "diff:-"', ['E734:', 'E734:'])
   call assert_fails('let &fillchars += []', ['E734:', 'E734:'])
   call assert_fails('let &fillchars = []', ['E730:', 'E730:'])
-  call assert_fails('let &fillchars .= []', ['E730:', 'E730:'])
+  call assert_fails('let &fillchars ..= []', ['E730:', 'E730:'])
   call assert_equal("vert:|", &fillchars)
   let &fillchars = _w
 

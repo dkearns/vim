@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for using Ctrl-A/Ctrl-X using DBCS.
 
 set encoding=cp932

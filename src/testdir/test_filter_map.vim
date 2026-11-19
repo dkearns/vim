@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test filter() and map()
 
 import './util/vim9.vim' as v9

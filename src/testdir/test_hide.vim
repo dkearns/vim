@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for :hide command/modifier and 'hidden' option
 
 func SetUp()

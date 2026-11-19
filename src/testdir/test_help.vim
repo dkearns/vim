@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Tests for :help
 
 import './util/vim9.vim' as v9
@@ -49,7 +51,7 @@ func Test_help_errors()
   call assert_notequal('help', &buftype)
   let &helpfile = save_hf
 
-  call assert_fails('help ' . repeat('a', 1048), 'E149:')
+  call assert_fails('help ' .. repeat('a', 1048), 'E149:')
 
   new
   set keywordprg=:help
@@ -219,7 +221,7 @@ endfunc
 
 func Test_helptag_navigation()
   let helpdir = tempname()
-  let tempfile = helpdir . '/test.txt'
+  let tempfile = helpdir .. '/test.txt'
   call mkdir(helpdir, 'pR')
   call writefile(['', '*[tag*', '', '|[tag|'], tempfile)
   exe 'helptags' helpdir

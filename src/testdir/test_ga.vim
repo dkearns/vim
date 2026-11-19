@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test ga normal command, and :ascii Ex command.
 
 func Do_ga(c)

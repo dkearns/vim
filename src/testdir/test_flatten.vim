@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for flatting list.
 
 func Test_flatten()

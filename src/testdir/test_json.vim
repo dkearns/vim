@@ -1,3 +1,5 @@
+scriptversion 4
+
 " Test for JSON functions.
 
 let s:json1 = '"str\"in\\g"'
@@ -104,7 +106,7 @@ func Test_json_encode()
   let &encoding = save_encoding
 
   " Invalid utf-8 sequences are replaced with U+FFFD (replacement character)
-  call assert_equal('"foo' . "\ufffd" . '"', json_encode("foo\xAB"))
+  call assert_equal('"foo' .. "\ufffd" .. '"', json_encode("foo\xAB"))
 
   call assert_fails('echo json_encode(function("tr"))', 'E1161: Cannot json encode a func')
   call assert_fails('echo json_encode([function("tr")])', 'E1161: Cannot json encode a func')
